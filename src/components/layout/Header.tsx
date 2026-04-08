@@ -55,14 +55,21 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             onClick={() => setShowUserMenu(!showUserMenu)}
             className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-sm font-medium text-brand-700">
-              {user?.email?.[0]?.toUpperCase() || "U"}
-            </div>
+            {(tenant?.agent as Record<string, unknown>)?.avatarUrl ? (
+              <img
+                src={(tenant.agent as Record<string, unknown>).avatarUrl as string}
+                alt=""
+                className="h-8 w-8 rounded-full object-cover"
+              />
+            ) : (
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-sm font-medium text-brand-700">
+                {user?.email?.[0]?.toUpperCase() || "U"}
+              </div>
+            )}
             <div className="hidden text-left sm:block">
               <p className="text-sm font-medium text-gray-900">
                 {tenant?.agent?.name || user?.email || "User"}
               </p>
-              <p className="text-xs text-gray-500">{user?.email}</p>
             </div>
             <ChevronDown className="h-4 w-4 text-gray-500" />
           </button>
