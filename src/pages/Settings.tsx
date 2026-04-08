@@ -482,21 +482,95 @@ function IntegrationsSettings() {
 }
 
 function TeamSettings() {
+  const { user } = useAuth();
   const { tenant } = useTenant();
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<"agent" | "admin">("agent");
+  const [inviting, setInviting] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
   const agents = tenant?.team?.agents || {};
   const agentList = Object.entries(agents);
+
+  const handleInvite = async () => {
+    if (!user || !inviteEmail.trim()) return;
+    setInviting(true);
+    try {
+      await updateDoc(doc(db, "tenants", user.uid), {
+        [`team.agents.${inviteEmail.replace(/\./g, "_")}`]: {
+          name: "",
+          email: inviteEmail,
+          role: inviteRole,
+          status: "invited",
+          invitedAt: new Date().toISOString(),
+        },
+        updatedAt: serverTimestamp(),
+      });
+      toast("success", "Invitation sent", `${inviteEmail} has been invited as ${inviteRole}`);
+      setInviteEmail("");
+      setShowInvite(false);
+    } catch {
+      toast("error", "Failed to send invitation");
+    } finally {
+      setInviting(false);
+    }
+  };
 
   return (
     <div>
       <BackButton label="Back to Settings" />
-      <h1 className="text-2xl font-bold text-gray-900">Team Management</h1>
-      <p className="mt-1 text-sm text-gray-500">Invite team members and manage roles</p>
-      <Card className="mt-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Team Management</h1>
+          <p className="mt-1 text-sm text-gray-500">Invite team members and manage roles</p>
+        </div>
+        <Button onClick={() => setShowInvite(!showInvite)}>
+          <Users className="mr-2 h-4 w-4" />
+          Invite Member
+        </Button>
+      </div>
+
+      {showInvite && (
+        <Card className="mt-4 border-brand-200 bg-brand-50">
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">Invite a Team Member</h3>
+          <div className="flex gap-3">
+            <input
+              type="email"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              placeholder="colleague@email.com"
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
+            <select
+              value={inviteRole}
+              onChange={(e) => setInviteRole(e.target.value as "agent" | "admin")}
+              className="w-28 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            >
+              <option value="agent">Agent</option>
+              <option value="admin">Admin</option>
+            </select>
+            <Button onClick={handleInvite} loading={inviting} disabled={!inviteEmail.trim()}>
+              Send
+            </Button>
+          </div>
+          <p className="mt-2 text-xs text-gray-500">
+            The invited member will need to sign up with this email and they'll be added to your tenant.
+          </p>
+        </Card>
+      )}
+
+      <Card className="mt-4">
+        {/* Current user */}
+        <div className="flex items-center justify-between py-3 border-b border-gray-100">
+          <div>
+            <p className="text-sm font-medium text-gray-900">{tenant?.agent?.name || "You"}</p>
+            <p className="text-xs text-gray-500">{user?.email} &middot; admin (owner)</p>
+          </div>
+          <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">active</span>
+        </div>
+
         {agentList.length === 0 ? (
-          <div className="py-8 text-center">
-            <Users className="mx-auto h-10 w-10 text-gray-300" />
-            <p className="mt-3 text-sm font-medium text-gray-900">No team members yet</p>
-            <p className="mt-1 text-xs text-gray-500">You're the only agent on this account. Upgrade to Team or Brokerage tier to invite others.</p>
+          <div className="py-6 text-center">
+            <p className="text-sm text-gray-400">No invited members yet. Click "Invite Member" to add your team.</p>
           </div>
         ) : (
           <div className="divide-y divide-gray-100">

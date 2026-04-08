@@ -22,7 +22,8 @@ async function getModel(): Promise<string> {
 export function buildSystemPrompt(
   tenant: Tenant,
   marketConfig: MarketConfig,
-  lead: Lead
+  lead: Lead,
+  feedbackContext?: string
 ): string {
   const persona = tenant.aiConfig.personaName;
   const agentName = tenant.agent.name;
@@ -53,6 +54,10 @@ ESCALATION: Flag guaranteed ROI demands, attempts to bypass documentation, suspi
   }
 
   prompt += "\n\nIMPORTANT: Keep responses concise and conversational (under 200 words). Use WhatsApp-appropriate formatting.";
+
+  if (feedbackContext) {
+    prompt += `\n\nLEARNING FROM PAST LEADS: ${feedbackContext}`;
+  }
 
   return prompt;
 }

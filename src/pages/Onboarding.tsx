@@ -256,6 +256,7 @@ export function Onboarding() {
     phone: tenant?.agent?.phone || "",
     licenseNumber: tenant?.agent?.licenseNumber || "",
     brokerage: tenant?.agent?.brokerage || "",
+    referralSource: tenant?.agent?.referralSource || "",
   });
 
   const [aiConfig, setAiConfig] = useState({
@@ -274,6 +275,7 @@ export function Onboarding() {
         "agent.phone": profile.phone,
         "agent.licenseNumber": profile.licenseNumber,
         "agent.brokerage": profile.brokerage,
+        "agent.referralSource": profile.referralSource,
         updatedAt: serverTimestamp(),
       });
       toast("success", "Profile saved");
@@ -404,6 +406,25 @@ export function Onboarding() {
                     onChange={(e) => setProfile({ ...profile, brokerage: e.target.value })}
                     className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Where did you hear about us?</label>
+                  <select
+                    value={profile.referralSource}
+                    onChange={(e) => setProfile({ ...profile, referralSource: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  >
+                    <option value="">Select an option</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="x_twitter">X (Twitter)</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="web_search">Web Search</option>
+                    <option value="reference">Reference</option>
+                    <option value="referral">Referral</option>
+                    <option value="other">Other</option>
+                  </select>
                 </div>
               </div>
               <div className="flex justify-end">

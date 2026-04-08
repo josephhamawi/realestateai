@@ -120,7 +120,8 @@ export const telegramWebhook = functions
     const systemPrompt = buildSystemPrompt(
       tenant as any,
       marketConfig,
-      lead as any
+      lead as any,
+      ""
     );
     const claudeMessages = buildClaudeMessages(messages);
 

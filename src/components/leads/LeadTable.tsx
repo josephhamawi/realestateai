@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MessageSquare, Calendar, MoreVertical } from "lucide-react";
+import { MessageSquare, MoreVertical, Eye, Flame, Snowflake, Trash2, CalendarPlus, UserCheck } from "lucide-react";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../config/firebase";
 import { Badge } from "../common/Badge";
 import { LeadScoreIndicator } from "./LeadScoreIndicator";
 import { formatRelativeTime, formatPhone } from "../../lib/formatters";
+import { useTenant } from "../../hooks/useTenant";
+import { toast } from "../common/Toast";
 import type { LeadData } from "../../hooks/useLeads";
 
 interface LeadTableProps {
@@ -14,14 +18,80 @@ interface LeadTableProps {
 const statusVariant: Record<string, "default" | "success" | "warning" | "danger" | "info"> = {
   new: "info",
   contacted: "default",
+  qualifying: "default",
   qualified: "success",
   appointment_set: "warning",
   closed: "success",
   dead: "danger",
 };
 
+function ActionsMenu({ lead, onClose }: { lead: LeadData; onClose: () => void }) {
+  const navigate = useNavigate();
+  const { tenant } = useTenant();
+
+  const updateLead = async (updates: Record<string, unknown>) => {
+    if (!tenant?.tenantId) return;
+    try {
+      await updateDoc(doc(db, `tenants/${tenant.tenantId}/leads`, lead.leadId), {
+        ...updates,
+        updatedAt: serverTimestamp(),
+      });
+      toast("success", "Lead updated");
+    } catch {
+      toast("error", "Failed to update lead");
+    }
+    onClose();
+  };
+
+  return (
+    <>
+      <div className="fixed inset-0 z-40" onClick={onClose} />
+      <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
+        <button
+          onClick={() => { navigate(`/leads/${lead.leadId}`); onClose(); }}
+          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          <Eye className="h-4 w-4" /> View Details
+        </button>
+        <button
+          onClick={() => updateLead({ "qualification.urgency": "hot", "qualification.score": Math.max(lead.qualification?.score || 0, 70) })}
+          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          <Flame className="h-4 w-4 text-red-500" /> Mark Hot
+        </button>
+        <button
+          onClick={() => updateLead({ "qualification.urgency": "cold" })}
+          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          <Snowflake className="h-4 w-4 text-blue-500" /> Mark Cold
+        </button>
+        <button
+          onClick={() => updateLead({ status: "qualified", "qualification.readiness.agentReady": true })}
+          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          <UserCheck className="h-4 w-4 text-green-500" /> Mark Qualified
+        </button>
+        <button
+          onClick={() => updateLead({ status: "appointment_set" })}
+          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          <CalendarPlus className="h-4 w-4 text-brand-500" /> Set Appointment
+        </button>
+        <hr className="my-1 border-gray-100" />
+        <button
+          onClick={() => updateLead({ status: "dead" })}
+          className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+        >
+          <Trash2 className="h-4 w-4" /> Mark Dead
+        </button>
+      </div>
+    </>
+  );
+}
+
 export function LeadTable({ leads, loading }: LeadTableProps) {
   const navigate = useNavigate();
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   if (loading) {
     return (
@@ -37,7 +107,7 @@ export function LeadTable({ leads, loading }: LeadTableProps) {
         <MessageSquare className="h-12 w-12 text-gray-300" />
         <h3 className="mt-4 text-lg font-medium text-gray-900">No leads yet</h3>
         <p className="mt-2 text-sm text-gray-500">
-          Leads will appear here when they message via WhatsApp or are added manually.
+          Leads will appear here when they message via Telegram/WhatsApp or are added manually.
         </p>
       </div>
     );
@@ -70,7 +140,7 @@ export function LeadTable({ leads, loading }: LeadTableProps) {
                     {lead.contact.name || "Unknown"}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {formatPhone(lead.contact.phone)}
+                    {lead.contact.phone ? formatPhone(lead.contact.phone) : lead.contact.telegramUsername ? `@${lead.contact.telegramUsername}` : "No contact"}
                   </p>
                 </div>
               </td>
@@ -101,12 +171,20 @@ export function LeadTable({ leads, loading }: LeadTableProps) {
                 </span>
               </td>
               <td className="px-4 py-3">
-                <button
-                  onClick={(e) => e.stopPropagation()}
-                  className="rounded-lg p-1 text-gray-400 hover:bg-gray-100"
-                >
-                  <MoreVertical className="h-4 w-4" />
-                </button>
+                <div className="relative">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setOpenMenu(openMenu === lead.leadId ? null : lead.leadId);
+                    }}
+                    className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                  </button>
+                  {openMenu === lead.leadId && (
+                    <ActionsMenu lead={lead} onClose={() => setOpenMenu(null)} />
+                  )}
+                </div>
               </td>
             </tr>
           ))}

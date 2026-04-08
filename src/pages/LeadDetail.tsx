@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { doc, onSnapshot, updateDoc, serverTimestamp } from "firebase/firestore";
-import { ArrowLeft, Phone, Mail, MapPin, Bot, UserCheck, Send, MessageSquare, User } from "lucide-react";
+import { ArrowLeft, Phone, Mail, MapPin, Bot, UserCheck, Send, MessageSquare, User, ThumbsUp, ThumbsDown, CheckCircle, XCircle, Clock, Trophy, UserX } from "lucide-react";
 import { db } from "../config/firebase";
 import { Card } from "../components/common/Card";
 import { Badge } from "../components/common/Badge";
@@ -20,6 +20,10 @@ export function LeadDetail() {
   const { tenant } = useTenant();
   const [lead, setLead] = useState<LeadData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [feedbackOutcome, setFeedbackOutcome] = useState<string | null>(null);
+  const [feedbackAiRating, setFeedbackAiRating] = useState<"positive" | "negative" | null>(null);
+  const [feedbackNotes, setFeedbackNotes] = useState("");
+  const [savingFeedback, setSavingFeedback] = useState(false);
 
   useEffect(() => {
     if (!tenant?.tenantId || !leadId) return;
@@ -36,6 +40,36 @@ export function LeadDetail() {
 
     return unsubscribe;
   }, [tenant?.tenantId, leadId]);
+
+  useEffect(() => {
+    if (lead?.feedback) {
+      setFeedbackOutcome(lead.feedback.outcome || null);
+      setFeedbackAiRating(lead.feedback.aiRating || null);
+      setFeedbackNotes(lead.feedback.notes || "");
+    }
+  }, [lead?.feedback]);
+
+  const saveFeedback = async () => {
+    if (!tenant?.tenantId || !leadId) return;
+    setSavingFeedback(true);
+    try {
+      await updateDoc(
+        doc(db, `tenants/${tenant.tenantId}/leads`, leadId),
+        {
+          "feedback.outcome": feedbackOutcome,
+          "feedback.aiRating": feedbackAiRating,
+          "feedback.notes": feedbackNotes,
+          "feedback.ratedAt": serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        }
+      );
+      toast("success", "Feedback saved", "Thank you for rating this lead outcome");
+    } catch {
+      toast("error", "Failed to save feedback");
+    } finally {
+      setSavingFeedback(false);
+    }
+  };
 
   const toggleAI = async () => {
     if (!tenant?.tenantId || !leadId || !lead) return;
@@ -230,6 +264,83 @@ export function LeadDetail() {
                   </div>
                 </div>
               )}
+            </div>
+          </Card>
+
+          <Card>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Lead Outcome</h3>
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                {([
+                  { value: "closed_deal", label: "Closed Deal", icon: Trophy, color: "text-green-600 bg-green-50 border-green-200" },
+                  { value: "no_show", label: "No Show", icon: XCircle, color: "text-red-600 bg-red-50 border-red-200" },
+                  { value: "not_qualified", label: "Not Qualified", icon: UserX, color: "text-gray-600 bg-gray-50 border-gray-200" },
+                  { value: "lost_to_competitor", label: "Lost to Competitor", icon: XCircle, color: "text-orange-600 bg-orange-50 border-orange-200" },
+                  { value: "still_nurturing", label: "Still Nurturing", icon: Clock, color: "text-blue-600 bg-blue-50 border-blue-200" },
+                ] as const).map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setFeedbackOutcome(feedbackOutcome === option.value ? null : option.value)}
+                    className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      feedbackOutcome === option.value
+                        ? option.color
+                        : "border-gray-200 bg-white text-gray-500 hover:bg-gray-50"
+                    }`}
+                  >
+                    <option.icon className="h-3.5 w-3.5" />
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">AI Conversation Quality</label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setFeedbackAiRating(feedbackAiRating === "positive" ? null : "positive")}
+                    className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+                      feedbackAiRating === "positive"
+                        ? "border-green-200 bg-green-50 text-green-600"
+                        : "border-gray-200 bg-white text-gray-400 hover:bg-gray-50"
+                    }`}
+                  >
+                    <ThumbsUp className="h-4 w-4" />
+                    Good
+                  </button>
+                  <button
+                    onClick={() => setFeedbackAiRating(feedbackAiRating === "negative" ? null : "negative")}
+                    className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+                      feedbackAiRating === "negative"
+                        ? "border-red-200 bg-red-50 text-red-600"
+                        : "border-gray-200 bg-white text-gray-400 hover:bg-gray-50"
+                    }`}
+                  >
+                    <ThumbsDown className="h-4 w-4" />
+                    Poor
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Agent Notes</label>
+                <input
+                  type="text"
+                  value={feedbackNotes}
+                  onChange={(e) => setFeedbackNotes(e.target.value)}
+                  placeholder="Any notes on this lead..."
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                />
+              </div>
+
+              <Button
+                size="sm"
+                onClick={saveFeedback}
+                loading={savingFeedback}
+                disabled={!feedbackOutcome && !feedbackAiRating && !feedbackNotes}
+              >
+                <CheckCircle className="h-4 w-4" />
+                Save Feedback
+              </Button>
             </div>
           </Card>
         </div>
