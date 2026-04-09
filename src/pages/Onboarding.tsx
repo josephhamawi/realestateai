@@ -307,7 +307,7 @@ export function Onboarding() {
   };
 
   const handleComplete = () => {
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (

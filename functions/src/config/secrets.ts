@@ -158,6 +158,21 @@ export async function getGoogleOAuthConfig(): Promise<{
 }
 
 /**
+ * Get Microsoft OAuth config from platform_config.
+ */
+export async function getMicrosoftOAuthConfig(): Promise<{
+  clientId: string;
+  clientSecret: string;
+}> {
+  const config = await loadPlatformConfig();
+  const ms = (config.microsoft || {}) as Record<string, string>;
+  return {
+    clientId: process.env.MS_CLIENT_ID || ms.clientId || "",
+    clientSecret: process.env.MS_CLIENT_SECRET || ms.clientSecret || "",
+  };
+}
+
+/**
  * Invalidate the config cache (call after admin updates config).
  */
 export function invalidateConfigCache(): void {

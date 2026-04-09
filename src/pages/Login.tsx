@@ -17,7 +17,7 @@ export function Login() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Login failed";
       toast("error", "Login failed", message);
@@ -29,7 +29,7 @@ export function Login() {
   const handleGoogle = async () => {
     try {
       await loginWithGoogle();
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Google login failed";
       toast("error", "Login failed", message);

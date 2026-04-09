@@ -1,29 +1,29 @@
-import { ConfidentialClientApplication } from "@azure/msal-node";
 import axios from "axios";
-import { getSecret } from "../config/secrets";
+import { getMicrosoftOAuthConfig } from "../config/secrets";
+import { db } from "../config/firebase";
 
-async function getMsalClient(): Promise<ConfidentialClientApplication> {
-  const clientId = await getSecret("MS_CLIENT_ID");
-  const clientSecret = await getSecret("MS_CLIENT_SECRET");
-
-  return new ConfidentialClientApplication({
-    auth: {
-      clientId,
-      clientSecret,
-      authority: "https://login.microsoftonline.com/common",
-    },
-  });
-}
-
+/**
+ * Refresh the access token using the stored refresh token and
+ * client credentials from platform_config.
+ */
 async function getAccessToken(refreshToken: string): Promise<string> {
-  const cca = await getMsalClient();
+  const { clientId, clientSecret } = await getMicrosoftOAuthConfig();
 
-  const result = await cca.acquireTokenByRefreshToken({
-    refreshToken,
-    scopes: ["Calendars.ReadWrite"],
-  });
+  const response = await axios.post(
+    "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+    new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+      grant_type: "refresh_token",
+      scope: "Calendars.ReadWrite User.Read offline_access",
+    }).toString(),
+    {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    }
+  );
 
-  return result?.accessToken || "";
+  return response.data.access_token || "";
 }
 
 export async function getOutlookAvailability(
@@ -102,4 +102,53 @@ export async function deleteOutlookCalendarEvent(
       headers: { Authorization: `Bearer ${token}` },
     }
   );
+}
+
+/**
+ * Create an Outlook Calendar event for an appointment, reading the
+ * refresh token directly from the tenant document.
+ *
+ * Returns the Outlook Calendar event ID, or empty string if calendar is not connected.
+ */
+export async function createOutlookEvent(
+  tenantId: string,
+  appointment: {
+    scheduledAt: Date;
+    leadName: string;
+    leadPhone?: string;
+    propertyType?: string;
+    duration?: number;
+    location?: string;
+    timezone?: string;
+  }
+): Promise<string> {
+  const tenantSnap = await db.doc(`tenants/${tenantId}`).get();
+  if (!tenantSnap.exists) return "";
+
+  const tenant = tenantSnap.data()!;
+  const refreshToken = tenant.integrations?.calendar?.outlook?.refreshToken;
+  if (!refreshToken) return "";
+
+  const dur = appointment.duration || 60;
+  const startTime = new Date(appointment.scheduledAt);
+  const endTime = new Date(startTime.getTime() + dur * 60000);
+  const tz = appointment.timezone || tenant.config?.timezone || "UTC";
+
+  const eventId = await createOutlookCalendarEvent(refreshToken, {
+    title: `[AgentFlow] Viewing - ${appointment.leadName}`,
+    description: [
+      `Lead: ${appointment.leadName}`,
+      appointment.leadPhone ? `Phone: ${appointment.leadPhone}` : "",
+      appointment.propertyType ? `Property: ${appointment.propertyType}` : "",
+      `Booked via AgentFlow AI`,
+    ]
+      .filter(Boolean)
+      .join("<br>"),
+    startTime: startTime.toISOString(),
+    endTime: endTime.toISOString(),
+    timezone: tz,
+    location: appointment.location,
+  });
+
+  return eventId;
 }

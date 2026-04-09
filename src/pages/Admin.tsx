@@ -36,6 +36,10 @@ interface ApiConfig {
     clientId: string;
     clientSecret: string;
   };
+  microsoft: {
+    clientId: string;
+    clientSecret: string;
+  };
 }
 
 const defaultConfig: ApiConfig = {
@@ -64,6 +68,10 @@ const defaultConfig: ApiConfig = {
     webhookSecret: "",
   },
   google: {
+    clientId: "",
+    clientSecret: "",
+  },
+  microsoft: {
     clientId: "",
     clientSecret: "",
   },
@@ -126,7 +134,7 @@ export function Admin() {
   const [saving, setSaving] = useState(false);
   const [loadingConfig, setLoadingConfig] = useState(true);
   const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle");
-  const [activeTab, setActiveTab] = useState<"whatsapp" | "telegram" | "vynn" | "paystack" | "stripe" | "google">("whatsapp");
+  const [activeTab, setActiveTab] = useState<"whatsapp" | "telegram" | "vynn" | "paystack" | "stripe" | "google" | "microsoft">("whatsapp");
 
   useEffect(() => {
     if (user && user.email === ADMIN_EMAIL) {
@@ -146,6 +154,7 @@ export function Admin() {
           paystack: { ...defaultConfig.paystack, ...data.paystack },
           stripe: { ...defaultConfig.stripe, ...data.stripe },
           google: { ...defaultConfig.google, ...(data as Record<string, unknown>).google as Partial<ApiConfig["google"]> },
+          microsoft: { ...defaultConfig.microsoft, ...(data as Record<string, unknown>).microsoft as Partial<ApiConfig["microsoft"]> },
         });
       }
     } catch (err) {
@@ -163,7 +172,7 @@ export function Admin() {
         ...config,
         updatedAt: new Date().toISOString(),
         updatedBy: user?.email,
-      });
+      }, { merge: true });
       setSaveStatus("success");
       setTimeout(() => setSaveStatus("idle"), 3000);
     } catch (err) {
@@ -199,6 +208,10 @@ export function Admin() {
     setConfig((prev) => ({ ...prev, google: { ...prev.google, [field]: value } }));
   };
 
+  const updateMicrosoft = (field: keyof ApiConfig["microsoft"], value: string) => {
+    setConfig((prev) => ({ ...prev, microsoft: { ...prev.microsoft, [field]: value } }));
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -208,7 +221,7 @@ export function Admin() {
   }
 
   if (!user || user.email !== ADMIN_EMAIL) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const tabs = [
@@ -218,6 +231,7 @@ export function Admin() {
     { id: "paystack" as const, label: "Paystack (NG)", icon: CreditCard, color: "text-blue-600" },
     { id: "stripe" as const, label: "Stripe (AE)", icon: CreditCard, color: "text-indigo-600" },
     { id: "google" as const, label: "Google OAuth", icon: Calendar, color: "text-red-500" },
+    { id: "microsoft" as const, label: "Microsoft OAuth", icon: Calendar, color: "text-blue-600" },
   ];
 
   const getConfigStatus = (section: keyof ApiConfig) => {
@@ -245,7 +259,7 @@ export function Admin() {
             </div>
             <div className="flex items-center gap-3">
               <a
-                href="/"
+                href="/dashboard"
                 className="flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-700"
               >
                 <Bot className="h-4 w-4" />
@@ -267,7 +281,7 @@ export function Admin() {
         ) : (
           <>
             {/* Status overview */}
-            <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-6">
+            <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-7">
               {tabs.map((tab) => {
                 const status = getConfigStatus(tab.id);
                 return (
@@ -512,6 +526,47 @@ export function Admin() {
                 </div>
               )}
 
+              {/* Microsoft OAuth */}
+              {activeTab === "microsoft" && (
+                <div>
+                  <div className="mb-6 flex items-center gap-3">
+                    <Calendar className="h-6 w-6 text-blue-600" />
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">Microsoft OAuth</h2>
+                      <p className="text-sm text-gray-500">OAuth 2.0 credentials for Outlook Calendar integration</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <SecretInput
+                      label="Microsoft OAuth Client ID (Application ID)"
+                      value={config.microsoft.clientId}
+                      onChange={(v) => updateMicrosoft("clientId", v)}
+                      placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    />
+                    <SecretInput
+                      label="Microsoft OAuth Client Secret"
+                      value={config.microsoft.clientSecret}
+                      onChange={(v) => updateMicrosoft("clientSecret", v)}
+                      placeholder="Client secret value"
+                    />
+                  </div>
+                  <div className="mt-4 rounded-lg bg-blue-50 p-4">
+                    <p className="text-sm text-blue-800">
+                      <strong>Setup:</strong> Go to{" "}
+                      <span className="font-mono text-xs">portal.azure.com</span> &rarr; App registrations &rarr; New registration.
+                      Set the redirect URI to:
+                    </p>
+                    <p className="mt-2 rounded bg-white px-3 py-2 font-mono text-xs text-gray-900 border border-blue-200">
+                      https://us-central1-agentflowai-11dd2.cloudfunctions.net/outlookCalendarCallback
+                    </p>
+                    <p className="mt-2 text-sm text-blue-800">
+                      Under <strong>API permissions</strong>, add Microsoft Graph: <strong>Calendars.ReadWrite</strong>, <strong>User.Read</strong>.
+                      Under <strong>Certificates & secrets</strong>, create a new client secret and paste the value above.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {/* Save button */}
               <div className="mt-8 flex items-center justify-between border-t border-gray-200 pt-6">
                 <div>
@@ -570,6 +625,10 @@ export function Admin() {
                 <div className="flex gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-600">6</span>
                   <p><strong>Google OAuth:</strong> Go to <span className="font-mono text-xs">console.cloud.google.com</span> → APIs &amp; Services → Credentials → Create OAuth 2.0 Client ID. Set authorized redirect URI to <span className="font-mono text-xs">https://us-central1-agentflowai-11dd2.cloudfunctions.net/googleCalendarCallback</span>. Enable the Google Calendar API.</p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">7</span>
+                  <p><strong>Microsoft OAuth:</strong> Go to <span className="font-mono text-xs">portal.azure.com</span> → App registrations → New registration. Set redirect URI to <span className="font-mono text-xs">https://us-central1-agentflowai-11dd2.cloudfunctions.net/outlookCalendarCallback</span>. Under API permissions, add Microsoft Graph: Calendars.ReadWrite, User.Read.</p>
                 </div>
               </div>
             </div>
