@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { path: "/", icon: LayoutDashboard, label: "Dashboard" },
+  { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { path: "/leads", icon: Users, label: "Leads" },
   { path: "/calendar", icon: Calendar, label: "Appointments" },
   { path: "/analytics", icon: BarChart3, label: "Analytics" },
@@ -46,8 +46,8 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
         {navItems.map((item) => {
           const isActive =
-            item.path === "/"
-              ? location.pathname === "/"
+            item.path === "/dashboard"
+              ? location.pathname === "/dashboard"
               : location.pathname.startsWith(item.path);
 
           return (

@@ -9,6 +9,8 @@ export { leadIngestion } from "./functions/leadIngestion";
 export { calendarManager } from "./functions/calendarManager";
 export { googleCalendarConnect } from "./functions/googleCalendarConnect";
 export { googleCalendarCallback } from "./functions/googleCalendarCallback";
+export { outlookCalendarConnect } from "./functions/outlookCalendarConnect";
+export { outlookCalendarCallback } from "./functions/outlookCalendarCallback";
 export {
   paymentProcessor as initializePayment,
   paystackWebhook,

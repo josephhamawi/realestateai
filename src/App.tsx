@@ -5,6 +5,11 @@ import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { Onboarding } from "./pages/Onboarding";
 import { Dashboard } from "./pages/Dashboard";
+import { LandingPage } from "./pages/LandingPage";
+import { TermsOfService } from "./pages/TermsOfService";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy";
+import { AboutUs } from "./pages/AboutUs";
+import { Contact } from "./pages/Contact";
 import { Leads } from "./pages/Leads";
 import { LeadDetail } from "./pages/LeadDetail";
 import { LeadNew } from "./pages/LeadNew";
@@ -47,18 +52,43 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
 }
 
+function HomeRoute() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-200 border-t-brand-600" />
+      </div>
+    );
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <LandingPage />;
+}
+
 export default function App() {
   return (
     <Routes>
+      {/* Landing page: shows for unauthenticated, redirects to /dashboard for authenticated */}
+      <Route path="/" element={<HomeRoute />} />
+
       {/* Public routes */}
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/about" element={<AboutUs />} />
+      <Route path="/contact" element={<Contact />} />
 
       {/* Onboarding */}
       <Route
@@ -82,7 +112,7 @@ export default function App() {
 
       {/* Protected routes with AppLayout */}
       <Route element={<AppLayout />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/leads" element={<Leads />} />
         <Route path="/leads/new" element={<LeadNew />} />
         <Route path="/leads/:leadId" element={<LeadDetail />} />

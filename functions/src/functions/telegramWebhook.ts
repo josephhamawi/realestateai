@@ -1,8 +1,9 @@
 import * as functions from "firebase-functions";
 import { db, FieldValue, Timestamp } from "../config/firebase";
 import { getTelegramConfig } from "../config/secrets";
-import { sendTelegramMessage, sendTypingAction } from "../services/telegram";
+import { sendTelegramMessage, sendTypingAction, sendTelegramDocument } from "../services/telegram";
 import { registerWebhook } from "../services/telegram";
+import { generateICS } from "../utils/icsGenerator";
 import { loadTenant, loadMarketConfig } from "../utils/marketConfig";
 import {
   buildSystemPrompt,
@@ -11,6 +12,7 @@ import {
   extractEntities,
 } from "../services/claude";
 import { createCalendarEvent } from "../services/googleCalendar";
+import { createOutlookEvent } from "../services/outlookCalendar";
 import { runComplianceCheck } from "../utils/compliance";
 import type { Message } from "../types/message";
 
@@ -373,6 +375,98 @@ export const telegramWebhook = functions
           } catch (calErr) {
             console.error("Calendar event creation failed (non-critical):", calErr);
           }
+        }
+
+        // Sync to Outlook Calendar if connected (non-blocking)
+        if (tenant.integrations?.calendar?.outlook?.connected) {
+          try {
+            const outlookEventId = await createOutlookEvent(tenantId, {
+              scheduledAt,
+              leadName: lead.contact?.name || contactName,
+              leadPhone: lead.contact?.phone,
+              propertyType: lead.propertyInterest?.propertyType,
+              duration: 60,
+              timezone: lead.market === "dubai" ? "Asia/Dubai" : "Africa/Lagos",
+            });
+            if (outlookEventId) {
+              await apptRef.update({
+                outlookCalendarEventId: outlookEventId,
+                outlookCalendarProvider: "outlook",
+              });
+              console.log(`Outlook Calendar event created: ${outlookEventId}`);
+            }
+          } catch (outlookErr) {
+            console.error("Outlook calendar event creation failed (non-critical):", outlookErr);
+          }
+        }
+
+        // Generate ICS calendar invite and send to lead via Telegram
+        try {
+          const agentName = tenant.agent?.name || "Agent";
+          const agentPhone = tenant.agent?.phone || "";
+          const agentEmail = tenant.agent?.email || "";
+          const brokerage = tenant.agent?.brokerage || "";
+          const leadName = lead.contact?.name || contactName;
+
+          const icsContent = generateICS({
+            title: `Property Viewing with ${agentName}`,
+            description: [
+              "Property viewing appointment booked via AgentFlow AI.",
+              "",
+              `Agent: ${agentName}`,
+              agentPhone ? `Phone: ${agentPhone}` : "",
+              brokerage ? `Brokerage: ${brokerage}` : "",
+            ].filter(Boolean).join("\n"),
+            startTime: scheduledAt,
+            durationMinutes: 60,
+            organizerName: agentName,
+            organizerEmail: agentEmail,
+            attendeeName: leadName,
+          });
+
+          // Format the date/time for the confirmation message
+          const apptDate = scheduledAt.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+          const apptTime = scheduledAt.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
+
+          // Send confirmation text message
+          const confirmationLines = [
+            `Your property viewing is confirmed!`,
+            ``,
+            `Date: ${apptDate}`,
+            `Time: ${apptTime}`,
+            `Agent: ${agentName}`,
+          ];
+          if (agentPhone) confirmationLines.push(`Phone: ${agentPhone}`);
+          confirmationLines.push(
+            ``,
+            `A calendar invite is attached below.`
+          );
+
+          await sendTelegramMessage(chatId, confirmationLines.join("\n"));
+
+          // Send ICS file as a Telegram document
+          await sendTelegramDocument(
+            chatId,
+            Buffer.from(icsContent),
+            "appointment.ics",
+            "Tap the file above to add this appointment to your calendar (Apple Calendar, Google Calendar, Outlook, etc.)"
+          );
+
+          // Store ICS data on the appointment doc for agent dashboard access
+          await apptRef.update({ icsData: icsContent });
+
+          console.log(`ICS calendar invite sent to lead ${leadId} in chat ${chatId}`);
+        } catch (icsErr) {
+          console.error("ICS send failed (non-critical):", icsErr);
         }
       }
     } catch (appointmentError) {

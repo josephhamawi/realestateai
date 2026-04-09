@@ -71,6 +71,46 @@ export async function sendTelegramPhoto(
 }
 
 /**
+ * Send a document (file) via Telegram Bot API using multipart/form-data.
+ *
+ * @param chatId - Telegram chat ID to send the document to
+ * @param fileBuffer - Buffer containing the file data
+ * @param filename - Name for the file (e.g., "appointment.ics")
+ * @param caption - Optional caption text shown below the file
+ * @returns Telegram message ID of the sent document
+ */
+export async function sendTelegramDocument(
+  chatId: string,
+  fileBuffer: Buffer,
+  filename: string,
+  caption?: string
+): Promise<number> {
+  const { botToken } = await getTelegramConfig();
+  if (!botToken) {
+    throw new Error("Telegram bot token not configured");
+  }
+
+  const FormData = require("form-data") as typeof import("form-data");
+  const form = new FormData();
+  form.append("chat_id", chatId);
+  form.append("document", fileBuffer, {
+    filename,
+    contentType: "text/calendar",
+  });
+  if (caption) {
+    form.append("caption", caption);
+  }
+
+  const response = await axios.post(
+    buildApiUrl(botToken, "sendDocument"),
+    form,
+    { headers: form.getHeaders() }
+  );
+
+  return response.data.result?.message_id || 0;
+}
+
+/**
  * Register a webhook URL with the Telegram Bot API.
  */
 export async function registerWebhook(

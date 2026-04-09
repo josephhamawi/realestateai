@@ -367,6 +367,8 @@ function IntegrationsSettings() {
 
   const googleCalendarConnected = tenant?.integrations?.calendar?.google?.connected || tenant?.integrations?.calendar?.google?.enabled || false;
   const googleCalendarEmail = (tenant?.integrations?.calendar?.google as Record<string, unknown> | undefined)?.email as string | undefined;
+  const outlookCalendarConnected = tenant?.integrations?.calendar?.outlook?.connected || tenant?.integrations?.calendar?.outlook?.enabled || false;
+  const outlookCalendarEmail = (tenant?.integrations?.calendar?.outlook as Record<string, unknown> | undefined)?.email as string | undefined;
 
   // Check URL params for calendar connection result
   useEffect(() => {
@@ -376,11 +378,22 @@ function IntegrationsSettings() {
     } else if (params.get("calendar") === "denied") {
       toast("error", "Connection denied", "You declined the Google Calendar permission request.");
     }
+    if (params.get("outlook") === "connected") {
+      toast("success", "Outlook Calendar connected", "Your appointments will now sync to Outlook Calendar.");
+    } else if (params.get("outlook") === "denied") {
+      toast("error", "Connection denied", "You declined the Outlook Calendar permission request.");
+    }
   }, [location.search]);
 
   const handleGoogleConnect = () => {
     if (!user?.uid) return;
     const connectUrl = `https://us-central1-agentflowai-11dd2.cloudfunctions.net/googleCalendarConnect?uid=${user.uid}`;
+    window.location.href = connectUrl;
+  };
+
+  const handleOutlookConnect = () => {
+    if (!user?.uid) return;
+    const connectUrl = `https://us-central1-agentflowai-11dd2.cloudfunctions.net/outlookCalendarConnect?uid=${user.uid}`;
     window.location.href = connectUrl;
   };
 
@@ -427,9 +440,11 @@ function IntegrationsSettings() {
       bgColor: "bg-blue-100",
       label: "Outlook Calendar",
       description: "Sync appointments with Outlook Calendar (Dubai priority)",
-      status: tenant?.integrations?.calendar?.outlook?.enabled ? "Connected" : "Not connected",
-      connected: tenant?.integrations?.calendar?.outlook?.enabled || false,
-      note: "Coming soon — Microsoft Graph integration",
+      status: outlookCalendarConnected ? "Connected" : "Not connected",
+      connected: outlookCalendarConnected,
+      note: outlookCalendarConnected && outlookCalendarEmail
+        ? `Connected as ${outlookCalendarEmail}`
+        : "Connect your Microsoft account to automatically sync AI-booked appointments",
     },
   ];
 
@@ -456,6 +471,15 @@ function IntegrationsSettings() {
                   <button
                     onClick={handleGoogleConnect}
                     className="flex items-center gap-1.5 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-brand-700"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    Connect
+                  </button>
+                )}
+                {item.id === "outlook-calendar" && !item.connected && (
+                  <button
+                    onClick={handleOutlookConnect}
+                    className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-700"
                   >
                     <ExternalLink className="h-3.5 w-3.5" />
                     Connect
