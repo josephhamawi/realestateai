@@ -46,7 +46,7 @@ function ActionsMenu({ lead, onClose }: { lead: LeadData; onClose: () => void })
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
+      <div className="fixed right-8 z-50 mt-1 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
         <button
           onClick={() => { navigate(`/leads/${lead.leadId}`); onClose(); }}
           className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"

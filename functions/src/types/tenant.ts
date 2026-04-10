@@ -57,6 +57,12 @@ export interface Tenant {
       botUsername?: string;
       connectedAt?: Timestamp;
     };
+    vynn?: {
+      enabled: boolean;
+      apiKey?: string;
+      model?: string;
+      connectedAt?: Timestamp;
+    };
     calendar: {
       google?: {
         enabled: boolean;

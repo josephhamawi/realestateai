@@ -132,10 +132,16 @@ export const telegramWebhook = functions
       return;
     }
 
+    // Prefer tenant's own Vynn AI key if configured
+    const tenantVynn = tenant.integrations?.vynn?.apiKey
+      ? { apiKey: tenant.integrations.vynn.apiKey, model: tenant.integrations.vynn.model }
+      : undefined;
+
     // Generate AI response
     const { text: aiReplyText, tokensUsed } = await generateAIResponse(
       systemPrompt,
-      claudeMessages
+      claudeMessages,
+      tenantVynn
     );
 
     // Run compliance check
@@ -156,7 +162,8 @@ export const telegramWebhook = functions
 
       const { text: rewrittenText } = await generateAIResponse(
         constraintPrompt,
-        claudeMessages
+        claudeMessages,
+        tenantVynn
       );
       finalMessage = rewrittenText;
     }

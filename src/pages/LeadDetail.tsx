@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { doc, onSnapshot, updateDoc, serverTimestamp } from "firebase/firestore";
-import { ArrowLeft, Phone, Mail, MapPin, Bot, UserCheck, Send, MessageSquare, User, ThumbsUp, ThumbsDown, CheckCircle, XCircle, Clock, Trophy, UserX } from "lucide-react";
+import { ArrowLeft, Phone, Mail, MapPin, Bot, UserCheck, Send, MessageSquare, User, ThumbsUp, ThumbsDown, CheckCircle, XCircle, Clock, Trophy, UserX, Pencil, Check, X } from "lucide-react";
 import { db } from "../config/firebase";
 import { Card } from "../components/common/Card";
 import { Badge } from "../components/common/Badge";
@@ -13,6 +13,65 @@ import { useTenant } from "../hooks/useTenant";
 import { formatPhone, formatRelativeTime } from "../lib/formatters";
 import { toast } from "../components/common/Toast";
 import type { LeadData } from "../hooks/useLeads";
+
+function EditablePhone({ phone, hasTelegram, onSave }: { phone?: string; hasTelegram: boolean; onSave: (phone: string) => Promise<void> }) {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(phone || "");
+  const [saving, setSaving] = useState(false);
+
+  if (editing) {
+    return (
+      <div className="flex items-center gap-1">
+        <Phone className="h-4 w-4 text-gray-400 shrink-0" />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="+2349064465673"
+          autoFocus
+          className="w-40 rounded border border-gray-300 px-2 py-1 text-sm font-mono focus:border-brand-500 focus:outline-none"
+        />
+        <button
+          disabled={saving || !value}
+          onClick={async () => {
+            setSaving(true);
+            await onSave(value);
+            setSaving(false);
+            setEditing(false);
+          }}
+          className="rounded p-1 text-green-600 hover:bg-green-50 disabled:opacity-50"
+        >
+          <Check className="h-3.5 w-3.5" />
+        </button>
+        <button onClick={() => { setEditing(false); setValue(phone || ""); }} className="rounded p-1 text-gray-400 hover:bg-gray-100">
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    );
+  }
+
+  if (phone) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-gray-600">
+        <Phone className="h-4 w-4 text-gray-400" />
+        {formatPhone(phone)}
+        <button onClick={() => { setValue(phone); setEditing(true); }} className="text-gray-400 hover:text-brand-600">
+          <Pencil className="h-3 w-3" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setEditing(true)}
+      className="flex items-center gap-2 text-sm text-brand-600 hover:text-brand-700"
+    >
+      <Phone className="h-4 w-4" />
+      {hasTelegram ? "Add phone number" : "Add phone"}
+    </button>
+  );
+}
 
 export function LeadDetail() {
   const { leadId } = useParams<{ leadId: string }>();
@@ -162,17 +221,18 @@ export function LeadDetail() {
                 <User className="h-4 w-4 text-gray-400" />
                 {lead.contact.name || "Unknown"}
               </div>
-              {lead.contact.phone ? (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Phone className="h-4 w-4 text-gray-400" />
-                  {formatPhone(lead.contact.phone)}
-                </div>
-              ) : lead.contact.telegramChatId ? (
-                <div className="flex items-center gap-2 text-sm text-gray-400 italic">
-                  <Phone className="h-4 w-4 text-gray-300" />
-                  No phone yet
-                </div>
-              ) : null}
+              <EditablePhone
+                phone={lead.contact.phone}
+                hasTelegram={!!lead.contact.telegramChatId}
+                onSave={async (phone) => {
+                  if (!tenant?.tenantId || !leadId) return;
+                  await updateDoc(doc(db, `tenants/${tenant.tenantId}/leads`, leadId), {
+                    "contact.phone": phone,
+                    updatedAt: serverTimestamp(),
+                  });
+                  toast("success", "Phone number saved");
+                }}
+              />
               {lead.contact.telegramUsername && (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Send className="h-4 w-4 text-blue-400" />
