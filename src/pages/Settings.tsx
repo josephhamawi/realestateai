@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { User, Bot, Link2, Users, ChevronRight, ArrowLeft, Save, MessageSquare, Send, Calendar, Camera, MapPin, Globe, ExternalLink, CheckCircle } from "lucide-react";
+import { User, Bot, Link2, Users, ChevronRight, ArrowLeft, Save, MessageSquare, Send, Calendar, Camera, MapPin, Globe, ExternalLink, CheckCircle, Brain, Eye, EyeOff } from "lucide-react";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { Card } from "../components/common/Card";
@@ -360,6 +360,131 @@ function AISettings() {
   );
 }
 
+function VynnAICard() {
+  const { user } = useAuth();
+  const { tenant } = useTenant();
+  const vynnIntegration = (tenant?.integrations as Record<string, unknown> | undefined)?.vynn as
+    | { apiKey?: string; model?: string; enabled?: boolean }
+    | undefined;
+
+  const [apiKey, setApiKey] = useState(vynnIntegration?.apiKey || "");
+  const [model, setModel] = useState(vynnIntegration?.model || "auto");
+  const [visible, setVisible] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const connected = Boolean(vynnIntegration?.apiKey);
+
+  const handleSave = async () => {
+    if (!user) return;
+    setSaving(true);
+    try {
+      await updateDoc(doc(db, "tenants", user.uid), {
+        "integrations.vynn.apiKey": apiKey.trim(),
+        "integrations.vynn.model": model,
+        "integrations.vynn.enabled": Boolean(apiKey.trim()),
+        "integrations.vynn.connectedAt": apiKey.trim() ? serverTimestamp() : null,
+        updatedAt: serverTimestamp(),
+      });
+      toast("success", apiKey.trim() ? "Vynn AI connected" : "Vynn AI key removed");
+    } catch {
+      toast("error", "Failed to save Vynn AI key");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Card>
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
+            <Brain className="h-5 w-5 text-purple-600" />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-900">Vynn AI</p>
+            <p className="text-xs text-gray-500">Powers your AI persona for lead conversations</p>
+          </div>
+        </div>
+        {connected ? (
+          <span className="flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+            <CheckCircle className="h-3.5 w-3.5" />
+            Connected
+          </span>
+        ) : (
+          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+            Not connected
+          </span>
+        )}
+      </div>
+
+      <div className="mt-4 rounded-lg border border-purple-100 bg-purple-50 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-purple-800">How to get your Vynn AI API key</p>
+        <ol className="mt-2 space-y-1.5 text-sm text-purple-900">
+          <li>
+            1. Visit{" "}
+            <a
+              href="https://vynnai.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono font-semibold text-purple-700 underline hover:text-purple-900"
+            >
+              vynnai.app
+            </a>
+            {" "}and sign up for a free account.
+          </li>
+          <li>2. Open the dashboard and go to the API Keys section.</li>
+          <li>3. Click "Create API Key", name it (e.g. "AgentFlow"), and copy the key (starts with <span className="font-mono text-xs">vynn_</span>).</li>
+          <li>4. Paste it below and click Save. Your AI persona will start using it on the next message.</li>
+        </ol>
+      </div>
+
+      <div className="mt-4 space-y-3">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">API Key</label>
+          <div className="relative mt-1">
+            <input
+              type={visible ? "text" : "password"}
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="vynn_..."
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-10 text-sm font-mono focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
+            <button
+              type="button"
+              onClick={() => setVisible(!visible)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Model</label>
+          <select
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          >
+            <option value="auto">Auto (Recommended)</option>
+            <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
+            <option value="claude-opus-4-6">Claude Opus 4.6</option>
+            <option value="gpt-4.1">GPT-4.1</option>
+            <option value="gpt-4.1-mini">GPT-4.1 Mini (Fastest)</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+          </select>
+        </div>
+        <div className="flex justify-end">
+          <Button onClick={handleSave} loading={saving}>
+            <Save className="mr-2 h-4 w-4" />
+            Save
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 function IntegrationsSettings() {
   const { tenant } = useTenant();
   const { user } = useAuth();
@@ -452,8 +577,9 @@ function IntegrationsSettings() {
     <div>
       <BackButton label="Back to Settings" />
       <h1 className="text-2xl font-bold text-gray-900">Integrations</h1>
-      <p className="mt-1 text-sm text-gray-500">Manage your messaging and calendar connections</p>
+      <p className="mt-1 text-sm text-gray-500">Manage your AI, messaging, and calendar connections</p>
       <div className="mt-6 space-y-3">
+        <VynnAICard />
         {integrations.map((item) => (
           <Card key={item.id}>
             <div className="flex items-center justify-between">

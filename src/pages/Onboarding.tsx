@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bot, User, MessageSquare, CreditCard, Check } from "lucide-react";
+import { Bot, User, MessageSquare, CreditCard, Check, Brain, ExternalLink } from "lucide-react";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { Button } from "../components/common/Button";
@@ -265,6 +265,31 @@ export function Onboarding() {
     handoffThreshold: tenant?.aiConfig?.handoffThreshold || 60,
   });
 
+  const existingVynn = (tenant?.integrations as Record<string, unknown> | undefined)?.vynn as
+    | { apiKey?: string; model?: string }
+    | undefined;
+  const [vynnApiKey, setVynnApiKey] = useState(existingVynn?.apiKey || "");
+  const [vynnSaving, setVynnSaving] = useState(false);
+
+  const handleSaveVynn = async () => {
+    if (!user) return;
+    setVynnSaving(true);
+    try {
+      await updateDoc(doc(db, "tenants", user.uid), {
+        "integrations.vynn.apiKey": vynnApiKey.trim(),
+        "integrations.vynn.model": existingVynn?.model || "auto",
+        "integrations.vynn.enabled": Boolean(vynnApiKey.trim()),
+        "integrations.vynn.connectedAt": vynnApiKey.trim() ? serverTimestamp() : null,
+        updatedAt: serverTimestamp(),
+      });
+      toast("success", "Vynn AI key saved");
+    } catch {
+      toast("error", "Failed to save Vynn AI key");
+    } finally {
+      setVynnSaving(false);
+    }
+  };
+
   const handleSaveProfile = async () => {
     if (!user) return;
     setLoading(true);
@@ -491,9 +516,61 @@ export function Onboarding() {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Integrations</h2>
               <p className="text-sm text-gray-500">
-                You can set up integrations now or later from Settings.
+                Connect Vynn AI now so your persona can start answering leads. You can add the other integrations later from Settings.
               </p>
               <div className="space-y-3">
+                <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <Brain className="h-8 w-8 text-purple-600" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">Vynn AI (Required)</p>
+                        <p className="text-xs text-gray-500">Powers your AI persona for lead conversations</p>
+                      </div>
+                    </div>
+                    <a
+                      href="https://vynnai.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-700"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      Get API Key
+                    </a>
+                  </div>
+                  <div className="mt-3 rounded-md bg-white p-3 text-xs text-gray-700">
+                    <p className="font-semibold text-gray-900">How to get your API key:</p>
+                    <ol className="mt-1.5 space-y-1">
+                      <li>
+                        1. Go to{" "}
+                        <a
+                          href="https://vynnai.app"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-mono font-semibold text-purple-700 underline"
+                        >
+                          vynnai.app
+                        </a>
+                        {" "}and create a free account.
+                      </li>
+                      <li>2. Open the dashboard and go to the API Keys section.</li>
+                      <li>3. Click "Create API Key", copy the value (starts with <span className="font-mono">vynn_</span>).</li>
+                      <li>4. Paste it below and click Save.</li>
+                    </ol>
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <input
+                      type="password"
+                      value={vynnApiKey}
+                      onChange={(e) => setVynnApiKey(e.target.value)}
+                      placeholder="vynn_..."
+                      className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    />
+                    <Button onClick={handleSaveVynn} loading={vynnSaving} size="sm">
+                      Save
+                    </Button>
+                  </div>
+                </div>
                 <div className="flex items-center justify-between rounded-lg border border-gray-200 p-4">
                   <div className="flex items-center gap-3">
                     <MessageSquare className="h-8 w-8 text-green-600" />

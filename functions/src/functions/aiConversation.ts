@@ -61,9 +61,14 @@ export const aiConversation = functions.https.onCall(
       return { status: "no_messages" };
     }
 
+    // Prefer tenant's own Vynn AI key if configured
+    const tenantVynn = tenant.integrations?.vynn?.apiKey
+      ? { apiKey: tenant.integrations.vynn.apiKey, model: tenant.integrations.vynn.model }
+      : undefined;
+
     // Generate AI response
     const { text: aiReplyText, tokensUsed } =
-      await generateAIResponse(systemPrompt, claudeMessages);
+      await generateAIResponse(systemPrompt, claudeMessages, tenantVynn);
 
     // Run compliance check
     const complianceResult = runComplianceCheck(
@@ -84,7 +89,8 @@ export const aiConversation = functions.https.onCall(
 
       const { text: rewrittenText } = await generateAIResponse(
         constraintPrompt,
-        claudeMessages
+        claudeMessages,
+        tenantVynn
       );
       finalMessage = rewrittenText;
     }

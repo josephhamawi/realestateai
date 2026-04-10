@@ -45,6 +45,7 @@ export interface TenantData {
   };
   integrations: {
     whatsapp: { enabled: boolean; phoneNumberId?: string; wabaId?: string };
+    vynn?: { enabled: boolean; apiKey?: string; model?: string };
     calendar: {
       google?: { enabled: boolean; email?: string };
       outlook?: { enabled: boolean; email?: string };

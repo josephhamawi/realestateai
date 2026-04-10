@@ -23,6 +23,10 @@ interface ApiConfig {
     apiKey: string;
     model: string;
   };
+  gemini: {
+    apiKey: string;
+    model: string;
+  };
   paystack: {
     secretKey: string;
     publicKey: string;
@@ -57,6 +61,10 @@ const defaultConfig: ApiConfig = {
   vynn: {
     apiKey: "",
     model: "auto",
+  },
+  gemini: {
+    apiKey: "",
+    model: "gemini-2.5-flash",
   },
   paystack: {
     secretKey: "",
@@ -134,7 +142,7 @@ export function Admin() {
   const [saving, setSaving] = useState(false);
   const [loadingConfig, setLoadingConfig] = useState(true);
   const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle");
-  const [activeTab, setActiveTab] = useState<"whatsapp" | "telegram" | "vynn" | "paystack" | "stripe" | "google" | "microsoft">("whatsapp");
+  const [activeTab, setActiveTab] = useState<"whatsapp" | "telegram" | "vynn" | "gemini" | "paystack" | "stripe" | "google" | "microsoft">("whatsapp");
 
   useEffect(() => {
     if (user && user.email === ADMIN_EMAIL) {
@@ -151,6 +159,7 @@ export function Admin() {
           whatsapp: { ...defaultConfig.whatsapp, ...data.whatsapp },
           telegram: { ...defaultConfig.telegram, ...data.telegram },
           vynn: { ...defaultConfig.vynn, ...data.vynn },
+          gemini: { ...defaultConfig.gemini, ...(data as Record<string, unknown>).gemini as Partial<ApiConfig["gemini"]> },
           paystack: { ...defaultConfig.paystack, ...data.paystack },
           stripe: { ...defaultConfig.stripe, ...data.stripe },
           google: { ...defaultConfig.google, ...(data as Record<string, unknown>).google as Partial<ApiConfig["google"]> },
@@ -196,6 +205,10 @@ export function Admin() {
     setConfig((prev) => ({ ...prev, vynn: { ...prev.vynn, [field]: value } }));
   };
 
+  const updateGemini = (field: keyof ApiConfig["gemini"], value: string) => {
+    setConfig((prev) => ({ ...prev, gemini: { ...prev.gemini, [field]: value } }));
+  };
+
   const updatePaystack = (field: keyof ApiConfig["paystack"], value: string) => {
     setConfig((prev) => ({ ...prev, paystack: { ...prev.paystack, [field]: value } }));
   };
@@ -228,6 +241,7 @@ export function Admin() {
     { id: "whatsapp" as const, label: "WhatsApp", icon: MessageSquare, color: "text-green-600" },
     { id: "telegram" as const, label: "Telegram", icon: Send, color: "text-blue-500" },
     { id: "vynn" as const, label: "Vynn AI", icon: Brain, color: "text-purple-600" },
+    { id: "gemini" as const, label: "Gemini", icon: Brain, color: "text-blue-500" },
     { id: "paystack" as const, label: "Paystack (NG)", icon: CreditCard, color: "text-blue-600" },
     { id: "stripe" as const, label: "Stripe (AE)", icon: CreditCard, color: "text-indigo-600" },
     { id: "google" as const, label: "Google OAuth", icon: Calendar, color: "text-red-500" },
@@ -422,6 +436,47 @@ export function Admin() {
                         <option value="llama-3.3-70b-versatile">Llama 3.3 70B</option>
                       </select>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Gemini */}
+              {activeTab === "gemini" && (
+                <div>
+                  <div className="mb-6 flex items-center gap-3">
+                    <Brain className="h-6 w-6 text-blue-500" />
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">Google Gemini</h2>
+                      <p className="text-sm text-gray-500">Alternative AI provider. Used when Vynn AI is not configured or as primary if preferred.</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <SecretInput
+                      label="API Key"
+                      value={config.gemini.apiKey}
+                      onChange={(v) => updateGemini("apiKey", v)}
+                      placeholder="AIza..."
+                    />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                      <select
+                        value={config.gemini.model}
+                        onChange={(e) => updateGemini("model", e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      >
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash (Fastest)</option>
+                        <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                        <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="mt-4 rounded-lg bg-blue-50 p-4">
+                    <p className="text-sm text-blue-800">
+                      <strong>Priority:</strong> The system uses AI providers in this order: Vynn AI (if key is set) then Gemini (if key is set). Configure whichever you prefer.
+                    </p>
+                    <p className="mt-2 text-sm text-blue-800">
+                      <strong>Setup:</strong> Go to <span className="font-mono text-xs">aistudio.google.com/apikey</span> to get your Gemini API key.
+                    </p>
                   </div>
                 </div>
               )}
