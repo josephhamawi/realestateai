@@ -3,14 +3,13 @@ import { Timestamp } from "firebase-admin/firestore";
 export interface Lead {
   leadId: string;
   tenantId: string;
-  market: "nigeria" | "dubai";
+  market: "dubai";
   source:
     | "whatsapp"
     | "telegram"
     | "manual"
     | "property_finder"
     | "bayut"
-    | "nigerian_property_centre"
     | "referral"
     | "other";
   status:
@@ -36,7 +35,7 @@ export interface Lead {
   propertyInterest: {
     budgetMin: number;
     budgetMax: number;
-    currency: "NGN" | "AED";
+    currency: "AED";
     timeline: string;
     propertyType: string;
     desiredAreas: string[];
@@ -47,12 +46,6 @@ export interface Lead {
       investmentType: "primary_residence" | "investment" | "holiday_home";
       targetYield?: number;
       islamicFinance: boolean;
-    };
-    nigeriaSpecific?: {
-      landSize?: string;
-      titleType: "c_of_o" | "governors_consent" | "deed" | "survey_plan";
-      infrastructureNeeds: string[];
-      paymentPlan: "outright" | "installment" | "mortgage";
     };
   };
 
