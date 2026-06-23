@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
-  Bot,
   ArrowLeft,
   Mail,
   Clock,
@@ -12,6 +11,7 @@ import {
   Twitter,
   Instagram,
 } from "lucide-react";
+import { LogoMark } from "../components/brand/LogoMark";
 import { SiteFooter } from "../components/layout/SiteFooter";
 
 /* ------------------------------------------------------------------ */
@@ -85,7 +85,7 @@ function StickyNav() {
         <div className="flex h-16 items-center justify-between lg:h-20">
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
-              <Bot className="h-5 w-5 text-white" />
+              <LogoMark className="h-5 w-5" white />
             </div>
             <span className="text-lg font-bold tracking-tight text-gray-900">
               AgentFlow AI

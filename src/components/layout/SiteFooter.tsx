@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Bot } from "lucide-react";
+import { LogoMark } from "../brand/LogoMark";
 
 /* ------------------------------------------------------------------ */
 /*  Standard KodeFoundry brand footer for public pages                 */
@@ -17,7 +17,7 @@ export function SiteFooter() {
           <div>
             <div className="flex items-center gap-2.5">
               <div className="flex h-6 w-6 items-center justify-center rounded bg-brand-600">
-                <Bot className="h-4 w-4 text-white" />
+                <LogoMark className="h-4 w-4" white />
               </div>
               <span className="text-base font-extrabold text-gray-900">AgentFlow AI</span>
             </div>
