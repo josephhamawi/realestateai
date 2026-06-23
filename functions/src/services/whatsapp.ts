@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as crypto from "crypto";
-import { getSecret } from "../config/secrets";
+import { getWhatsAppConfig } from "../config/secrets";
 
 const GRAPH_API_VERSION = "v18.0";
 const GRAPH_API_BASE = `https://graph.facebook.com/${GRAPH_API_VERSION}`;
@@ -10,7 +10,7 @@ export async function sendWhatsAppMessage(
   recipientPhone: string,
   text: string
 ): Promise<string> {
-  const accessToken = await getSecret("WHATSAPP_ACCESS_TOKEN");
+  const { accessToken } = await getWhatsAppConfig();
 
   const response = await axios.post(
     `${GRAPH_API_BASE}/${phoneNumberId}/messages`,
@@ -38,7 +38,7 @@ export async function sendWhatsAppTemplate(
     parameters: Array<{ type: string; text: string }>;
   }>
 ): Promise<string> {
-  const accessToken = await getSecret("WHATSAPP_ACCESS_TOKEN");
+  const { accessToken } = await getWhatsAppConfig();
 
   const body: Record<string, unknown> = {
     messaging_product: "whatsapp",
@@ -136,7 +136,7 @@ export function parseMessageContent(message: Record<string, unknown>): {
 export async function downloadMedia(
   mediaId: string
 ): Promise<Buffer> {
-  const accessToken = await getSecret("WHATSAPP_ACCESS_TOKEN");
+  const { accessToken } = await getWhatsAppConfig();
 
   // Get media URL
   const urlResponse = await axios.get(
