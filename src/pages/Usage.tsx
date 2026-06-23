@@ -79,7 +79,7 @@ export function Usage() {
             <p className="mt-1 text-sm text-brand-700">
               {leadsLimit > 0
                 ? `${leadsUsed} of ${leadsLimit} leads used this billing cycle`
-                : `${leadsUsed} leads this cycle — unlimited plan`}
+                : `${leadsUsed} leads this cycle (unlimited plan)`}
             </p>
           </div>
           {leadsLimit > 0 && (

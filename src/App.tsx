@@ -100,7 +100,7 @@ export default function App() {
         }
       />
 
-      {/* Admin route (no AppLayout — standalone) */}
+      {/* Admin route (no AppLayout, standalone) */}
       <Route
         path="/admin"
         element={
