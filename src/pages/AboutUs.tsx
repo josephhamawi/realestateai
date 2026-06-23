@@ -133,7 +133,7 @@ function Footer() {
               <span className="text-lg font-bold text-white">AgentFlow AI</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-6">
-              AI-powered lead qualification for real estate agents in Nigeria and Dubai.
+              AI-powered lead qualification for real estate agents in Dubai and the UAE.
             </p>
             <div className="flex items-center gap-3">
               <a
@@ -208,7 +208,6 @@ function Footer() {
                   kodefoundryatelier@gmail.com
                 </a>
               </li>
-              <li className="text-sm text-gray-400">Lagos, Nigeria</li>
               <li className="text-sm text-gray-400">Dubai, UAE</li>
             </ul>
           </div>
@@ -219,7 +218,7 @@ function Footer() {
             &copy; {new Date().getFullYear()} AgentFlow AI. All rights reserved.
           </p>
           <p className="text-xs text-gray-500">
-            Made with AI for real estate agents in Nigeria &amp; Dubai
+            Made with AI for real estate agents in Dubai &amp; the UAE
           </p>
         </div>
       </div>
@@ -240,7 +239,7 @@ export function AboutUs() {
       icon: Globe2,
       title: "Market Intelligence First",
       description:
-        "We don't build generic chatbots. Chioma knows Lagos. Aisha knows Dubai. That's the difference.",
+        "We don't build generic chatbots. Aisha knows Dubai inside out. That's the difference.",
       color: "bg-purple-50 text-purple-600",
     },
     {
@@ -254,7 +253,7 @@ export function AboutUs() {
       icon: ShieldCheck,
       title: "Compliance by Default",
       description:
-        "NDPR and RERA built in from day one, not bolted on later.",
+        "UAE PDPL and RERA built in from day one, not bolted on later.",
       color: "bg-green-50 text-green-600",
     },
     {
@@ -321,7 +320,7 @@ export function AboutUs() {
           <Reveal delay={100}>
             <div className="rounded-2xl bg-gray-50 border border-gray-200 p-8 lg:p-12">
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                We watched talented agents in Lagos and Dubai lose deals simply because
+                We watched talented agents in Dubai lose deals simply because
                 they couldn't respond fast enough. A lead messages at 2 AM from Mumbai
                 asking about Palm Jumeirah. By morning, they've already talked to three
                 other agents.
@@ -330,8 +329,7 @@ export function AboutUs() {
                 We built AgentFlow AI to make sure that never happens again. Our platform
                 combines culturally aware AI with deep market knowledge, so your leads get
                 instant, intelligent responses in the language and context they expect,
-                whether that's Pidgin English in Lagos or luxury property terminology in
-                Dubai Marina.
+                from first-time buyers to luxury property terminology in Dubai Marina.
               </p>
             </div>
           </Reveal>
@@ -423,7 +421,7 @@ export function AboutUs() {
               <p className="text-gray-600 leading-relaxed">
                 Our team brings together expertise in AI, real estate technology, and
                 emerging market dynamics. We understand the unique challenges agents face
-                in Lagos, Abuja, and Dubai, because we've seen them firsthand.
+                in Dubai and across the UAE, because we've seen them firsthand.
               </p>
             </div>
           </Reveal>
@@ -464,7 +462,7 @@ export function AboutUs() {
               Ready to Stop Losing Leads?
             </h2>
             <p className="text-lg text-blue-100/80 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Join agents across Lagos, Abuja, and Dubai who are closing more deals with
+              Join agents across Dubai and the UAE who are closing more deals with
               AI-powered lead qualification.
             </p>
             <Link
