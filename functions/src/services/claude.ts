@@ -178,7 +178,7 @@ async function callVynnWithRetry(
         }
       );
 
-      // Extract response text — handle different response shapes
+      // Extract response text, handle different response shapes
       const data = res.data;
       if (typeof data === "string") return data;
       if (data.response) return data.response;
