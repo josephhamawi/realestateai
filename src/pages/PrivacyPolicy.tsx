@@ -255,10 +255,10 @@ export function PrivacyPolicy() {
 
           <h3 className="text-lg font-semibold text-gray-900 mt-6">Payment Information</h3>
           <p>
-            Payment processing is handled by Stripe. We do not store your credit card
-            numbers, bank account details, or other
-            sensitive financial information on our servers. Payment processors handle all
-            financial data in compliance with PCI-DSS standards.
+            Stripe handles payment processing. We do not store your credit card numbers,
+            bank account details, or other sensitive financial information on our servers.
+            Payment processors handle all financial data in compliance with PCI-DSS
+            standards.
           </p>
         </Section>
 
@@ -359,8 +359,8 @@ export function PrivacyPolicy() {
             ))}
           </div>
           <p className="mt-4">
-            Each third-party service operates under its own privacy policy. We encourage
-            you to review their policies to understand how they handle your data.
+            Each third-party service operates under its own privacy policy. Review their
+            policies to understand how they handle your data.
           </p>
         </Section>
 
@@ -501,8 +501,8 @@ export function PrivacyPolicy() {
             the Service at least 30 days before the changes take effect.
           </p>
           <p>
-            We encourage you to review this Privacy Policy periodically to stay informed
-            about how we protect your data.
+            Review this Privacy Policy periodically to stay informed about how we protect
+            your data.
           </p>
         </Section>
 
