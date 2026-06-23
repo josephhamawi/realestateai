@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
-  Bot,
   MessageSquare,
   Star,
   Calendar,
@@ -25,6 +24,7 @@ import {
   Menu,
   X as XIcon,
 } from "lucide-react";
+import { LogoMark } from "../components/brand/LogoMark";
 
 /* ------------------------------------------------------------------ */
 /*  useInView hook : triggers "visible" class on scroll                */
@@ -95,7 +95,7 @@ function Navbar() {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2.5 group">
             <div className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${scrolled ? "bg-brand-600" : "bg-white/20"}`}>
-              <Bot className="h-5 w-5 text-white" />
+              <LogoMark className="h-5 w-5" white />
             </div>
             <span className={`text-lg font-bold tracking-tight transition-colors ${scrolled ? "text-gray-900" : "text-white"}`}>
               AgentFlow AI
@@ -940,7 +940,7 @@ function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
-                <Bot className="h-5 w-5 text-white" />
+                <LogoMark className="h-5 w-5" white />
               </div>
               <span className="text-lg font-bold text-white">AgentFlow AI</span>
             </div>

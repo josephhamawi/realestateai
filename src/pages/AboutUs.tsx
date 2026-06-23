@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Eye,
 } from "lucide-react";
+import { LogoMark } from "../components/brand/LogoMark";
 import { SiteFooter } from "../components/layout/SiteFooter";
 
 /* ------------------------------------------------------------------ */
@@ -87,7 +88,7 @@ function StickyNav() {
                 scrolled ? "bg-brand-600" : "bg-white/20"
               }`}
             >
-              <Bot className="h-5 w-5 text-white" />
+              <LogoMark className="h-5 w-5" white />
             </div>
             <span
               className={`text-lg font-bold tracking-tight transition-colors ${
