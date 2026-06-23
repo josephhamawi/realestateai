@@ -2,7 +2,7 @@ import { Timestamp } from "firebase-admin/firestore";
 
 export interface Tenant {
   tenantId: string;
-  market: "nigeria" | "dubai";
+  market: "dubai";
   region: "africa-west" | "mena";
   status: "trial" | "active" | "suspended" | "cancelled";
   createdAt: Timestamp;
@@ -81,7 +81,7 @@ export interface Tenant {
       preferred?: "google" | "outlook";
     };
     payments: {
-      provider?: "paystack" | "stripe";
+      provider?: "stripe";
       customerId?: string;
       subscriptionId?: string;
       tier?: "solo" | "team" | "brokerage";
