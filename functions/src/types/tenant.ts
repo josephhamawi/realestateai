@@ -23,7 +23,7 @@ export interface Tenant {
     weekend: string[];
     dateFormat: string;
     compliance: {
-      framework: "NDPR" | "RERA";
+      framework: "RERA";
       consentRequired: boolean;
       auditRetentionYears: number;
     };

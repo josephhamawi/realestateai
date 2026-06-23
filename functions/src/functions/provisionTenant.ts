@@ -1,6 +1,5 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { db, authAdmin, FieldValue, Timestamp } from "../config/firebase";
-import { isValidMarket } from "../utils/validation";
 
 export const provisionTenant = onCall(async (request) => {
   if (!request.auth) {
@@ -8,14 +7,7 @@ export const provisionTenant = onCall(async (request) => {
   }
 
   const uid = request.auth.uid;
-  const { market } = request.data as { market: string };
-
-  if (!isValidMarket(market)) {
-    throw new HttpsError(
-      "invalid-argument",
-      "Market must be 'nigeria' or 'dubai'"
-    );
-  }
+  const market = "dubai";
 
   // Check if tenant already exists
   const existingTenant = await db.doc(`tenants/${uid}`).get();
@@ -23,33 +15,21 @@ export const provisionTenant = onCall(async (request) => {
     throw new HttpsError("already-exists", "Tenant already provisioned");
   }
 
-  // Load market defaults — fallback to hardcoded if not seeded yet
+  // Load Dubai defaults (fallback to hardcoded if not seeded yet)
   const marketConfigSnap = await db.doc(`market_config/${market}`).get();
-  const marketDefaults: Record<string, Record<string, unknown>> = {
-    nigeria: {
-      currency: "NGN",
-      currencySymbol: "\u20A6",
-      region: "africa-west",
-      timezone: "Africa/Lagos",
-      weekend: ["saturday", "sunday"],
-      dateFormat: "DD/MM/YYYY",
-      compliance: { gdpr: false, ndpr: true, difc: false, rera: false },
-      ai: { defaultPersona: "Chioma", qualificationQuestions: [] },
-    },
-    dubai: {
-      currency: "AED",
-      currencySymbol: "AED",
-      region: "mena",
-      timezone: "Asia/Dubai",
-      weekend: ["friday", "saturday"],
-      dateFormat: "DD/MM/YYYY",
-      compliance: { gdpr: false, ndpr: false, difc: true, rera: true },
-      ai: { defaultPersona: "Aisha", qualificationQuestions: [] },
-    },
+  const marketDefaults: Record<string, unknown> = {
+    currency: "AED",
+    currencySymbol: "AED",
+    region: "mena",
+    timezone: "Asia/Dubai",
+    weekend: ["friday", "saturday"],
+    dateFormat: "DD/MM/YYYY",
+    compliance: { gdpr: false, difc: true, rera: true },
+    ai: { defaultPersona: "Aisha", qualificationQuestions: [] },
   };
   const marketConfig = marketConfigSnap.exists
     ? marketConfigSnap.data()!
-    : marketDefaults[market];
+    : marketDefaults;
 
   // Seed market_config if it doesn't exist yet
   if (!marketConfigSnap.exists) {
@@ -72,27 +52,17 @@ export const provisionTenant = onCall(async (request) => {
       compliance: marketConfig.compliance,
     },
     aiConfig: {
-      personaName:
-        aiDefaults.defaultPersona ||
-        (market === "dubai" ? "Aisha" : "Chioma"),
+      personaName: aiDefaults.defaultPersona || "Aisha",
       greetingScript: "",
       handoffThreshold: 60,
       qualificationQuestions: aiDefaults.qualificationQuestions || [],
       languages: ["en"],
-      features:
-        market === "dubai"
-          ? {
-              offPlanSupport: true,
-              rentalYieldCalc: true,
-              mobileMoney: false,
-              ejariIntegration: true,
-            }
-          : {
-              offPlanSupport: false,
-              rentalYieldCalc: false,
-              mobileMoney: true,
-              ejariIntegration: false,
-            },
+      features: {
+        offPlanSupport: true,
+        rentalYieldCalc: true,
+        mobileMoney: false,
+        ejariIntegration: true,
+      },
       approvalMode: false,
     },
     integrations: {

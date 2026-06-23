@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import { db, FieldValue, Timestamp } from "../config/firebase";
-import { getSecret } from "../config/secrets";
+import { getWhatsAppConfig } from "../config/secrets";
 import {
   verifyWebhookSignature,
   parseMessageContent,
@@ -14,7 +14,7 @@ export const whatsappWebhook = functions.https.onRequest(async (req, res) => {
     const challenge = req.query["hub.challenge"] as string;
 
     try {
-      const verifyToken = await getSecret("WHATSAPP_VERIFY_TOKEN");
+      const { verifyToken } = await getWhatsAppConfig();
       if (mode === "subscribe" && token === verifyToken) {
         res.status(200).send(challenge);
       } else {
@@ -29,7 +29,7 @@ export const whatsappWebhook = functions.https.onRequest(async (req, res) => {
   // POST: Inbound message
   try {
     // Verify signature
-    const appSecret = await getSecret("WHATSAPP_APP_SECRET");
+    const { appSecret } = await getWhatsAppConfig();
     const signature = req.headers["x-hub-signature-256"] as string;
 
     if (!verifyWebhookSignature(req.rawBody, signature, appSecret)) {
@@ -154,7 +154,7 @@ async function findOrCreateLead(
     propertyInterest: {
       budgetMin: 0,
       budgetMax: 0,
-      currency: market === "dubai" ? "AED" : "NGN",
+      currency: "AED",
       timeline: "",
       propertyType: "",
       desiredAreas: [],

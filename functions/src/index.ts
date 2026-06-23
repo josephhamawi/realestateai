@@ -13,7 +13,6 @@ export { outlookCalendarConnect } from "./functions/outlookCalendarConnect";
 export { outlookCalendarCallback } from "./functions/outlookCalendarCallback";
 export {
   paymentProcessor as initializePayment,
-  paystackWebhook,
   stripeWebhook,
 } from "./functions/paymentProcessor";
 export { complianceLogger } from "./functions/complianceLogger";
