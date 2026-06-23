@@ -4,7 +4,7 @@ import { db } from "../config/firebase";
 import { useTenantContext } from "./TenantContext";
 
 export interface MarketConfigData {
-  marketId: "nigeria" | "dubai";
+  marketId: "dubai";
   displayName: string;
   region: string;
   currency: { code: string; symbol: string; locale: string };
@@ -12,7 +12,7 @@ export interface MarketConfigData {
   weekend: string[];
   dateFormat: string;
   compliance: {
-    framework: "NDPR" | "RERA";
+    framework: "RERA";
     consentRequired: boolean;
     auditRetentionYears: number;
     blockedPhrases: string[];
@@ -62,7 +62,7 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
 
     const loadMarketConfig = async () => {
       try {
-        const snap = await getDoc(doc(db, "market_config", tenant.market));
+        const snap = await getDoc(doc(db, "market_config", "dubai"));
         if (snap.exists()) {
           setMarketConfig(snap.data() as MarketConfigData);
         }

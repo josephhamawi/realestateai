@@ -80,7 +80,7 @@ export const dailyBatchJobs = functions.pubsub
 
     for (const doc of suspendedTenants.docs) {
       console.log(
-        `Suspended tenant ${doc.id} -- consider dunning retry`
+        `Suspended tenant ${doc.id} (consider dunning retry)`
       );
       // In production: call payment retry logic here
     }
@@ -117,58 +117,6 @@ export const dailyBatchJobs = functions.pubsub
           error
         );
       }
-    }
-
-    // 5. NDPR DELETION EXECUTION
-    try {
-      const deletionLogs = await db
-        .collection("compliance_log")
-        .where("eventType", "==", "deletion_requested")
-        .where("timestamp", "<", thirtyDaysAgo)
-        .limit(50)
-        .get();
-
-      for (const log of deletionLogs.docs) {
-        const logData = log.data();
-        if (logData.leadId && logData.tenantId) {
-          console.log(
-            `Auto-executing NDPR deletion for lead ${logData.leadId}`
-          );
-          // Delete messages
-          const messagesSnap = await db
-            .collection(
-              `tenants/${logData.tenantId}/leads/${logData.leadId}/messages`
-            )
-            .get();
-          const batch = db.batch();
-          for (const msgDoc of messagesSnap.docs) {
-            batch.delete(msgDoc.ref);
-          }
-          batch.delete(
-            db.doc(
-              `tenants/${logData.tenantId}/leads/${logData.leadId}`
-            )
-          );
-          await batch.commit();
-
-          // Log completion
-          const completionRef = db.collection("compliance_log").doc();
-          await completionRef.set({
-            logId: completionRef.id,
-            tenantId: logData.tenantId,
-            market: logData.market,
-            leadId: null,
-            eventType: "deletion_completed",
-            severity: "info",
-            details: {
-              description: `Auto-executed NDPR deletion for lead ${logData.leadId}`,
-            },
-            timestamp: FieldValue.serverTimestamp(),
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error executing NDPR deletions:", error);
     }
 
     console.log("Daily batch jobs completed.");

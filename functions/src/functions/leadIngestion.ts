@@ -36,7 +36,7 @@ export const leadIngestion = functions.https.onRequest(async (req, res) => {
     const tenantId = tenant.tenantId;
 
     // Check tier limits
-    const marketConfig = await loadMarketConfig(tenant.market);
+    const marketConfig = await loadMarketConfig();
     if (isLeadLimitReached(tenant, marketConfig)) {
       res.status(429).json({ error: "Lead limit reached for current tier" });
       return;
@@ -44,7 +44,7 @@ export const leadIngestion = functions.https.onRequest(async (req, res) => {
 
     // Normalize payload
     const payload = req.body;
-    const normalizedLead = normalizeLeadPayload(source, payload, tenant.market);
+    const normalizedLead = normalizeLeadPayload(source, payload);
 
     // Duplicate detection by phone
     const existingLeads = await db
@@ -106,9 +106,9 @@ export const leadIngestion = functions.https.onRequest(async (req, res) => {
 
 function normalizeLeadPayload(
   source: string,
-  payload: Record<string, unknown>,
-  market: "nigeria" | "dubai"
+  payload: Record<string, unknown>
 ) {
+  const market = "dubai";
   // Normalize different source formats into our universal schema
   const name = sanitizeText(
     (payload.name as string) ||
@@ -120,8 +120,7 @@ function normalizeLeadPayload(
     (payload.phone as string) ||
       (payload.mobile as string) ||
       (payload.contact_phone as string) ||
-      "",
-    market
+      ""
   );
   const email =
     (payload.email as string) ||
@@ -141,7 +140,7 @@ function normalizeLeadPayload(
     propertyInterest: {
       budgetMin: Number(payload.budget_min || payload.budgetMin || 0),
       budgetMax: Number(payload.budget_max || payload.budgetMax || 0),
-      currency: market === "dubai" ? ("AED" as const) : ("NGN" as const),
+      currency: "AED" as const,
       timeline: (payload.timeline as string) || "",
       propertyType: (payload.property_type as string) || (payload.propertyType as string) || "",
       desiredAreas: Array.isArray(payload.areas)

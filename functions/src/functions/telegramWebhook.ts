@@ -64,12 +64,10 @@ export const telegramWebhook = functions
     // Parallel: load tenant + find/create lead
     const [tenant, leadId] = await Promise.all([
       loadTenant(tenantId),
-      findOrCreateTelegramLead(tenantId, "nigeria", chatId, contactName, username),
+      findOrCreateTelegramLead(tenantId, "dubai", chatId, contactName, username),
     ]);
-    // Now load market config (needs tenant.market)
-    const marketConfig = await loadMarketConfig(tenant.market);
-    // Update lead market if it was created with wrong default
-    // (findOrCreateTelegramLead used "nigeria" as placeholder)
+    // Now load market config
+    const marketConfig = await loadMarketConfig();
 
     // Store inbound message
     const msgRef = db
@@ -147,7 +145,6 @@ export const telegramWebhook = functions
     // Run compliance check
     const complianceResult = runComplianceCheck(
       aiReplyText,
-      tenant.market,
       marketConfig
     );
 
@@ -271,7 +268,6 @@ export const telegramWebhook = functions
 
       // Extract phone from conversation text (simple regex)
       const phoneMatch = conversationText.match(/(?:phone|number|call me|reach me|whatsapp)[:\s]*([+\d][\d\s\-()]{7,15})/i)
-        || conversationText.match(/\b((?:\+?234|0)\d[\d\s\-]{8,13})\b/)  // Nigerian numbers
         || conversationText.match(/\b((?:\+?971|05)\d[\d\s\-]{7,11})\b/); // UAE numbers
       if (phoneMatch && !lead.contact.phone) {
         const phone = phoneMatch[1].replace(/[\s\-()]/g, "");
@@ -337,12 +333,12 @@ export const telegramWebhook = functions
           appointmentId: apptRef.id,
           tenantId,
           leadId,
-          market: lead.market || "nigeria",
+          market: lead.market || "dubai",
           scheduledAt: Timestamp.fromDate(scheduledAt),
           status: "scheduled",
           type: "property_viewing",
           duration: 60,
-          timezone: lead.market === "dubai" ? "Asia/Dubai" : "Africa/Lagos",
+          timezone: "Asia/Dubai",
           leadName: lead.contact?.name || contactName,
           source: "ai_booked",
           remindersSent: { twentyFourHour: false, oneHour: false },
@@ -370,7 +366,7 @@ export const telegramWebhook = functions
               leadPhone: lead.contact?.phone,
               propertyType: lead.propertyInterest?.propertyType,
               duration: 60,
-              timezone: lead.market === "dubai" ? "Asia/Dubai" : "Africa/Lagos",
+              timezone: "Asia/Dubai",
             });
             if (eventId) {
               await apptRef.update({
@@ -393,7 +389,7 @@ export const telegramWebhook = functions
               leadPhone: lead.contact?.phone,
               propertyType: lead.propertyInterest?.propertyType,
               duration: 60,
-              timezone: lead.market === "dubai" ? "Asia/Dubai" : "Africa/Lagos",
+              timezone: "Asia/Dubai",
             });
             if (outlookEventId) {
               await apptRef.update({
@@ -685,7 +681,7 @@ async function findOrCreateTelegramLead(
     propertyInterest: {
       budgetMin: 0,
       budgetMax: 0,
-      currency: market === "dubai" ? "AED" : "NGN",
+      currency: "AED",
       timeline: "",
       propertyType: "",
       desiredAreas: [],

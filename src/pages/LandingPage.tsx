@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   Bot,
@@ -214,8 +214,8 @@ function Hero() {
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-blue-100/80 max-w-2xl mx-auto leading-relaxed">
-            Chioma for Nigeria. Aisha for Dubai. AI that qualifies leads, books viewings,
-            and speaks your market's language : while you close deals.
+            Meet Aisha, your AI assistant for Dubai. She qualifies leads, books viewings,
+            and speaks your market's language, while you close deals.
           </p>
 
           {/* CTAs */}
@@ -243,7 +243,7 @@ function Hero() {
             {[
               { value: "5 min", label: "Avg response time", icon: Clock },
               { value: "10x", label: "More leads qualified", icon: TrendingUp },
-              { value: "₦0", label: "Per message on Telegram", icon: Send },
+              { value: "AED 0", label: "Per message on Telegram", icon: Send },
               { value: "24/7", label: "Always working", icon: Zap },
             ].map((stat, i) => (
               <div key={i} className="flex flex-col items-center py-4 lg:py-6 lg:px-8">
@@ -266,13 +266,13 @@ function Hero() {
 /*  Social Proof / Logos Bar                                            */
 /* ------------------------------------------------------------------ */
 function SocialProof() {
-  const logos = ["Brokerage 1", "Property Finder", "Lagos Realty", "Dubai Homes", "Prime Estate", "City Properties"];
+  const logos = ["Brokerage 1", "Property Finder", "Bayut", "Dubai Homes", "Prime Estate", "City Properties"];
   return (
     <section className="py-16 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
           <p className="text-center text-sm font-medium text-gray-500 uppercase tracking-wider mb-10">
-            Trusted by agents across Lagos, Abuja, and Dubai
+            Trusted by agents across Dubai and the UAE
           </p>
         </Reveal>
         <Reveal delay={100}>
@@ -300,13 +300,13 @@ function ProblemSolution() {
     "60-80% of your time wasted on unqualified leads",
     "Leads go cold while you're stuck in traffic",
     "Can't respond at 2 AM when international buyers message",
-    "Generic chatbots don't understand Nigerian Pidgin or Dubai's luxury market",
+    "Generic chatbots don't understand Dubai's luxury market",
   ];
   const solutions = [
     "AI qualifies leads automatically via Telegram & WhatsApp",
     "Responds in seconds, 24 hours a day",
     "Books viewings while you sleep",
-    "Understands C of O, off-plan, freehold : your market's language",
+    "Understands off-plan, freehold, leasehold: your market's language",
   ];
 
   return (
@@ -381,7 +381,7 @@ function Features() {
     {
       icon: Globe2,
       title: "Cultural AI Intelligence",
-      description: "Chioma understands Pidgin and Lagos traffic patterns. Aisha handles Dubai's multicultural investors with finesse.",
+      description: "Aisha handles Dubai's multicultural investors with finesse, from off-plan buyers to luxury villa seekers.",
       color: "bg-purple-50 text-purple-600",
     },
     {
@@ -404,14 +404,14 @@ function Features() {
     },
     {
       icon: ShieldCheck,
-      title: "NDPR & RERA Compliant",
-      description: "Built-in compliance for Nigeria's NDPR and Dubai's RERA regulations. Data handling you can trust.",
+      title: "PDPL & RERA Compliant",
+      description: "Built-in compliance for the UAE's PDPL and Dubai's RERA regulations. Data handling you can trust.",
       color: "bg-red-50 text-red-600",
     },
     {
       icon: BarChart3,
-      title: "Multi-Market Ready",
-      description: "One account, both markets. Launch in Nigeria today, expand to Dubai tomorrow. Seamless switching.",
+      title: "Built for Dubai",
+      description: "Deeply tuned for the Dubai and UAE property market, from communities and developers to pricing in AED.",
       color: "bg-indigo-50 text-indigo-600",
     },
   ];
@@ -428,7 +428,7 @@ function Features() {
               Everything you need to convert leads
             </h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              Purpose-built for real estate agents in Nigeria and Dubai. Every feature designed to help you close more deals.
+              Purpose-built for real estate agents in Dubai and the UAE. Every feature designed to help you close more deals.
             </p>
           </div>
         </Reveal>
@@ -458,8 +458,8 @@ function HowItWorks() {
   const steps = [
     {
       num: "01",
-      title: "Sign Up & Pick Your Market",
-      description: "2 minutes to set up. Select Nigeria or Dubai : or both. Customize your AI persona's personality and knowledge base.",
+      title: "Sign Up & Set Up Your Assistant",
+      description: "2 minutes to set up. Customize your AI persona's personality and knowledge base for the Dubai market.",
     },
     {
       num: "02",
@@ -469,7 +469,7 @@ function HowItWorks() {
     {
       num: "03",
       title: "Watch Leads Get Qualified",
-      description: "Chioma or Aisha handles the conversations. You get a scored pipeline of qualified leads ready to close.",
+      description: "Aisha handles the conversations. You get a scored pipeline of qualified leads ready to close.",
     },
   ];
 
@@ -518,13 +518,6 @@ function HowItWorks() {
 /*  AI Personas Section                                                */
 /* ------------------------------------------------------------------ */
 function AIPersonas() {
-  const chiomaChat = [
-    { role: "lead", text: "I wan buy house for Lekki, 3 bedroom. Budget na like 80 milli." },
-    { role: "ai", text: "Welcome! I'm Chioma, your real estate assistant. 3-bedroom in Lekki with ₦80M budget : great choice! Do you have a preference between Lekki Phase 1 and Chevron axis? Also, do you need C of O documentation?" },
-    { role: "lead", text: "Chevron side. C of O must dey o!" },
-    { role: "ai", text: "Noted! I have 3 properties in Chevron area with C of O, ranging from ₦72M to ₦85M. Can I schedule a viewing for you this Saturday? Our agent has morning and afternoon slots available." },
-  ];
-
   const aishaChat = [
     { role: "lead", text: "I'm looking for a 2-bed apartment in Dubai Marina. Off-plan or ready, budget around AED 2M." },
     { role: "ai", text: "Welcome! I'm Aisha, your Dubai property assistant. 2-bed in Marina with AED 2M budget : excellent. Are you looking for freehold ownership? Any preference for sea view or marina view?" },
@@ -549,41 +542,9 @@ function AIPersonas() {
           </div>
         </Reveal>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Chioma */}
-          <Reveal delay={100}>
-            <div className="rounded-2xl border-2 border-green-200 bg-gradient-to-b from-green-50/50 to-white overflow-hidden">
-              <div className="p-6 border-b border-green-100 bg-green-50/80">
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-lg">C</div>
-                  <div>
-                    <h3 className="font-bold text-gray-900 text-lg">Chioma</h3>
-                    <p className="text-sm text-green-700">Nigeria Market Specialist</p>
-                  </div>
-                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                    <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                    Online
-                  </span>
-                </div>
-              </div>
-              <div className="p-6 space-y-4">
-                {chiomaChat.map((msg, i) => (
-                  <div key={i} className={`flex ${msg.role === "lead" ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                      msg.role === "lead"
-                        ? "bg-brand-600 text-white rounded-br-md"
-                        : "bg-gray-100 text-gray-800 rounded-bl-md"
-                    }`}>
-                      {msg.text}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-
+        <div className="max-w-2xl mx-auto">
           {/* Aisha */}
-          <Reveal delay={200}>
+          <Reveal delay={100}>
             <div className="rounded-2xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/50 to-white overflow-hidden">
               <div className="p-6 border-b border-amber-100 bg-amber-50/80">
                 <div className="flex items-center gap-3">
@@ -623,122 +584,61 @@ function AIPersonas() {
 /*  Pricing Section                                                    */
 /* ------------------------------------------------------------------ */
 function Pricing() {
-  const [market, setMarket] = useState<"nigeria" | "dubai">("nigeria");
-
-  const plans = {
-    nigeria: [
-      {
-        name: "Solo",
-        price: "25,000",
-        currency: "₦",
-        period: "/mo",
-        badge: "One deal pays for 2+ years",
-        features: [
-          "100 leads per month",
-          "1 agent account",
-          "AI lead qualification",
-          "Telegram & WhatsApp",
-          "Calendar sync",
-          "Email support",
-        ],
-        highlighted: false,
-      },
-      {
-        name: "Team",
-        price: "75,000",
-        currency: "₦",
-        period: "/mo",
-        badge: null,
-        features: [
-          "500 leads per month",
-          "5 agent accounts",
-          "AI lead qualification",
-          "Telegram & WhatsApp",
-          "Calendar sync",
-          "CRM integration",
-          "Team dashboard",
-          "Priority support",
-        ],
-        highlighted: true,
-      },
-      {
-        name: "Brokerage",
-        price: "200,000",
-        currency: "₦",
-        period: "/mo",
-        badge: null,
-        features: [
-          "Unlimited leads",
-          "Unlimited agents",
-          "AI lead qualification",
-          "Telegram & WhatsApp",
-          "Calendar sync",
-          "CRM integration",
-          "Compliance reports",
-          "API access",
-          "Dedicated account manager",
-        ],
-        highlighted: false,
-      },
-    ],
-    dubai: [
-      {
-        name: "Solo",
-        price: "179",
-        currency: "AED ",
-        period: "/mo",
-        badge: "One deal pays for 2+ years",
-        features: [
-          "100 leads per month",
-          "1 agent account",
-          "AI lead qualification",
-          "Telegram & WhatsApp",
-          "Calendar sync",
-          "Email support",
-        ],
-        highlighted: false,
-      },
-      {
-        name: "Team",
-        price: "499",
-        currency: "AED ",
-        period: "/mo",
-        badge: null,
-        features: [
-          "500 leads per month",
-          "5 agent accounts",
-          "AI lead qualification",
-          "Telegram & WhatsApp",
-          "Calendar sync",
-          "CRM integration",
-          "Team dashboard",
-          "Priority support",
-        ],
-        highlighted: true,
-      },
-      {
-        name: "Brokerage",
-        price: "1,299",
-        currency: "AED ",
-        period: "/mo",
-        badge: null,
-        features: [
-          "Unlimited leads",
-          "Unlimited agents",
-          "AI lead qualification",
-          "Telegram & WhatsApp",
-          "Calendar sync",
-          "CRM integration",
-          "Compliance reports",
-          "API access",
-          "Dedicated account manager",
-        ],
-        highlighted: false,
-      },
-    ],
-  };
-
-  const currentPlans = plans[market];
+  const currentPlans = [
+    {
+      name: "Solo",
+      price: "179",
+      currency: "AED ",
+      period: "/mo",
+      badge: "One deal pays for 2+ years",
+      features: [
+        "100 leads per month",
+        "1 agent account",
+        "AI lead qualification",
+        "Telegram & WhatsApp",
+        "Calendar sync",
+        "Email support",
+      ],
+      highlighted: false,
+    },
+    {
+      name: "Team",
+      price: "499",
+      currency: "AED ",
+      period: "/mo",
+      badge: null,
+      features: [
+        "500 leads per month",
+        "5 agent accounts",
+        "AI lead qualification",
+        "Telegram & WhatsApp",
+        "Calendar sync",
+        "CRM integration",
+        "Team dashboard",
+        "Priority support",
+      ],
+      highlighted: true,
+    },
+    {
+      name: "Brokerage",
+      price: "1,299",
+      currency: "AED ",
+      period: "/mo",
+      badge: null,
+      features: [
+        "Unlimited leads",
+        "Unlimited agents",
+        "AI lead qualification",
+        "Telegram & WhatsApp",
+        "Calendar sync",
+        "CRM integration",
+        "Compliance reports",
+        "API access",
+        "Dedicated account manager",
+      ],
+      highlighted: false,
+    },
+  ];
 
   return (
     <section id="pricing" className="py-20 lg:py-28 bg-gray-50 scroll-mt-20">
@@ -752,34 +652,14 @@ function Pricing() {
               Plans that pay for themselves
             </h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
-              Start free. Upgrade when your pipeline is overflowing.
+              Start free. Upgrade when your pipeline is overflowing. All prices in AED.
             </p>
-
-            {/* Market toggle */}
-            <div className="inline-flex items-center rounded-xl bg-gray-100 p-1">
-              <button
-                onClick={() => setMarket("nigeria")}
-                className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
-                  market === "nigeria" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                Nigeria (NGN)
-              </button>
-              <button
-                onClick={() => setMarket("dubai")}
-                className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
-                  market === "dubai" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                Dubai (AED)
-              </button>
-            </div>
           </div>
         </Reveal>
 
         <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {currentPlans.map((plan, i) => (
-            <Reveal key={`${market}-${i}`} delay={i * 100}>
+            <Reveal key={i} delay={i * 100}>
               <div
                 className={`relative rounded-2xl p-8 flex flex-col h-full transition-all duration-300 ${
                   plan.highlighted
@@ -843,27 +723,15 @@ function Pricing() {
 /*  ROI Calculator                                                     */
 /* ------------------------------------------------------------------ */
 function ROICalculator() {
-  const [market, setMarket] = useState<"nigeria" | "dubai">("nigeria");
-  const [commission, setCommission] = useState(2500000);
+  const [commission, setCommission] = useState(60000);
   const [deals, setDeals] = useState(1);
 
-  const planCost = market === "nigeria" ? 25000 : 179 * 3.67 * 100; // rough AED to comparison
+  const planCost = 179;
   const monthlyRevenue = commission * deals;
   const daysToPayoff = monthlyRevenue > 0 ? Math.max(1, Math.ceil((planCost / monthlyRevenue) * 30)) : 999;
 
-  const defaults = {
-    nigeria: { commission: 2500000, currency: "₦", cost: "₦25,000" },
-    dubai: { commission: 60000, currency: "AED ", cost: "AED 179" },
-  };
-
-  const handleMarketSwitch = useCallback((m: "nigeria" | "dubai") => {
-    setMarket(m);
-    setCommission(defaults[m].commission);
-  }, []);
-
-  const current = defaults[market];
-  const formattedCommission = new Intl.NumberFormat().format(commission);
-  const roi = monthlyRevenue > 0 ? Math.round((monthlyRevenue / (market === "nigeria" ? 25000 : 657)) * 100) : 0;
+  const current = { commission: 60000, currency: "AED ", cost: "AED 179" };
+  const roi = monthlyRevenue > 0 ? Math.round((monthlyRevenue / planCost) * 100) : 0;
 
   return (
     <section className="py-20 lg:py-28 bg-white">
@@ -882,26 +750,6 @@ function ROICalculator() {
         <Reveal delay={100}>
           <div className="max-w-2xl mx-auto">
             <div className="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 p-8 lg:p-10 shadow-2xl">
-              {/* Market toggle */}
-              <div className="inline-flex items-center rounded-lg bg-white/10 p-1 mb-8">
-                <button
-                  onClick={() => handleMarketSwitch("nigeria")}
-                  className={`rounded-md px-4 py-2 text-sm font-semibold transition-all ${
-                    market === "nigeria" ? "bg-white text-gray-900" : "text-white/70 hover:text-white"
-                  }`}
-                >
-                  Nigeria
-                </button>
-                <button
-                  onClick={() => handleMarketSwitch("dubai")}
-                  className={`rounded-md px-4 py-2 text-sm font-semibold transition-all ${
-                    market === "dubai" ? "bg-white text-gray-900" : "text-white/70 hover:text-white"
-                  }`}
-                >
-                  Dubai
-                </button>
-              </div>
-
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -913,7 +761,7 @@ function ROICalculator() {
                     onChange={(e) => setCommission(Number(e.target.value) || 0)}
                     className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Default: {current.currency}{new Intl.NumberFormat().format(defaults[market].commission)}</p>
+                  <p className="text-xs text-gray-500 mt-1">Default: {current.currency}{new Intl.NumberFormat().format(current.commission)}</p>
                 </div>
 
                 <div>
@@ -970,19 +818,19 @@ function FAQ() {
   const faqs = [
     {
       q: "How does the AI qualify leads?",
-      a: "Our AI engages leads in natural conversation, asking about budget, timeline, location preferences, property type, and documentation needs (like C of O for Nigeria or freehold for Dubai). Each lead gets a 0-100 qualification score based on their responses, and hot leads are flagged for immediate follow-up.",
+      a: "Our AI engages leads in natural conversation, asking about budget, timeline, location preferences, property type, and ownership needs (like freehold or leasehold in Dubai). Each lead gets a 0-100 qualification score based on their responses, and hot leads are flagged for immediate follow-up.",
     },
     {
       q: "Is my data secure?",
-      a: "Absolutely. We use end-to-end encryption, are NDPR compliant for Nigeria, and follow RERA data guidelines for Dubai. All data is stored in SOC 2 certified data centers. You own your data, and we never share it with third parties.",
+      a: "Absolutely. We use end-to-end encryption, are compliant with the UAE PDPL, and follow RERA data guidelines for Dubai. All data is stored in SOC 2 certified data centers. You own your data, and we never share it with third parties.",
     },
     {
       q: "Do I need WhatsApp Business API?",
       a: "For Telegram, you can start immediately with zero per-message cost. For WhatsApp, we support both the official WhatsApp Business API (for verified businesses) and Telegram as a free alternative. Our team helps you get set up with WhatsApp Business API if you choose that route.",
     },
     {
-      q: "Can I use it for both Nigeria and Dubai?",
-      a: "Yes! One account works for both markets. Chioma handles Nigerian leads with Pidgin understanding and Naira pricing, while Aisha handles Dubai leads with multicultural awareness and AED pricing. Switch between markets in one click.",
+      q: "Is it built for the Dubai market?",
+      a: "Yes! AgentFlow AI is purpose-built for Dubai and the UAE. Aisha handles your leads with multicultural awareness, AED pricing, and deep knowledge of local communities, developers, and ownership types like freehold and leasehold.",
     },
     {
       q: "What happens if the AI gets it wrong?",
@@ -1097,7 +945,7 @@ function Footer() {
               <span className="text-lg font-bold text-white">AgentFlow AI</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-6">
-              AI-powered lead qualification for real estate agents in Nigeria and Dubai.
+              AI-powered lead qualification for real estate agents in Dubai and the UAE.
             </p>
             <div className="flex items-center gap-3">
               <a href="#" className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
@@ -1162,7 +1010,6 @@ function Footer() {
                   kodefoundryatelier@gmail.com
                 </a>
               </li>
-              <li className="text-sm text-gray-400">Lagos, Nigeria</li>
               <li className="text-sm text-gray-400">Dubai, UAE</li>
             </ul>
           </div>
@@ -1173,7 +1020,7 @@ function Footer() {
             &copy; {new Date().getFullYear()} AgentFlow AI. All rights reserved.
           </p>
           <p className="text-xs text-gray-500">
-            Made with AI for real estate agents in Nigeria & Dubai
+            Made with AI for real estate agents in Dubai & the UAE
           </p>
         </div>
       </div>

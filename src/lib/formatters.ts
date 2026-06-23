@@ -63,10 +63,6 @@ export function formatRelativeTime(
 
 export function formatPhone(phone: string): string {
   if (!phone) return "";
-  if (phone.startsWith("+234")) {
-    const local = phone.slice(4);
-    return `+234 ${local.slice(0, 3)} ${local.slice(3, 6)} ${local.slice(6)}`;
-  }
   if (phone.startsWith("+971")) {
     const local = phone.slice(4);
     return `+971 ${local.slice(0, 2)} ${local.slice(2, 5)} ${local.slice(5)}`;

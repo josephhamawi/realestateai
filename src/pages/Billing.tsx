@@ -59,7 +59,7 @@ export function Billing() {
             </div>
             {provider && (
               <p className="mt-1 text-sm text-gray-500">
-                Billed via {provider === "paystack" ? "Paystack" : "Stripe"}
+                Billed via Stripe
               </p>
             )}
           </div>

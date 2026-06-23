@@ -58,7 +58,7 @@ export function Compliance() {
     critical: "danger",
   };
 
-  const framework = tenant?.config.compliance.framework || "NDPR";
+  const framework = tenant?.config.compliance.framework || "RERA";
   const criticalCount = events.filter((e) => e.severity === "critical").length;
   const warningCount = events.filter((e) => e.severity === "warning").length;
 

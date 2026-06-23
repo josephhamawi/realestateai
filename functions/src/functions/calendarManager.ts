@@ -24,7 +24,7 @@ export const calendarManager = functions.https.onCall(
     const { action, tenantId, leadId, appointmentData } = data;
 
     const tenant = await loadTenant(tenantId);
-    const marketConfig = await loadMarketConfig(tenant.market);
+    const marketConfig = await loadMarketConfig();
 
     switch (action) {
       case "checkAvailability": {

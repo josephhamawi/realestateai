@@ -205,8 +205,7 @@ export function TermsOfService() {
           <p>
             AgentFlow AI provides AI-powered lead qualification for real estate agents via
             Telegram and WhatsApp. The platform uses culturally aware AI assistants to
-            engage, qualify, and manage real estate leads across the Nigeria and Dubai
-            markets.
+            engage, qualify, and manage real estate leads in the Dubai and UAE market.
           </p>
           <p>Key features of the Service include:</p>
           <ul className="list-disc pl-6 space-y-2">
@@ -214,7 +213,7 @@ export function TermsOfService() {
             <li>AI-powered conversation management with market-specific knowledge</li>
             <li>Lead scoring and prioritization</li>
             <li>Appointment booking and calendar integration</li>
-            <li>Compliance tools for NDPR (Nigeria) and RERA (Dubai) regulations</li>
+            <li>Compliance tools for UAE PDPL and RERA regulations</li>
             <li>Analytics and reporting dashboards</li>
           </ul>
         </Section>
@@ -237,19 +236,9 @@ export function TermsOfService() {
 
         <Section id="payments" title="4. Subscription and Payments">
           <p>
-            AgentFlow AI offers subscription-based pricing with market-specific payment
-            processing:
+            AgentFlow AI offers subscription-based pricing. Payments are processed through
+            Stripe in UAE Dirhams (AED). Prices are displayed and charged in AED.
           </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              <strong>Nigeria:</strong> Payments are processed through Paystack in Nigerian
-              Naira (NGN). Prices are displayed and charged in NGN.
-            </li>
-            <li>
-              <strong>Dubai:</strong> Payments are processed through Stripe in UAE Dirhams
-              (AED). Prices are displayed and charged in AED.
-            </li>
-          </ul>
           <p>
             <strong>Billing Cycles:</strong> Subscriptions are billed on a monthly or annual
             basis, depending on the plan you select. Your subscription will automatically
@@ -288,8 +277,7 @@ export function TermsOfService() {
             </li>
             <li>
               Fail to comply with local real estate regulations, including but not limited
-              to RERA licensing requirements in Dubai and Nigerian real estate regulatory
-              frameworks
+              to RERA licensing requirements in Dubai and the UAE
             </li>
             <li>
               Attempt to reverse engineer, decompile, or extract source code from the
@@ -345,9 +333,9 @@ export function TermsOfService() {
           <p>
             By using the Service, you represent and warrant that you have obtained all
             necessary consents from your leads for data collection and processing as
-            required by applicable data protection laws, including the Nigeria Data
-            Protection Regulation (NDPR) and the Dubai International Financial Centre (DIFC)
-            Data Protection Law.
+            required by applicable data protection laws, including the UAE Personal Data
+            Protection Law (PDPL) and the Dubai International Financial Centre (DIFC) Data
+            Protection Law.
           </p>
         </Section>
 
@@ -408,23 +396,10 @@ export function TermsOfService() {
 
         <Section id="governing-law" title="11. Governing Law">
           <p>
-            These Terms are governed by and construed in accordance with the applicable laws
-            based on your registered market:
+            These Terms shall be governed by and construed in accordance with the laws of the
+            Emirate of Dubai and the United Arab Emirates. Any disputes shall be subject to
+            the exclusive jurisdiction of the courts of Dubai, UAE.
           </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              <strong>Nigeria users:</strong> These Terms shall be governed by and construed
-              in accordance with the laws of the Federal Republic of Nigeria. Any disputes
-              shall be subject to the exclusive jurisdiction of the courts of the Federal
-              Republic of Nigeria.
-            </li>
-            <li>
-              <strong>Dubai/UAE users:</strong> These Terms shall be governed by and
-              construed in accordance with the laws of the Emirate of Dubai and the United
-              Arab Emirates. Any disputes shall be subject to the exclusive jurisdiction of
-              the courts of Dubai, UAE.
-            </li>
-          </ul>
         </Section>
 
         <Section id="changes" title="12. Changes to Terms">

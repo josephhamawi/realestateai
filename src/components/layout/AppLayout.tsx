@@ -22,7 +22,7 @@ export function AppLayout() {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   // If tenant is null, show a helpful message instead of redirecting to onboarding loop
