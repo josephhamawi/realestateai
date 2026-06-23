@@ -190,7 +190,7 @@ export function PrivacyPolicy() {
         <Reveal>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
-              { icon: Shield, label: "NDPR Compliant", desc: "Nigeria Data Protection" },
+              { icon: Shield, label: "PDPL Compliant", desc: "UAE Data Protection" },
               { icon: Lock, label: "Encrypted", desc: "At rest and in transit" },
               { icon: Database, label: "Tenant Isolated", desc: "Your data stays yours" },
             ].map((item, i) => (
@@ -234,7 +234,6 @@ export function PrivacyPolicy() {
             <li>Email address and phone number</li>
             <li>Real estate license number</li>
             <li>Brokerage or agency name</li>
-            <li>Market selection (Nigeria or Dubai)</li>
           </ul>
 
           <h3 className="text-lg font-semibold text-gray-900 mt-6">Lead Data</h3>
@@ -256,8 +255,8 @@ export function PrivacyPolicy() {
 
           <h3 className="text-lg font-semibold text-gray-900 mt-6">Payment Information</h3>
           <p>
-            Payment processing is handled by Paystack (for Nigeria) and Stripe (for Dubai).
-            We do not store your credit card numbers, bank account details, or other
+            Payment processing is handled by Stripe. We do not store your credit card
+            numbers, bank account details, or other
             sensitive financial information on our servers. Payment processors handle all
             financial data in compliance with PCI-DSS standards.
           </p>
@@ -284,8 +283,8 @@ export function PrivacyPolicy() {
             </li>
             <li>
               <strong>Compliance with legal obligations:</strong> Meet regulatory requirements
-              under NDPR (Nigeria) and RERA (Dubai), maintain audit trails, and respond to
-              lawful requests from authorities
+              under the UAE Personal Data Protection Law (PDPL) and RERA, maintain audit
+              trails, and respond to lawful requests from authorities
             </li>
             <li>
               <strong>Communication:</strong> Send service updates, security alerts, and
@@ -339,12 +338,8 @@ export function PrivacyPolicy() {
                 purpose: "Messaging delivery and receipt for WhatsApp-based lead conversations",
               },
               {
-                name: "Paystack",
-                purpose: "Payment processing for Nigeria-based subscriptions (NGN)",
-              },
-              {
                 name: "Stripe",
-                purpose: "Payment processing for Dubai-based subscriptions (AED)",
+                purpose: "Payment processing for subscriptions (AED)",
               },
               {
                 name: "Google Calendar / Outlook Calendar",
@@ -369,10 +364,10 @@ export function PrivacyPolicy() {
           </p>
         </Section>
 
-        <Section id="ndpr" title="6. Nigeria Data Protection (NDPR)">
+        <Section id="pdpl" title="6. UAE Data Protection (PDPL)">
           <p>
-            For users operating in the Nigeria market, we comply with the Nigeria Data
-            Protection Regulation (NDPR) and the Nigeria Data Protection Act. This includes:
+            We comply with the UAE Personal Data Protection Law (Federal Decree-Law No. 45 of
+            2021) and applicable UAE data protection requirements. This includes:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
@@ -389,12 +384,11 @@ export function PrivacyPolicy() {
             </li>
             <li>
               <strong>Breach notification:</strong> In the event of a data breach affecting
-              your personal data, we will notify the National Information Technology
-              Development Agency (NITDA) within 72 hours and notify affected users without
-              undue delay
+              your personal data, we will notify the relevant UAE authority and affected
+              users without undue delay
             </li>
             <li>
-              <strong>Data Protection Officer:</strong> Questions regarding NDPR compliance
+              <strong>Data Protection Officer:</strong> Questions regarding PDPL compliance
               may be directed to our contact email
             </li>
           </ul>
@@ -437,14 +431,14 @@ export function PrivacyPolicy() {
               subscription is active and your account is in good standing
             </li>
             <li>
-              <strong>Account closure (Nigeria):</strong> Upon account closure or deletion
+              <strong>Account closure:</strong> Upon account closure or deletion
               request, your data will be permanently deleted within 30 days, except where
               retention is required by law
             </li>
             <li>
               <strong>Communication logs (Dubai):</strong> Communication logs and transaction
-              records for Dubai market users are retained for a minimum of 5 years in
-              compliance with RERA audit trail requirements, even after account closure
+              records are retained for a minimum of 5 years in compliance with RERA audit
+              trail requirements, even after account closure
             </li>
             <li>
               <strong>Anonymized data:</strong> We may retain anonymized, aggregated data
@@ -456,8 +450,7 @@ export function PrivacyPolicy() {
 
         <Section id="your-rights" title="9. Your Rights">
           <p>
-            Regardless of your market, you have the following rights regarding your personal
-            data:
+            You have the following rights regarding your personal data:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
@@ -528,8 +521,8 @@ export function PrivacyPolicy() {
             </a>
           </div>
           <p className="mt-4 text-sm text-gray-500">
-            Operated by Kode Foundry Atelier. Serving real estate agents in Lagos, Abuja,
-            and Dubai.
+            Operated by Kode Foundry Atelier. Serving real estate agents in Dubai and across
+            the UAE.
           </p>
         </Section>
       </div>

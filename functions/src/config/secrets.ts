@@ -111,21 +111,6 @@ export async function getTelegramConfig(): Promise<{
 }
 
 /**
- * Get Paystack config from platform_config.
- */
-export async function getPaystackConfig(): Promise<{
-  secretKey: string;
-  publicKey: string;
-}> {
-  const config = await loadPlatformConfig();
-  const ps = (config.paystack || {}) as Record<string, string>;
-  return {
-    secretKey: process.env.PAYSTACK_SECRET_KEY || ps.secretKey || "",
-    publicKey: process.env.PAYSTACK_PUBLIC_KEY || ps.publicKey || "",
-  };
-}
-
-/**
  * Get Stripe config from platform_config.
  */
 export async function getStripeConfig(): Promise<{

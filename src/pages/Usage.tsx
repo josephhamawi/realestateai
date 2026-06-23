@@ -6,7 +6,6 @@ import { MessageSquare, Brain, Calendar, Users, TrendingUp } from "lucide-react"
 export function Usage() {
   const { tenant } = useTenant();
   const usage = tenant?.usage;
-  const market = tenant?.market || "nigeria";
 
   const tierLimits: Record<string, { leads: number; label: string }> = {
     solo: { leads: 100, label: "Solo" },
@@ -63,7 +62,7 @@ export function Usage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Usage</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Track your platform consumption for {market === "dubai" ? "Dubai" : "Nigeria"} market
+          Track your platform consumption for the Dubai market
         </p>
       </div>
 

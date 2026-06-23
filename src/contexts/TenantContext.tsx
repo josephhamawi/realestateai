@@ -5,7 +5,7 @@ import { useAuthContext } from "./AuthContext";
 
 export interface TenantData {
   tenantId: string;
-  market: "nigeria" | "dubai";
+  market: "dubai";
   region: string;
   status: "trial" | "active" | "suspended" | "cancelled";
   createdAt: unknown;
@@ -17,6 +17,7 @@ export interface TenantData {
     licenseNumber: string;
     brokerage: string;
     preferredLanguage: string;
+    referralSource?: string;
   };
   config: {
     currency: { code: string; symbol: string; locale: string };
@@ -24,7 +25,7 @@ export interface TenantData {
     weekend: string[];
     dateFormat: string;
     compliance: {
-      framework: "NDPR" | "RERA";
+      framework: "RERA";
       consentRequired: boolean;
       auditRetentionYears: number;
     };
@@ -45,14 +46,15 @@ export interface TenantData {
   };
   integrations: {
     whatsapp: { enabled: boolean; phoneNumberId?: string; wabaId?: string };
+    telegram?: { enabled: boolean; botToken?: string; botUsername?: string };
     vynn?: { enabled: boolean; apiKey?: string; model?: string };
     calendar: {
-      google?: { enabled: boolean; email?: string };
-      outlook?: { enabled: boolean; email?: string };
+      google?: { enabled: boolean; email?: string; connected?: boolean };
+      outlook?: { enabled: boolean; email?: string; connected?: boolean };
       preferred?: "google" | "outlook";
     };
     payments: {
-      provider?: "paystack" | "stripe";
+      provider?: "stripe";
       customerId?: string;
       subscriptionId?: string;
       tier?: "solo" | "team" | "brokerage";

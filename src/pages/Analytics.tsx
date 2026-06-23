@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, CardHeader } from "../components/common/Card";
-import { useTenant } from "../hooks/useTenant";
 import { useLeads } from "../hooks/useLeads";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -10,7 +9,6 @@ import {
 const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
 
 export function Analytics() {
-  const { tenant } = useTenant();
   const { leads } = useLeads({ maxResults: 200 });
 
   // Lead source distribution
@@ -49,7 +47,7 @@ export function Analytics() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Performance insights for your {tenant?.market === "dubai" ? "Dubai" : "Nigeria"} market
+          Performance insights for your Dubai market
         </p>
       </div>
 

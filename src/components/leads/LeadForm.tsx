@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../common/Button";
-import { useTenant } from "../../hooks/useTenant";
-import { MARKET_DEFAULTS } from "../../lib/marketConfig";
+import { DUBAI_DEFAULTS } from "../../lib/marketConfig";
 
 interface LeadFormProps {
   onSubmit: (data: LeadFormData) => void;
@@ -22,9 +21,7 @@ export interface LeadFormData {
 }
 
 export function LeadForm({ onSubmit, loading }: LeadFormProps) {
-  const { tenant } = useTenant();
-  const market = tenant?.market || "nigeria";
-  const marketDefaults = MARKET_DEFAULTS[market];
+  const marketDefaults = DUBAI_DEFAULTS;
 
   const [formData, setFormData] = useState<LeadFormData>({
     name: "",
@@ -91,9 +88,8 @@ export function LeadForm({ onSubmit, loading }: LeadFormProps) {
             <option value="manual">Manual Entry</option>
             <option value="whatsapp">WhatsApp</option>
             <option value="referral">Referral</option>
-            {market === "dubai" && <option value="property_finder">Property Finder</option>}
-            {market === "dubai" && <option value="bayut">Bayut</option>}
-            {market === "nigeria" && <option value="nigerian_property_centre">Nigerian Property Centre</option>}
+            <option value="property_finder">Property Finder</option>
+            <option value="bayut">Bayut</option>
             <option value="other">Other</option>
           </select>
         </div>
@@ -128,7 +124,7 @@ export function LeadForm({ onSubmit, loading }: LeadFormProps) {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Budget Min ({tenant?.config?.currency || "NGN"})
+            Budget Min ({marketDefaults.currency.code})
           </label>
           <input
             type="number"
@@ -139,7 +135,7 @@ export function LeadForm({ onSubmit, loading }: LeadFormProps) {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Budget Max ({tenant?.config?.currency || "NGN"})
+            Budget Max ({marketDefaults.currency.code})
           </label>
           <input
             type="number"

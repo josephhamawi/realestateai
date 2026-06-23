@@ -92,7 +92,7 @@ export const complianceLogger = functions.https.onCall(
 
         await db.doc(`tenants/${tenantId}/leads/${leadId}`).update({
           status: "dead",
-          notes: "NDPR deletion requested",
+          notes: "Data deletion requested",
           updatedAt: FieldValue.serverTimestamp(),
         });
 
@@ -154,7 +154,7 @@ export const complianceLogger = functions.https.onCall(
           eventType: "deletion_completed",
           severity: "info",
           details: {
-            description: `Lead ${leadId} deleted per NDPR request. No PII retained.`,
+            description: `Lead ${leadId} deleted per deletion request. No PII retained.`,
           },
           timestamp: FieldValue.serverTimestamp(),
         });

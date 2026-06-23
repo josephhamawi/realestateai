@@ -1,12 +1,6 @@
 import * as functions from "firebase-functions";
 import { db, FieldValue, Timestamp } from "../config/firebase";
-import { getSecret } from "../config/secrets";
 import { loadTenant } from "../utils/marketConfig";
-import {
-  initializePaystackTransaction,
-  verifyPaystackSignature,
-  getPaystackAmount,
-} from "../services/paystack";
 import {
   createCheckoutSession,
   constructWebhookEvent,
@@ -30,94 +24,14 @@ export const paymentProcessor = functions.https.onCall(
 
     const tenant = await loadTenant(context.auth.uid);
 
-    if (tenant.market === "nigeria") {
-      const result = await initializePaystackTransaction(
-        tenant.agent.email,
-        getPaystackAmount(tier),
-        { tenantId: tenant.tenantId, tier }
-      );
-      return {
-        authorizationUrl: result.authorizationUrl,
-        reference: result.reference,
-      };
-    }
-
-    if (tenant.market === "dubai") {
-      const result = await createCheckoutSession(
-        tenant.tenantId,
-        tenant.agent.email,
-        tier
-      );
-      return { sessionId: result.sessionId, url: result.url };
-    }
-
-    throw new functions.https.HttpsError(
-      "invalid-argument",
-      "Unsupported market"
+    const result = await createCheckoutSession(
+      tenant.tenantId,
+      tenant.agent.email,
+      tier
     );
+    return { sessionId: result.sessionId, url: result.url };
   }
 );
-
-// --- Paystack Webhook ---
-export const paystackWebhook = functions.https.onRequest(async (req, res) => {
-  if (req.method !== "POST") {
-    res.status(405).send("Method not allowed");
-    return;
-  }
-
-  try {
-    const paystackSecret = await getSecret("PAYSTACK_SECRET_KEY");
-    const signature = req.headers["x-paystack-signature"] as string;
-
-    if (!verifyPaystackSignature(req.body, signature, paystackSecret)) {
-      res.status(401).send("Invalid signature");
-      return;
-    }
-
-    // Idempotency check
-    const eventRef = req.body.data?.reference as string;
-    if (eventRef) {
-      const existing = await db.doc(`_idempotency/paystack_${eventRef}`).get();
-      if (existing.exists) {
-        res.status(200).send("Already processed");
-        return;
-      }
-    }
-
-    const event = req.body.event as string;
-    const data = req.body.data;
-
-    switch (event) {
-      case "charge.success": {
-        const tenantId = data?.metadata?.tenantId;
-        const tier = data?.metadata?.tier;
-        if (tenantId && tier) {
-          await activateSubscription(tenantId, "paystack", tier, data);
-        }
-        break;
-      }
-      case "invoice.payment_failed": {
-        const tenantId = data?.metadata?.tenantId;
-        if (tenantId) {
-          await handleFailedPayment(tenantId);
-        }
-        break;
-      }
-    }
-
-    // Mark as processed
-    if (eventRef) {
-      await db
-        .doc(`_idempotency/paystack_${eventRef}`)
-        .set({ processedAt: FieldValue.serverTimestamp() });
-    }
-
-    res.status(200).send("OK");
-  } catch (error) {
-    console.error("Paystack webhook error:", error);
-    res.status(500).send("Error");
-  }
-});
 
 // --- Stripe Webhook ---
 export const stripeWebhook = functions.https.onRequest(async (req, res) => {
@@ -192,7 +106,7 @@ export const stripeWebhook = functions.https.onRequest(async (req, res) => {
 
 async function activateSubscription(
   tenantId: string,
-  provider: "paystack" | "stripe",
+  provider: "stripe",
   tier: string,
   paymentData: Record<string, any>
 ): Promise<void> {
@@ -205,7 +119,6 @@ async function activateSubscription(
     "integrations.payments.provider": provider,
     "integrations.payments.tier": tier,
     "integrations.payments.subscriptionId":
-      paymentData.subscription_code ||
       paymentData.subscription ||
       paymentData.id ||
       "",

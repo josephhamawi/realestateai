@@ -1,17 +1,19 @@
+export type MarketId = "dubai";
+
 export interface MarketConfig {
-  marketId: "nigeria" | "dubai";
+  marketId: MarketId;
   displayName: string;
-  region: "africa-west" | "mena";
+  region: "mena";
   currency: {
-    code: "NGN" | "AED";
+    code: "AED";
     symbol: string;
     locale: string;
   };
-  timezone: "Africa/Lagos" | "Asia/Dubai";
+  timezone: "Asia/Dubai";
   weekend: string[];
   dateFormat: string;
   compliance: {
-    framework: "NDPR" | "RERA";
+    framework: "RERA";
     consentRequired: boolean;
     auditRetentionYears: number;
     blockedPhrases: string[];

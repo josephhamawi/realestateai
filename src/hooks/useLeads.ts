@@ -14,7 +14,7 @@ import { useTenantContext } from "../contexts/TenantContext";
 export interface LeadData {
   leadId: string;
   tenantId: string;
-  market: "nigeria" | "dubai";
+  market: "dubai";
   source: string;
   status: string;
   createdAt: unknown;
@@ -62,6 +62,12 @@ export interface LeadData {
     status: string;
   };
   notes?: string;
+  feedback?: {
+    outcome?: string | null;
+    aiRating?: "positive" | "negative" | null;
+    notes?: string;
+    ratedAt?: unknown;
+  };
 }
 
 export interface LeadFilters {
