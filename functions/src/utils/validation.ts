@@ -6,8 +6,8 @@ export function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export function isValidMarket(market: string): market is "nigeria" | "dubai" {
-  return market === "nigeria" || market === "dubai";
+export function isValidMarket(market: string): market is "dubai" {
+  return market === "dubai";
 }
 
 export function isValidTier(tier: string): tier is "solo" | "team" | "brokerage" {
@@ -22,19 +22,14 @@ export function sanitizeText(text: string): string {
     .slice(0, 4096);          // Limit length
 }
 
-export function normalizePhone(phone: string, market: "nigeria" | "dubai"): string {
+export function normalizePhone(phone: string): string {
   // Remove all non-digit characters except leading +
   let cleaned = phone.replace(/[^\d+]/g, "");
 
-  // Add country code if missing
+  // Add UAE country code if missing
   if (!cleaned.startsWith("+")) {
-    if (market === "nigeria") {
-      if (cleaned.startsWith("0")) cleaned = cleaned.slice(1);
-      cleaned = "+234" + cleaned;
-    } else {
-      if (cleaned.startsWith("0")) cleaned = cleaned.slice(1);
-      cleaned = "+971" + cleaned;
-    }
+    if (cleaned.startsWith("0")) cleaned = cleaned.slice(1);
+    cleaned = "+971" + cleaned;
   }
 
   return cleaned;

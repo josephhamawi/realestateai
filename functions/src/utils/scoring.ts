@@ -11,7 +11,6 @@ export interface ScoringInput {
   messageCount: number;
   hasAppointment: boolean;
   hasConsent: boolean;
-  market: "nigeria" | "dubai";
 }
 
 export function calculateLeadScore(input: ScoringInput): {
@@ -37,8 +36,8 @@ export function calculateLeadScore(input: ScoringInput): {
   // Appointment bonus (10 points)
   if (input.hasAppointment) score += 10;
 
-  // Consent bonus (10 points for Nigeria)
-  if (input.market === "nigeria" && input.hasConsent) score += 10;
+  // Consent bonus (10 points)
+  if (input.hasConsent) score += 10;
 
   // Cap at 100
   score = Math.min(score, 100);

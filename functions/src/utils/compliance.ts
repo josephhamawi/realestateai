@@ -8,7 +8,6 @@ export interface ComplianceResult {
 
 export function runComplianceCheck(
   text: string,
-  market: "nigeria" | "dubai",
   marketConfig: MarketConfig
 ): ComplianceResult {
   const violations: string[] = [];
@@ -24,45 +23,24 @@ export function runComplianceCheck(
     }
   }
 
-  // Market-specific checks
-  if (market === "dubai") {
-    // RERA compliance checks
-    if (
-      lowerText.includes("guaranteed return") ||
-      lowerText.includes("guaranteed roi") ||
-      lowerText.includes("assured yield") ||
-      lowerText.includes("guaranteed profit")
-    ) {
-      violations.push("RERA violation: guaranteed returns language detected");
-    }
-
-    // Nationality steering
-    const nationalityPatterns = [
-      /as an? (?:indian|british|russian|chinese|pakistani) (?:buyer|investor)/i,
-      /only for (?:indian|british|russian|chinese|pakistani)/i,
-    ];
-    for (const pattern of nationalityPatterns) {
-      if (pattern.test(text)) {
-        violations.push("RERA violation: nationality-based steering detected");
-      }
-    }
+  // RERA compliance checks
+  if (
+    lowerText.includes("guaranteed return") ||
+    lowerText.includes("guaranteed roi") ||
+    lowerText.includes("assured yield") ||
+    lowerText.includes("guaranteed profit")
+  ) {
+    violations.push("RERA violation: guaranteed returns language detected");
   }
 
-  if (market === "nigeria") {
-    // NDPR checks
-    // Fraud indicators
-    const fraudPatterns = [
-      "send money to",
-      "wire transfer to personal",
-      "western union",
-      "moneygram",
-      "advance fee",
-      "processing fee upfront",
-    ];
-    for (const pattern of fraudPatterns) {
-      if (lowerText.includes(pattern)) {
-        violations.push(`Fraud indicator: "${pattern}" detected`);
-      }
+  // Nationality steering
+  const nationalityPatterns = [
+    /as an? (?:indian|british|russian|chinese|pakistani) (?:buyer|investor)/i,
+    /only for (?:indian|british|russian|chinese|pakistani)/i,
+  ];
+  for (const pattern of nationalityPatterns) {
+    if (pattern.test(text)) {
+      violations.push("RERA violation: nationality-based steering detected");
     }
   }
 
@@ -72,7 +50,7 @@ export function runComplianceCheck(
 
   // Determine severity
   const hasBlockingViolation = violations.some(
-    (v) => v.includes("RERA violation") || v.includes("Fraud indicator")
+    (v) => v.includes("RERA violation")
   );
 
   return {
