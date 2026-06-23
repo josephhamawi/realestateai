@@ -238,7 +238,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
           >
             {(tenant?.agent as Record<string, unknown>)?.avatarUrl ? (
               <img
-                src={(tenant.agent as Record<string, unknown>).avatarUrl as string}
+                src={(tenant?.agent as Record<string, unknown>)?.avatarUrl as string}
                 alt=""
                 className="h-8 w-8 rounded-full object-cover"
               />
