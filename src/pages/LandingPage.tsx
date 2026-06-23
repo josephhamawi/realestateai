@@ -1006,8 +1006,8 @@ function Footer() {
             <h4 className="text-sm font-semibold text-white mb-4">Contact</h4>
             <ul className="space-y-3">
               <li>
-                <a href="mailto:kodefoundryatelier@gmail.com" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  kodefoundryatelier@gmail.com
+                <a href="mailto:hello@kodefoundry.com" className="text-sm text-gray-400 hover:text-white transition-colors">
+                  hello@kodefoundry.com
                 </a>
               </li>
               <li className="text-sm text-gray-400">Dubai, UAE</li>
