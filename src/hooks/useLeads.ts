@@ -62,6 +62,12 @@ export interface LeadData {
     status: string;
   };
   notes?: string;
+  feedback?: {
+    outcome?: string | null;
+    aiRating?: "positive" | "negative" | null;
+    notes?: string;
+    ratedAt?: unknown;
+  };
 }
 
 export interface LeadFilters {

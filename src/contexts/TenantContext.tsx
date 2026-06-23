@@ -17,6 +17,7 @@ export interface TenantData {
     licenseNumber: string;
     brokerage: string;
     preferredLanguage: string;
+    referralSource?: string;
   };
   config: {
     currency: { code: string; symbol: string; locale: string };
@@ -45,10 +46,11 @@ export interface TenantData {
   };
   integrations: {
     whatsapp: { enabled: boolean; phoneNumberId?: string; wabaId?: string };
+    telegram?: { enabled: boolean; botToken?: string; botUsername?: string };
     vynn?: { enabled: boolean; apiKey?: string; model?: string };
     calendar: {
-      google?: { enabled: boolean; email?: string };
-      outlook?: { enabled: boolean; email?: string };
+      google?: { enabled: boolean; email?: string; connected?: boolean };
+      outlook?: { enabled: boolean; email?: string; connected?: boolean };
       preferred?: "google" | "outlook";
     };
     payments: {
