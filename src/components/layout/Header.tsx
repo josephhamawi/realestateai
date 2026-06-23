@@ -37,7 +37,6 @@ export function Header({ onToggleSidebar }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  const marketBadgeVariant = tenant?.market === "dubai" ? "info" : "success";
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   // Listen to real-time notifications from leads (new leads + appointments)
@@ -138,8 +137,8 @@ export function Header({ onToggleSidebar }: HeaderProps) {
         </button>
         {tenant && (
           <div className="flex items-center gap-2">
-            <Badge variant={marketBadgeVariant}>
-              {tenant.market === "dubai" ? "Dubai" : "Nigeria"}
+            <Badge variant="info">
+              Dubai
             </Badge>
             <Badge
               variant={

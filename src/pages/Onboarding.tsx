@@ -162,7 +162,6 @@ const countryCodes = [
   { code: "+64", country: "NZ", name: "New Zealand" },
   { code: "+505", country: "NI", name: "Nicaragua" },
   { code: "+227", country: "NE", name: "Niger" },
-  { code: "+234", country: "NG", name: "Nigeria" },
   { code: "+683", country: "NU", name: "Niue" },
   { code: "+47", country: "NO", name: "Norway" },
   { code: "+968", country: "OM", name: "Oman" },
@@ -241,7 +240,7 @@ export function Onboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const defaultCountryCode = tenant?.market === "dubai" ? "+971" : "+234";
+  const defaultCountryCode = "+971";
   const [phoneCode, setPhoneCode] = useState(defaultCountryCode);
   const [phoneNumber, setPhoneNumber] = useState(() => {
     const existing = tenant?.agent?.phone || "";
@@ -469,7 +468,7 @@ export function Onboarding() {
                   type="text"
                   value={aiConfig.personaName}
                   onChange={(e) => setAiConfig({ ...aiConfig, personaName: e.target.value })}
-                  placeholder={tenant?.market === "dubai" ? "Aisha" : "Chioma"}
+                  placeholder="Aisha"
                   className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 />
               </div>
@@ -588,7 +587,7 @@ export function Onboarding() {
                     <CreditCard className="h-8 w-8 text-brand-600" />
                     <div>
                       <p className="text-sm font-medium text-gray-900">
-                        {tenant?.market === "dubai" ? "Stripe" : "Paystack"}
+                        Stripe
                       </p>
                       <p className="text-xs text-gray-500">Set up billing and subscription</p>
                     </div>
