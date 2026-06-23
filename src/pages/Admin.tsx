@@ -474,7 +474,7 @@ export function Admin() {
                     <CreditCard className="h-6 w-6 text-indigo-600" />
                     <div>
                       <h2 className="text-lg font-semibold text-gray-900">Stripe (Dubai)</h2>
-                      <p className="text-sm text-gray-500">Payment processing for Dubai agents — AED, cards, Apple Pay, Google Pay</p>
+                      <p className="text-sm text-gray-500">Payment processing for Dubai agents: AED, cards, Apple Pay, Google Pay</p>
                     </div>
                   </div>
                   <div className="space-y-4">
@@ -593,7 +593,7 @@ export function Admin() {
                   {saveStatus === "error" && (
                     <div className="flex items-center gap-2 text-red-600">
                       <AlertCircle className="h-5 w-5" />
-                      <span className="text-sm font-medium">Failed to save — check console for details</span>
+                      <span className="text-sm font-medium">Failed to save. Check console for details.</span>
                     </div>
                   )}
                 </div>
@@ -626,7 +626,7 @@ export function Admin() {
                 </div>
                 <div className="flex gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-bold text-purple-700">3</span>
-                  <p><strong>Vynn AI:</strong> Go to <span className="font-mono text-xs">vynnai.app</span> → Get your API key. "Auto" model recommended — it picks the best model automatically.</p>
+                  <p><strong>Vynn AI:</strong> Go to <span className="font-mono text-xs">vynnai.app</span> → Get your API key. "Auto" model recommended. It picks the best model automatically.</p>
                 </div>
                 <div className="flex gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700">4</span>
