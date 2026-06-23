@@ -20,7 +20,7 @@ export const aiConversation = functions.https.onCall(
 
     // Load tenant and market config
     const tenant = await loadTenant(tenantId);
-    const marketConfig = await loadMarketConfig(tenant.market);
+    const marketConfig = await loadMarketConfig();
 
     // Load lead
     const leadSnap = await db
@@ -73,7 +73,6 @@ export const aiConversation = functions.https.onCall(
     // Run compliance check
     const complianceResult = runComplianceCheck(
       aiReplyText,
-      tenant.market,
       marketConfig
     );
 
