@@ -239,28 +239,28 @@ export function AboutUs() {
       icon: Globe2,
       title: "Market Intelligence First",
       description:
-        "We don't build generic chatbots. Aisha knows Dubai inside out. That's the difference.",
+        "Aisha knows Dubai. She talks about Palm Jumeirah, Dubai Marina, and Downtown the way a local agent would.",
       color: "bg-purple-50 text-purple-600",
     },
     {
       icon: Users,
       title: "Agent-First Design",
       description:
-        "You're the expert. AI handles the qualifying. You handle the closing.",
+        "Aisha qualifies your leads. You close the deals. You keep control of every account.",
       color: "bg-blue-50 text-blue-600",
     },
     {
       icon: ShieldCheck,
       title: "Compliance by Default",
       description:
-        "UAE PDPL and RERA built in from day one, not bolted on later.",
+        "We built UAE PDPL and RERA requirements into the product from the start.",
       color: "bg-green-50 text-green-600",
     },
     {
       icon: Eye,
       title: "Transparent AI",
       description:
-        "Every AI message is visible. You can take over any conversation instantly.",
+        "You see every message Aisha sends, and you can take over any conversation when you want to.",
       color: "bg-yellow-50 text-yellow-600",
     },
   ];
@@ -290,12 +290,12 @@ export function AboutUs() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white leading-[1.1] tracking-tight">
-            Built for Real Estate Agents Who Refuse to Miss a Deal
+            Built for Dubai Real Estate Agents
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-blue-100/80 max-w-2xl mx-auto leading-relaxed">
-            AI that understands your market, speaks your language, and works around the
-            clock so you never lose another lead.
+            Aisha replies to your leads in seconds, day or night, in the language they
+            messaged you in. You wake up to qualified buyers instead of missed messages.
           </p>
         </div>
 
@@ -320,16 +320,16 @@ export function AboutUs() {
           <Reveal delay={100}>
             <div className="rounded-2xl bg-gray-50 border border-gray-200 p-8 lg:p-12">
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                We watched talented agents in Dubai lose deals simply because
-                they couldn't respond fast enough. A lead messages at 2 AM from Mumbai
-                asking about Palm Jumeirah. By morning, they've already talked to three
-                other agents.
+                We watched good agents in Dubai lose deals because they could not reply
+                fast enough. A buyer messages at 2 AM from Mumbai asking about Palm
+                Jumeirah. By morning, that buyer has already spoken to three other agents.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                We built AgentFlow AI to make sure that never happens again. Our platform
-                combines culturally aware AI with deep market knowledge, so your leads get
-                instant, intelligent responses in the language and context they expect,
-                from first-time buyers to luxury property terminology in Dubai Marina.
+                We built AgentFlow AI to close that gap. Aisha replies the moment a lead
+                writes in, in their own language, and she knows the Dubai market well
+                enough to talk through a first-time purchase or a luxury listing in Dubai
+                Marina. By the time you pick up the conversation, the lead is already
+                qualified.
               </p>
             </div>
           </Reveal>
@@ -351,9 +351,9 @@ export function AboutUs() {
           <Reveal delay={100}>
             <div className="rounded-2xl bg-gradient-to-br from-brand-600 to-purple-700 p-8 lg:p-12 shadow-xl shadow-brand-500/20">
               <p className="text-xl sm:text-2xl text-white font-medium leading-relaxed">
-                "To give every real estate agent in emerging markets an AI-powered
-                assistant that understands their culture, speaks their language, and works
-                24/7."
+                We want every real estate agent in Dubai and the UAE to have an AI
+                assistant that knows the local market, answers leads in their own
+                language, and never goes offline.
               </p>
             </div>
           </Reveal>
@@ -414,14 +414,14 @@ export function AboutUs() {
                 <Bot className="h-8 w-8 text-brand-600" />
               </div>
               <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                Kode Foundry Atelier is a technology studio building AI-powered tools for
-                emerging markets. We specialize in combining cutting-edge artificial
-                intelligence with deep local market understanding.
+                Kode Foundry Atelier is a technology studio that builds AI tools for the
+                UAE property market. We pair AI with a working knowledge of how Dubai
+                agents actually sell.
               </p>
               <p className="text-gray-600 leading-relaxed">
-                Our team brings together expertise in AI, real estate technology, and
-                emerging market dynamics. We understand the unique challenges agents face
-                in Dubai and across the UAE, because we've seen them firsthand.
+                Our team has spent time around AI, real estate software, and the day-to-day
+                pressures of selling property in Dubai and across the UAE. We have watched
+                agents lose leads to slow replies, and we built AgentFlow AI to fix it.
               </p>
             </div>
           </Reveal>
@@ -436,7 +436,7 @@ export function AboutUs() {
               Get in Touch
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-              Have Questions? We'd Love to Hear From You
+              Questions? Email Us
             </h2>
           </Reveal>
 
@@ -462,8 +462,8 @@ export function AboutUs() {
               Ready to Stop Losing Leads?
             </h2>
             <p className="text-lg text-blue-100/80 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Join agents across Dubai and the UAE who are closing more deals with
-              AI-powered lead qualification.
+              Agents across Dubai and the UAE use Aisha to qualify leads and close more
+              deals. Start your free trial and see how she handles your next inquiry.
             </p>
             <Link
               to="/signup"

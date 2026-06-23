@@ -250,8 +250,7 @@ export function Contact() {
             Get in Touch
           </h1>
           <p className="mt-4 text-blue-100/80 text-lg max-w-2xl mx-auto">
-            Have questions about AgentFlow AI? We're here to help. Reach out and we'll
-            respond within 24 hours.
+            Send us your questions about AgentFlow AI and we will reply within 24 hours.
           </p>
         </div>
       </div>
@@ -312,7 +311,7 @@ export function Contact() {
                       to="/#faq"
                       className="text-sm text-brand-600 hover:text-brand-700"
                     >
-                      Check our FAQ for quick answers
+                      Read the FAQ
                     </Link>
                   </div>
                 </div>
@@ -361,7 +360,7 @@ export function Contact() {
                       Message Sent!
                     </h3>
                     <p className="text-gray-600 max-w-sm">
-                      Thank you for reaching out. We'll respond within 24 hours.
+                      Thanks for writing in. We will reply within 24 hours.
                     </p>
                   </div>
                 ) : (
