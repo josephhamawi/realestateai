@@ -3,7 +3,7 @@ import { Timestamp } from "firebase-admin/firestore";
 export interface Appointment {
   appointmentId: string;
   tenantId: string;
-  market: "nigeria" | "dubai";
+  market: "dubai";
   leadId: string;
   agentId?: string;
 
