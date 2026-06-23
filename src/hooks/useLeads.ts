@@ -14,7 +14,7 @@ import { useTenantContext } from "../contexts/TenantContext";
 export interface LeadData {
   leadId: string;
   tenantId: string;
-  market: "nigeria" | "dubai";
+  market: "dubai";
   source: string;
   status: string;
   createdAt: unknown;

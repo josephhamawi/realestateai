@@ -14,7 +14,7 @@ import { useTenantContext } from "../contexts/TenantContext";
 export interface AppointmentData {
   appointmentId: string;
   tenantId: string;
-  market: "nigeria" | "dubai";
+  market: "dubai";
   leadId: string;
   agentId?: string;
   scheduledAt: Timestamp;
