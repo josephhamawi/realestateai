@@ -27,7 +27,7 @@ function EditablePhone({ phone, hasTelegram, onSave }: { phone?: string; hasTele
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="+2349064465673"
+          placeholder="+971501234567"
           autoFocus
           className="w-40 rounded border border-gray-300 px-2 py-1 text-sm font-mono focus:border-brand-500 focus:outline-none"
         />

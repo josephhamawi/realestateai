@@ -120,7 +120,7 @@ function Footer() {
               <span className="text-lg font-bold text-white">AgentFlow AI</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-6">
-              AI-powered lead qualification for real estate agents in Nigeria and Dubai.
+              AI-powered lead qualification for real estate agents in Dubai and the UAE.
             </p>
             <div className="flex items-center gap-3">
               <a
@@ -195,7 +195,6 @@ function Footer() {
                   kodefoundryatelier@gmail.com
                 </a>
               </li>
-              <li className="text-sm text-gray-400">Lagos, Nigeria</li>
               <li className="text-sm text-gray-400">Dubai, UAE</li>
             </ul>
           </div>
@@ -206,7 +205,7 @@ function Footer() {
             &copy; {new Date().getFullYear()} AgentFlow AI. All rights reserved.
           </p>
           <p className="text-xs text-gray-500">
-            Made with AI for real estate agents in Nigeria &amp; Dubai
+            Made with AI for real estate agents in Dubai &amp; the UAE
           </p>
         </div>
       </div>
