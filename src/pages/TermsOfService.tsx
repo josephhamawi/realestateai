@@ -410,8 +410,8 @@ export function TermsOfService() {
             of the updated Terms constitutes your acceptance of the changes.
           </p>
           <p>
-            We recommend reviewing these Terms periodically to stay informed about your
-            rights and obligations.
+            Review these Terms periodically to stay informed about your rights and
+            obligations.
           </p>
         </Section>
 
