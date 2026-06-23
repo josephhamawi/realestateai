@@ -5,7 +5,7 @@ import { useAuthContext } from "./AuthContext";
 
 export interface TenantData {
   tenantId: string;
-  market: "nigeria" | "dubai";
+  market: "dubai";
   region: string;
   status: "trial" | "active" | "suspended" | "cancelled";
   createdAt: unknown;
@@ -24,7 +24,7 @@ export interface TenantData {
     weekend: string[];
     dateFormat: string;
     compliance: {
-      framework: "NDPR" | "RERA";
+      framework: "RERA";
       consentRequired: boolean;
       auditRetentionYears: number;
     };
@@ -52,7 +52,7 @@ export interface TenantData {
       preferred?: "google" | "outlook";
     };
     payments: {
-      provider?: "paystack" | "stripe";
+      provider?: "stripe";
       customerId?: string;
       subscriptionId?: string;
       tier?: "solo" | "team" | "brokerage";
