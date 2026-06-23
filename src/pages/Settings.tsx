@@ -10,7 +10,7 @@ import { useTenant } from "../hooks/useTenant";
 import { toast } from "../components/common/Toast";
 
 const countryCodes = [
-  { code: "+234", country: "NG" }, { code: "+971", country: "AE" },
+  { code: "+971", country: "AE" },
   { code: "+1", country: "US" }, { code: "+44", country: "GB" },
   { code: "+91", country: "IN" }, { code: "+86", country: "CN" },
   { code: "+81", country: "JP" }, { code: "+49", country: "DE" },
@@ -42,7 +42,6 @@ const countryCodes = [
 
 function SettingsMenu() {
   const navigate = useNavigate();
-  const { tenant } = useTenant();
 
   const groups = [
     {
@@ -66,7 +65,7 @@ function SettingsMenu() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Manage your {tenant?.market === "dubai" ? "Dubai" : "Nigeria"} account settings
+          Manage your Dubai account settings
         </p>
       </div>
       {groups.map((group) => (
@@ -114,7 +113,7 @@ function ProfileSettings() {
   const { tenant } = useTenant();
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const defaultCode = tenant?.market === "dubai" ? "+971" : "+234";
+  const defaultCode = "+971";
 
   const existingPhone = tenant?.agent?.phone || "";
   const matchedCode = countryCodes.find((c) => existingPhone.startsWith(c.code));
@@ -197,7 +196,7 @@ function ProfileSettings() {
     .slice(0, 2);
 
   return (
-    <div>
+    <div className="mx-auto max-w-5xl">
       <BackButton label="Back to Settings" />
       <h1 className="text-2xl font-bold text-gray-900">Profile Settings</h1>
       <p className="mt-1 text-sm text-gray-500">Update your agent profile and contact information</p>
@@ -261,7 +260,7 @@ function ProfileSettings() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700">{tenant?.market === "dubai" ? "RERA License" : "State License"}</label>
+              <label className="block text-sm font-medium text-gray-700">RERA License</label>
               <input type="text" value={license} onChange={(e) => setLicense(e.target.value)} className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500" />
             </div>
             <div>
@@ -272,7 +271,7 @@ function ProfileSettings() {
               <label className="block text-sm font-medium text-gray-700">
                 <div className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> Location</div>
               </label>
-              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder={tenant?.market === "dubai" ? "Dubai Marina, Dubai" : "Lekki, Lagos"} className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500" />
+              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Dubai Marina, Dubai" className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -286,9 +285,8 @@ function ProfileSettings() {
               <label className="text-sm font-medium text-gray-700">Preferred Language</label>
               <select value={language} onChange={(e) => setLanguage(e.target.value)} className="w-48 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
                 <option value="en">English</option>
-                {tenant?.market === "nigeria" && <option value="en-ng">English (Nigeria)</option>}
-                {tenant?.market === "dubai" && <option value="en-ae">English (UAE)</option>}
-                {tenant?.market === "dubai" && <option value="ar">Arabic</option>}
+                <option value="en-ae">English (UAE)</option>
+                <option value="ar">Arabic</option>
               </select>
             </div>
             <Button onClick={handleSave} loading={saving}><Save className="mr-2 h-4 w-4" />Save Profile</Button>
@@ -328,15 +326,15 @@ function AISettings() {
   };
 
   return (
-    <div>
+    <div className="mx-auto max-w-5xl">
       <BackButton label="Back to Settings" />
       <h1 className="text-2xl font-bold text-gray-900">AI Configuration</h1>
-      <p className="mt-1 text-sm text-gray-500">Customize how {tenant?.market === "dubai" ? "Aisha" : "Chioma"} interacts with your leads</p>
+      <p className="mt-1 text-sm text-gray-500">Customize how Aisha interacts with your leads</p>
       <Card className="mt-6">
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">AI Persona Name</label>
-            <input type="text" value={personaName} onChange={(e) => setPersonaName(e.target.value)} placeholder={tenant?.market === "dubai" ? "Aisha" : "Chioma"} className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500" />
+            <input type="text" value={personaName} onChange={(e) => setPersonaName(e.target.value)} placeholder="Aisha" className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Greeting Script</label>
@@ -574,7 +572,7 @@ function IntegrationsSettings() {
   ];
 
   return (
-    <div>
+    <div className="mx-auto max-w-5xl">
       <BackButton label="Back to Settings" />
       <h1 className="text-2xl font-bold text-gray-900">Integrations</h1>
       <p className="mt-1 text-sm text-gray-500">Manage your AI, messaging, and calendar connections</p>
@@ -666,7 +664,7 @@ function TeamSettings() {
   };
 
   return (
-    <div>
+    <div className="mx-auto max-w-5xl">
       <BackButton label="Back to Settings" />
       <div className="flex items-center justify-between">
         <div>
