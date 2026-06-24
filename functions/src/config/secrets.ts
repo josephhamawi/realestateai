@@ -68,6 +68,8 @@ export async function getWhatsAppConfig(): Promise<{
   accessToken: string;
   phoneNumberId: string;
   wabaId: string;
+  provider: "meta" | "360dialog";
+  d360ApiKey: string;
 }> {
   const config = await loadPlatformConfig();
   const wa = (config.whatsapp || {}) as Record<string, string>;
@@ -77,6 +79,10 @@ export async function getWhatsAppConfig(): Promise<{
     accessToken: process.env.WHATSAPP_ACCESS_TOKEN || wa.accessToken || "",
     phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID || wa.phoneNumberId || "",
     wabaId: process.env.WHATSAPP_WABA_ID || wa.wabaId || "",
+    provider: (process.env.WHATSAPP_PROVIDER || wa.provider || "meta") as
+      | "meta"
+      | "360dialog",
+    d360ApiKey: process.env.D360_API_KEY || wa.d360ApiKey || "",
   };
 }
 
