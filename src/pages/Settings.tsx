@@ -343,11 +343,11 @@ function AISettings() {
           <div>
             <label className="block text-sm font-medium text-gray-700">Handoff Threshold (0-100)</label>
             <input type="range" min="0" max="100" value={threshold} onChange={(e) => setThreshold(Number(e.target.value))} className="mt-2 w-full" />
-            <p className="text-sm text-gray-500">Score: {threshold} — AI suggests appointment when lead score reaches this level</p>
+            <p className="text-sm text-gray-500">Score: {threshold}. AI suggests an appointment when the lead score reaches this level.</p>
           </div>
           <div className="flex items-center gap-3">
             <input type="checkbox" id="approvalMode" checked={approvalMode} onChange={(e) => setApprovalMode(e.target.checked)} className="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
-            <label htmlFor="approvalMode" className="text-sm text-gray-700">Approval Mode — review AI messages before they're sent</label>
+            <label htmlFor="approvalMode" className="text-sm text-gray-700">Approval Mode: review AI messages before they're sent</label>
           </div>
           <div className="flex justify-end">
             <Button onClick={handleSave} loading={saving}><Save className="mr-2 h-4 w-4" />Save AI Config</Button>

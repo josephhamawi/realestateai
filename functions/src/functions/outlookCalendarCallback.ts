@@ -76,7 +76,7 @@ export const outlookCalendarCallback = functions.https.onRequest(
 
       if (!refresh_token) {
         console.error(
-          "No refresh token received — user may have already granted access previously."
+          "No refresh token received. User may have already granted access previously."
         );
         res
           .status(400)

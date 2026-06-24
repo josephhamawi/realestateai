@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bot } from "lucide-react";
+import { LogoMark } from "../components/brand/LogoMark";
 import { Button } from "../components/common/Button";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "../components/common/Toast";
@@ -40,7 +40,7 @@ export function Login() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center">
-          <Bot className="mx-auto h-12 w-12 text-brand-600" />
+          <LogoMark className="mx-auto h-12 w-12" />
           <h1 className="mt-4 text-2xl font-bold text-gray-900">Welcome back</h1>
           <p className="mt-2 text-sm text-gray-500">Sign in to your AgentFlow AI account</p>
         </div>

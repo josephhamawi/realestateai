@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
-  Bot,
   ArrowLeft,
   Mail,
   Clock,
@@ -12,6 +11,8 @@ import {
   Twitter,
   Instagram,
 } from "lucide-react";
+import { LogoMark } from "../components/brand/LogoMark";
+import { SiteFooter } from "../components/layout/SiteFooter";
 
 /* ------------------------------------------------------------------ */
 /*  Scroll reveal                                                      */
@@ -84,7 +85,7 @@ function StickyNav() {
         <div className="flex h-16 items-center justify-between lg:h-20">
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
-              <Bot className="h-5 w-5 text-white" />
+              <LogoMark className="h-5 w-5" white />
             </div>
             <span className="text-lg font-bold tracking-tight text-gray-900">
               AgentFlow AI
@@ -100,116 +101,6 @@ function StickyNav() {
         </div>
       </div>
     </nav>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Footer                                                             */
-/* ------------------------------------------------------------------ */
-function Footer() {
-  return (
-    <footer className="bg-gray-900 pt-16 pb-8">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-gray-800">
-          {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
-                <Bot className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-lg font-bold text-white">AgentFlow AI</span>
-            </div>
-            <p className="text-sm text-gray-400 leading-relaxed mb-6">
-              AI-powered lead qualification for real estate agents in Dubai and the UAE.
-            </p>
-            <div className="flex items-center gap-3">
-              <a
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
-              >
-                <Linkedin className="h-4 w-4" />
-              </a>
-              <a
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
-              >
-                <Twitter className="h-4 w-4" />
-              </a>
-              <a
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
-              >
-                <Instagram className="h-4 w-4" />
-              </a>
-            </div>
-          </div>
-
-          {/* Product */}
-          <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Product</h4>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/signup" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Get Started
-                </Link>
-              </li>
-              <li>
-                <Link to="/login" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Login
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Legal</h4>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/terms" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Contact</h4>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  href="mailto:kodefoundryatelier@gmail.com"
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  kodefoundryatelier@gmail.com
-                </a>
-              </li>
-              <li className="text-sm text-gray-400">Dubai, UAE</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} AgentFlow AI. All rights reserved.
-          </p>
-          <p className="text-xs text-gray-500">
-            Made with AI for real estate agents in Dubai &amp; the UAE
-          </p>
-        </div>
-      </div>
-    </footer>
   );
 }
 
@@ -250,8 +141,7 @@ export function Contact() {
             Get in Touch
           </h1>
           <p className="mt-4 text-blue-100/80 text-lg max-w-2xl mx-auto">
-            Have questions about AgentFlow AI? We're here to help. Reach out and we'll
-            respond within 24 hours.
+            Send us your questions about AgentFlow AI and we will reply within 24 hours.
           </p>
         </div>
       </div>
@@ -270,10 +160,10 @@ export function Contact() {
                   <div>
                     <p className="text-sm font-semibold text-gray-900">Email</p>
                     <a
-                      href="mailto:kodefoundryatelier@gmail.com"
+                      href="mailto:hello@kodefoundry.com"
                       className="text-sm text-brand-600 hover:text-brand-700"
                     >
-                      kodefoundryatelier@gmail.com
+                      hello@kodefoundry.com
                     </a>
                   </div>
                 </div>
@@ -312,7 +202,7 @@ export function Contact() {
                       to="/#faq"
                       className="text-sm text-brand-600 hover:text-brand-700"
                     >
-                      Check our FAQ for quick answers
+                      Read the FAQ
                     </Link>
                   </div>
                 </div>
@@ -361,7 +251,7 @@ export function Contact() {
                       Message Sent!
                     </h3>
                     <p className="text-gray-600 max-w-sm">
-                      Thank you for reaching out. We'll respond within 24 hours.
+                      Thanks for writing in. We will reply within 24 hours.
                     </p>
                   </div>
                 ) : (
@@ -473,7 +363,7 @@ export function Contact() {
         </div>
       </div>
 
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
-  Bot,
   MessageSquare,
   Star,
   Calendar,
@@ -25,6 +24,7 @@ import {
   Menu,
   X as XIcon,
 } from "lucide-react";
+import { LogoMark } from "../components/brand/LogoMark";
 
 /* ------------------------------------------------------------------ */
 /*  useInView hook : triggers "visible" class on scroll                */
@@ -95,7 +95,7 @@ function Navbar() {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2.5 group">
             <div className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${scrolled ? "bg-brand-600" : "bg-white/20"}`}>
-              <Bot className="h-5 w-5 text-white" />
+              <LogoMark className="h-5 w-5" white />
             </div>
             <span className={`text-lg font-bold tracking-tight transition-colors ${scrolled ? "text-gray-900" : "text-white"}`}>
               AgentFlow AI
@@ -214,8 +214,8 @@ function Hero() {
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-blue-100/80 max-w-2xl mx-auto leading-relaxed">
-            Meet Aisha, your AI assistant for Dubai. She qualifies leads, books viewings,
-            and speaks your market's language, while you close deals.
+            Meet Aisha, your AI assistant for Dubai. She qualifies leads and books
+            viewings around the clock so you can spend your time closing.
           </p>
 
           {/* CTAs */}
@@ -304,9 +304,9 @@ function ProblemSolution() {
   ];
   const solutions = [
     "AI qualifies leads automatically via Telegram & WhatsApp",
-    "Responds in seconds, 24 hours a day",
+    "Replies in seconds, any hour of the day",
     "Books viewings while you sleep",
-    "Understands off-plan, freehold, leasehold: your market's language",
+    "Knows off-plan, freehold, and leasehold the way Dubai buyers ask about them",
   ];
 
   return (
@@ -380,38 +380,38 @@ function Features() {
   const features = [
     {
       icon: Globe2,
-      title: "Cultural AI Intelligence",
-      description: "Aisha handles Dubai's multicultural investors with finesse, from off-plan buyers to luxury villa seekers.",
+      title: "Built for Dubai's buyers",
+      description: "Aisha talks to off-plan investors and villa seekers alike, and adapts to how each one buys.",
       color: "bg-purple-50 text-purple-600",
     },
     {
       icon: MessageSquare,
-      title: "WhatsApp & Telegram First",
-      description: "Meet leads where they already are. Zero per-message cost on Telegram. WhatsApp Business API supported.",
+      title: "WhatsApp & Telegram",
+      description: "Reach leads on the apps they already use. Telegram costs nothing per message, and the WhatsApp Business API is supported.",
       color: "bg-green-50 text-green-600",
     },
     {
       icon: Star,
-      title: "Smart Lead Scoring",
-      description: "AI rates every lead 0-100 based on intent, budget, and readiness. Hot leads get flagged instantly.",
+      title: "Lead scoring",
+      description: "Every lead gets a 0-100 score from their budget, intent, and timeline. Hot ones get flagged right away.",
       color: "bg-yellow-50 text-yellow-600",
     },
     {
       icon: Calendar,
-      title: "Auto Appointment Booking",
-      description: "AI checks your calendar and books viewings automatically. Sends .ics invites to both parties.",
+      title: "Automatic booking",
+      description: "Aisha checks your calendar, books the viewing, and sends an .ics invite to you and the buyer.",
       color: "bg-blue-50 text-blue-600",
     },
     {
       icon: ShieldCheck,
-      title: "PDPL & RERA Compliant",
-      description: "Built-in compliance for the UAE's PDPL and Dubai's RERA regulations. Data handling you can trust.",
+      title: "PDPL & RERA compliant",
+      description: "We handle lead data under the UAE's PDPL and Dubai's RERA rules.",
       color: "bg-red-50 text-red-600",
     },
     {
       icon: BarChart3,
-      title: "Built for Dubai",
-      description: "Deeply tuned for the Dubai and UAE property market, from communities and developers to pricing in AED.",
+      title: "Tuned for the UAE market",
+      description: "Aisha knows Dubai's communities, developers, and AED pricing, so leads get answers that fit the local market.",
       color: "bg-indigo-50 text-indigo-600",
     },
   ];
@@ -428,7 +428,7 @@ function Features() {
               Everything you need to convert leads
             </h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              Purpose-built for real estate agents in Dubai and the UAE. Every feature designed to help you close more deals.
+              Built for real estate agents in Dubai and the UAE, down to the way leads ask about property here.
             </p>
           </div>
         </Reveal>
@@ -458,18 +458,18 @@ function HowItWorks() {
   const steps = [
     {
       num: "01",
-      title: "Sign Up & Set Up Your Assistant",
-      description: "2 minutes to set up. Customize your AI persona's personality and knowledge base for the Dubai market.",
+      title: "Sign up and set up Aisha",
+      description: "Spend two minutes shaping her tone and the Dubai knowledge she works from.",
     },
     {
       num: "02",
       title: "Connect Telegram (or WhatsApp)",
-      description: "Your AI assistant goes live instantly. Share a link with leads or embed it on your website. Zero technical skills needed.",
+      description: "Aisha goes live as soon as you connect. Share her link with leads or embed it on your site. You won't touch any code.",
     },
     {
       num: "03",
-      title: "Watch Leads Get Qualified",
-      description: "Aisha handles the conversations. You get a scored pipeline of qualified leads ready to close.",
+      title: "Watch leads get qualified",
+      description: "Aisha runs the conversations and hands you a scored pipeline of leads ready to close.",
     },
   ];
 
@@ -485,7 +485,7 @@ function HowItWorks() {
               Live in under 5 minutes
             </h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              No complex setup. No coding. Just results.
+              No setup wizard and no code. Connect an app and start qualifying leads.
             </p>
           </div>
         </Reveal>
@@ -534,10 +534,10 @@ function AIPersonas() {
               Meet Your AI Agents
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              AI that speaks your market
+              An assistant who knows Dubai
             </h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              Not generic chatbots. Purpose-built AI personas that understand local culture, language, and regulations.
+              Aisha is built around how property changes hands in the UAE, from local etiquette to RERA rules.
             </p>
           </div>
         </Reveal>
@@ -652,7 +652,7 @@ function Pricing() {
               Plans that pay for themselves
             </h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
-              Start free. Upgrade when your pipeline is overflowing. All prices in AED.
+              Start free and upgrade when your pipeline fills up. Prices in AED.
             </p>
           </div>
         </Reveal>
@@ -818,27 +818,27 @@ function FAQ() {
   const faqs = [
     {
       q: "How does the AI qualify leads?",
-      a: "Our AI engages leads in natural conversation, asking about budget, timeline, location preferences, property type, and ownership needs (like freehold or leasehold in Dubai). Each lead gets a 0-100 qualification score based on their responses, and hot leads are flagged for immediate follow-up.",
+      a: "Aisha chats with each lead about budget, timeline, location, property type, and ownership (freehold or leasehold). Their answers give the lead a 0-100 score, and the hot ones get flagged for you to follow up.",
     },
     {
       q: "Is my data secure?",
-      a: "Absolutely. We use end-to-end encryption, are compliant with the UAE PDPL, and follow RERA data guidelines for Dubai. All data is stored in SOC 2 certified data centers. You own your data, and we never share it with third parties.",
+      a: "Yes. We encrypt data end to end, follow the UAE PDPL and Dubai's RERA data guidelines, and store everything in SOC 2 certified data centers. Your data stays yours, and we never sell or share it with third parties.",
     },
     {
       q: "Do I need WhatsApp Business API?",
-      a: "For Telegram, you can start immediately with zero per-message cost. For WhatsApp, we support both the official WhatsApp Business API (for verified businesses) and Telegram as a free alternative. Our team helps you get set up with WhatsApp Business API if you choose that route.",
+      a: "No. You can start on Telegram right away at no per-message cost. For WhatsApp, we support the official Business API for verified businesses, and our team helps you set it up if you go that route.",
     },
     {
       q: "Is it built for the Dubai market?",
-      a: "Yes! AgentFlow AI is purpose-built for Dubai and the UAE. Aisha handles your leads with multicultural awareness, AED pricing, and deep knowledge of local communities, developers, and ownership types like freehold and leasehold.",
+      a: "Yes. AgentFlow AI is built for Dubai and the UAE. Aisha works in AED and knows the local communities, developers, and ownership types like freehold and leasehold.",
     },
     {
       q: "What happens if the AI gets it wrong?",
-      a: "Our AI is highly accurate, but we've built in safeguards. You can review all conversations in real-time, set custom escalation rules, and the AI always offers to connect the lead with a human agent when it's uncertain. You maintain full control at all times.",
+      a: "You stay in control. Review any conversation as it happens, set your own escalation rules, and when Aisha is unsure she offers to hand the lead to a human agent.",
     },
     {
       q: "How long is the free trial?",
-      a: "The free trial lasts 14 days with full access to all features on the Solo plan. No credit card required. If you love it (and you will), upgrading is one click away.",
+      a: "Fourteen days with full access to every Solo plan feature, no credit card needed. When you're ready to keep going, upgrading takes one click.",
     },
   ];
 
@@ -940,7 +940,7 @@ function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
-                <Bot className="h-5 w-5 text-white" />
+                <LogoMark className="h-5 w-5" white />
               </div>
               <span className="text-lg font-bold text-white">AgentFlow AI</span>
             </div>
@@ -1006,8 +1006,8 @@ function Footer() {
             <h4 className="text-sm font-semibold text-white mb-4">Contact</h4>
             <ul className="space-y-3">
               <li>
-                <a href="mailto:kodefoundryatelier@gmail.com" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  kodefoundryatelier@gmail.com
+                <a href="mailto:hello@kodefoundry.com" className="text-sm text-gray-400 hover:text-white transition-colors">
+                  hello@kodefoundry.com
                 </a>
               </li>
               <li className="text-sm text-gray-400">Dubai, UAE</li>

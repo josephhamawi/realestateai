@@ -17,6 +17,6 @@ export {
 } from "./functions/paymentProcessor";
 export { complianceLogger } from "./functions/complianceLogger";
 
-// Scheduled batch jobs — REMOVED (cost optimization 2026-05-03)
+// Scheduled batch jobs: REMOVED (cost optimization 2026-05-03)
 // Source preserved in functions/dailyBatchJobs.ts but no longer deployed.
-// Do NOT re-add functions.pubsub.schedule(...) — that was the cost we removed.
+// Do NOT re-add functions.pubsub.schedule(...). That was the cost we removed.
