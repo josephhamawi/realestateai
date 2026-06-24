@@ -4,7 +4,16 @@ import { getWhatsAppConfig } from "../config/secrets";
 import {
   verifyWebhookSignature,
   parseMessageContent,
+  sendWhatsAppMessage,
 } from "../services/whatsapp";
+import { loadTenant, loadMarketConfig } from "../utils/marketConfig";
+import {
+  buildSystemPrompt,
+  buildClaudeMessages,
+  generateAIResponse,
+} from "../services/claude";
+import { runComplianceCheck } from "../utils/compliance";
+import type { Message } from "../types/message";
 
 export const whatsappWebhook = functions.https.onRequest(async (req, res) => {
   // GET: Meta webhook verification
@@ -104,6 +113,18 @@ export const whatsappWebhook = functions.https.onRequest(async (req, res) => {
             "conversation.messageCount": FieldValue.increment(1),
             updatedAt: FieldValue.serverTimestamp(),
           });
+
+          // Generate and send the AI reply (Noor)
+          try {
+            await generateAndSendReply(
+              tenantId,
+              leadId,
+              phoneNumberId,
+              senderPhone
+            );
+          } catch (replyError) {
+            console.error("Failed to generate or send AI reply:", replyError);
+          }
         }
 
         // Process delivery status updates
@@ -119,6 +140,131 @@ export const whatsappWebhook = functions.https.onRequest(async (req, res) => {
   // Always respond 200 quickly (Meta requirement)
   res.status(200).send("OK");
 });
+
+async function generateAndSendReply(
+  tenantId: string,
+  leadId: string,
+  phoneNumberId: string,
+  recipientPhone: string
+): Promise<void> {
+  const [tenant, marketConfig] = await Promise.all([
+    loadTenant(tenantId),
+    loadMarketConfig(),
+  ]);
+
+  const [leadSnap, messagesSnap] = await Promise.all([
+    db.doc(`tenants/${tenantId}/leads/${leadId}`).get(),
+    db
+      .collection(`tenants/${tenantId}/leads/${leadId}/messages`)
+      .orderBy("timestamp", "asc")
+      .limit(50)
+      .get(),
+  ]);
+  const lead = leadSnap.data();
+  if (!lead) return;
+
+  // Respect the per-lead AI toggle
+  if (!lead.conversation?.aiActive) return;
+
+  const messages = messagesSnap.docs.map((d) => d.data() as Message);
+  const systemPrompt = buildSystemPrompt(
+    tenant as any,
+    marketConfig,
+    lead as any,
+    ""
+  );
+  const claudeMessages = buildClaudeMessages(messages);
+  if (claudeMessages.length === 0) return;
+
+  // Prefer the tenant's own Vynn AI key if configured
+  const tenantVynn = tenant.integrations?.vynn?.apiKey
+    ? {
+        apiKey: tenant.integrations.vynn.apiKey,
+        model: tenant.integrations.vynn.model,
+      }
+    : undefined;
+
+  const { text: aiReplyText, tokensUsed } = await generateAIResponse(
+    systemPrompt,
+    claudeMessages,
+    tenantVynn
+  );
+
+  const complianceResult = runComplianceCheck(aiReplyText, marketConfig);
+  let finalMessage = aiReplyText;
+
+  if (complianceResult.status === "blocked") {
+    const constraintPrompt =
+      systemPrompt +
+      "\n\nCOMPLIANCE ALERT: Your previous response was blocked due to: " +
+      complianceResult.violations.join("; ") +
+      ". Rewrite your response avoiding these issues.";
+    const { text: rewrittenText } = await generateAIResponse(
+      constraintPrompt,
+      claudeMessages,
+      tenantVynn
+    );
+    finalMessage = rewrittenText;
+  }
+
+  // Approval mode: store as pending, do not send
+  if (tenant.aiConfig?.approvalMode) {
+    const pendingRef = db
+      .collection(`tenants/${tenantId}/leads/${leadId}/messages`)
+      .doc();
+    await pendingRef.set({
+      messageId: pendingRef.id,
+      tenantId,
+      leadId,
+      type: "outbound",
+      channel: "whatsapp",
+      senderType: "ai",
+      content: { text: finalMessage },
+      metadata: {
+        aiGenerated: true,
+        aiModel: "vynn-auto",
+        tokensUsed,
+        complianceCheck: complianceResult.status,
+        complianceNotes: complianceResult.notes,
+        deliveryStatus: "pending_approval" as any,
+      },
+      timestamp: FieldValue.serverTimestamp(),
+      createdAt: FieldValue.serverTimestamp(),
+    });
+    return;
+  }
+
+  // Send via WhatsApp and store the outbound message
+  const waMessageId = await sendWhatsAppMessage(
+    phoneNumberId,
+    recipientPhone,
+    finalMessage
+  );
+
+  const outMsgRef = db
+    .collection(`tenants/${tenantId}/leads/${leadId}/messages`)
+    .doc();
+  await outMsgRef.set({
+    messageId: outMsgRef.id,
+    tenantId,
+    leadId,
+    type: "outbound",
+    channel: "whatsapp",
+    senderType: "ai",
+    content: { text: finalMessage },
+    metadata: {
+      aiGenerated: true,
+      aiModel: "vynn-auto",
+      tokensUsed,
+      complianceCheck: complianceResult.status,
+      complianceNotes: complianceResult.notes,
+      whatsappMessageId: waMessageId,
+      deliveryStatus: "sent",
+    },
+    timestamp: FieldValue.serverTimestamp(),
+    createdAt: FieldValue.serverTimestamp(),
+  });
+}
 
 async function findOrCreateLead(
   tenantId: string,
@@ -196,6 +342,13 @@ async function updateDeliveryStatus(
 ): Promise<void> {
   const whatsappMessageId = status.id as string;
   const deliveryStatus = status.status as string;
+
+  if (status.errors) {
+    console.error(
+      "WhatsApp delivery error:",
+      JSON.stringify(status.errors)
+    );
+  }
 
   if (!whatsappMessageId || !deliveryStatus) return;
 
