@@ -25,7 +25,7 @@ export const provisionTenant = onCall(async (request) => {
     weekend: ["friday", "saturday"],
     dateFormat: "DD/MM/YYYY",
     compliance: { gdpr: false, difc: true, rera: true },
-    ai: { defaultPersona: "Aisha", qualificationQuestions: [] },
+    ai: { defaultPersona: "Noor", qualificationQuestions: [] },
   };
   const marketConfig = marketConfigSnap.exists
     ? marketConfigSnap.data()!
@@ -52,7 +52,7 @@ export const provisionTenant = onCall(async (request) => {
       compliance: marketConfig.compliance,
     },
     aiConfig: {
-      personaName: aiDefaults.defaultPersona || "Aisha",
+      personaName: aiDefaults.defaultPersona || "Noor",
       greetingScript: "",
       handoffThreshold: 60,
       qualificationQuestions: aiDefaults.qualificationQuestions || [],
