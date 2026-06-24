@@ -395,7 +395,7 @@ export function Admin() {
                     <Brain className="h-6 w-6 text-purple-600" />
                     <div>
                       <h2 className="text-lg font-semibold text-gray-900">Vynn AI</h2>
-                      <p className="text-sm text-gray-500">Powers the Aisha (Dubai) AI persona via vynnai.app</p>
+                      <p className="text-sm text-gray-500">Powers the Noor (Dubai) AI persona via vynnai.app</p>
                     </div>
                   </div>
                   <div className="space-y-4">

@@ -329,12 +329,12 @@ function AISettings() {
     <div className="mx-auto max-w-5xl">
       <BackButton label="Back to Settings" />
       <h1 className="text-2xl font-bold text-gray-900">AI Configuration</h1>
-      <p className="mt-1 text-sm text-gray-500">Customize how Aisha interacts with your leads</p>
+      <p className="mt-1 text-sm text-gray-500">Customize how Noor interacts with your leads</p>
       <Card className="mt-6">
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">AI Persona Name</label>
-            <input type="text" value={personaName} onChange={(e) => setPersonaName(e.target.value)} placeholder="Aisha" className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500" />
+            <input type="text" value={personaName} onChange={(e) => setPersonaName(e.target.value)} placeholder="Noor" className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Greeting Script</label>
