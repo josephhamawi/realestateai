@@ -128,14 +128,14 @@ export function AboutUs() {
       icon: Globe2,
       title: "Market Intelligence First",
       description:
-        "Aisha knows Dubai. She talks about Palm Jumeirah, Dubai Marina, and Downtown the way a local agent would.",
+        "Noor knows Dubai. She talks about Palm Jumeirah, Dubai Marina, and Downtown the way a local agent would.",
       color: "bg-purple-50 text-purple-600",
     },
     {
       icon: Users,
       title: "Agent-First Design",
       description:
-        "Aisha qualifies your leads. You close the deals. You keep control of every account.",
+        "Noor qualifies your leads. You close the deals. You keep control of every account.",
       color: "bg-blue-50 text-blue-600",
     },
     {
@@ -149,7 +149,7 @@ export function AboutUs() {
       icon: Eye,
       title: "Transparent AI",
       description:
-        "You see every message Aisha sends, and you can take over any conversation when you want to.",
+        "You see every message Noor sends, and you can take over any conversation when you want to.",
       color: "bg-yellow-50 text-yellow-600",
     },
   ];
@@ -183,7 +183,7 @@ export function AboutUs() {
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-blue-100/80 max-w-2xl mx-auto leading-relaxed">
-            Aisha replies to your leads in seconds, day or night, in the language they
+            Noor replies to your leads in seconds, day or night, in the language they
             messaged you in. You wake up to qualified buyers instead of missed messages.
           </p>
         </div>
@@ -214,7 +214,7 @@ export function AboutUs() {
                 Jumeirah. By morning, that buyer has already spoken to three other agents.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                We built AgentFlow AI to close that gap. Aisha replies the moment a lead
+                We built AgentFlow AI to close that gap. Noor replies the moment a lead
                 writes in, in their own language, and she knows the Dubai market well
                 enough to talk through a first-time purchase or a luxury listing in Dubai
                 Marina. By the time you pick up the conversation, the lead is already
@@ -351,7 +351,7 @@ export function AboutUs() {
               Ready to Stop Losing Leads?
             </h2>
             <p className="text-lg text-blue-100/80 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Agents across Dubai and the UAE use Aisha to qualify leads and close more
+              Agents across Dubai and the UAE use Noor to qualify leads and close more
               deals. Start your free trial and see how she handles your next inquiry.
             </p>
             <Link
