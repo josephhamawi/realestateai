@@ -37,13 +37,28 @@ export const whatsappWebhook = functions.https.onRequest(async (req, res) => {
 
   // POST: Inbound message
   try {
-    // Verify signature
-    const { appSecret } = await getWhatsAppConfig();
-    const signature = req.headers["x-hub-signature-256"] as string;
+    // Verify signature (provider-aware)
+    const cfg = await getWhatsAppConfig();
 
-    if (!verifyWebhookSignature(req.rawBody, signature, appSecret)) {
-      res.status(403).send("Invalid signature");
-      return;
+    if (cfg.provider === "360dialog") {
+      // 360dialog forwards unsigned Meta-format payloads, so skip the Meta HMAC check.
+      // Optionally enforce a shared verify token passed as a query param.
+      if (cfg.verifyToken && req.query.token !== undefined) {
+        if (req.query.token !== cfg.verifyToken) {
+          res.status(403).send("Forbidden");
+          return;
+        }
+      } else if (cfg.verifyToken && req.query.token === undefined) {
+        res.status(403).send("Forbidden");
+        return;
+      }
+    } else {
+      const signature = req.headers["x-hub-signature-256"] as string;
+
+      if (!verifyWebhookSignature(req.rawBody, signature, cfg.appSecret)) {
+        res.status(403).send("Invalid signature");
+        return;
+      }
     }
 
     const entries = req.body.entry || [];
