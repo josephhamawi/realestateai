@@ -9,8 +9,8 @@ import {
   Settings,
   Shield,
   Activity,
-  Bot,
 } from "lucide-react";
+import { LogoMark } from "../brand/LogoMark";
 
 const navItems = [
   { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -37,7 +37,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
       }`}
     >
       <div className="flex h-16 items-center gap-2 border-b border-gray-200 px-4">
-        <Bot className="h-8 w-8 text-brand-600 flex-shrink-0" />
+        <LogoMark className="h-8 w-8 flex-shrink-0" />
         {!collapsed && (
           <span className="text-xl font-bold text-gray-900">AgentFlow</span>
         )}
@@ -76,7 +76,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
               <p className="mt-1 text-xs text-brand-600">Active & Learning</p>
             </>
           )}
-          {collapsed && <Bot className="h-5 w-5 text-brand-600 mx-auto" />}
+          {collapsed && <LogoMark className="h-5 w-5 mx-auto" />}
         </div>
       </div>
     </aside>

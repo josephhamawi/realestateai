@@ -1,0 +1,12 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AgentFlow AI">
+  <g stroke="#60a5fa" stroke-width="3" stroke-linecap="round">
+    <path d="M18 21 L32 37"/>
+    <path d="M32 18 L32 37"/>
+    <path d="M46 21 L32 37"/>
+    <path d="M32 37 L32 46"/>
+  </g>
+  <circle cx="18" cy="20" r="5" fill="#2563eb"/>
+  <circle cx="32" cy="17" r="5.5" fill="#2563eb"/>
+  <circle cx="46" cy="20" r="5" fill="#2563eb"/>
+  <circle cx="32" cy="49" r="7" fill="#38bdf8"/>
+</svg>

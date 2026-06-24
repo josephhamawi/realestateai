@@ -38,7 +38,7 @@ export const telegramWebhook = functions
     // We only handle text messages for now
     const message = update.message;
     if (!message || !message.text) {
-      // Could be an edit, callback query, etc. — acknowledge and ignore.
+      // Could be an edit, callback query, etc. Acknowledge and ignore.
       res.status(200).send("OK");
       return;
     }
@@ -225,7 +225,7 @@ export const telegramWebhook = functions
 
     // --- Post-response processing: entity extraction & appointment detection ---
 
-    // Entity extraction (non-blocking — failures won't break main flow)
+    // Entity extraction (non-blocking, failures won't break main flow)
     try {
       const allMessages = messagesSnap.docs.map((d) => d.data() as Message);
       const conversationText = allMessages
@@ -572,7 +572,7 @@ async function resolveTenantForTelegram(): Promise<string | null> {
 
 /**
  * Parse an appointment date/time from AI response text.
- * Best-effort extraction — defaults to next occurrence of the day mentioned.
+ * Best-effort extraction, defaults to next occurrence of the day mentioned.
  */
 function parseAppointmentDate(text: string): Date {
   const now = new Date();

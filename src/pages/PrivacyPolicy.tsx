@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Bot, ArrowLeft, Mail, Shield, Lock, Database, Globe2 } from "lucide-react";
+import { ArrowLeft, Mail, Shield, Lock, Database, Globe2 } from "lucide-react";
+import { LogoMark } from "../components/brand/LogoMark";
+import { SiteFooter } from "../components/layout/SiteFooter";
 
 /* ------------------------------------------------------------------ */
 /*  Scroll reveal                                                      */
@@ -73,7 +75,7 @@ function StickyNav() {
         <div className="flex h-16 items-center justify-between lg:h-20">
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
-              <Bot className="h-5 w-5 text-white" />
+              <LogoMark className="h-5 w-5" white />
             </div>
             <span className="text-lg font-bold tracking-tight text-gray-900">
               AgentFlow AI
@@ -113,51 +115,6 @@ function Section({
         </div>
       </section>
     </Reveal>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Footer                                                             */
-/* ------------------------------------------------------------------ */
-function Footer() {
-  return (
-    <footer className="bg-gray-900 py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
-              <Bot className="h-5 w-5 text-white" />
-            </div>
-            <span className="text-lg font-bold text-white">AgentFlow AI</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link
-              to="/terms"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              to="/about"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              to="/contact"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
-            >
-              Contact
-            </Link>
-          </div>
-        </div>
-        <div className="mt-8 pt-8 border-t border-gray-800 text-center">
-          <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} AgentFlow AI. All rights reserved.
-          </p>
-        </div>
-      </div>
-    </footer>
   );
 }
 
@@ -255,10 +212,10 @@ export function PrivacyPolicy() {
 
           <h3 className="text-lg font-semibold text-gray-900 mt-6">Payment Information</h3>
           <p>
-            Payment processing is handled by Stripe. We do not store your credit card
-            numbers, bank account details, or other
-            sensitive financial information on our servers. Payment processors handle all
-            financial data in compliance with PCI-DSS standards.
+            Stripe handles payment processing. We do not store your credit card numbers,
+            bank account details, or other sensitive financial information on our servers.
+            Payment processors handle all financial data in compliance with PCI-DSS
+            standards.
           </p>
         </Section>
 
@@ -359,8 +316,8 @@ export function PrivacyPolicy() {
             ))}
           </div>
           <p className="mt-4">
-            Each third-party service operates under its own privacy policy. We encourage
-            you to review their policies to understand how they handle your data.
+            Each third-party service operates under its own privacy policy. Review their
+            policies to understand how they handle your data.
           </p>
         </Section>
 
@@ -501,8 +458,8 @@ export function PrivacyPolicy() {
             the Service at least 30 days before the changes take effect.
           </p>
           <p>
-            We encourage you to review this Privacy Policy periodically to stay informed
-            about how we protect your data.
+            Review this Privacy Policy periodically to stay informed about how we protect
+            your data.
           </p>
         </Section>
 
@@ -514,10 +471,10 @@ export function PrivacyPolicy() {
           <div className="mt-4 flex items-center gap-3 rounded-xl bg-gray-50 border border-gray-200 p-4">
             <Mail className="h-5 w-5 text-brand-600" />
             <a
-              href="mailto:kodefoundryatelier@gmail.com"
+              href="mailto:hello@kodefoundry.com"
               className="text-brand-600 hover:text-brand-700 font-medium"
             >
-              kodefoundryatelier@gmail.com
+              hello@kodefoundry.com
             </a>
           </div>
           <p className="mt-4 text-sm text-gray-500">
@@ -527,7 +484,7 @@ export function PrivacyPolicy() {
         </Section>
       </div>
 
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }

@@ -1,6 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="8" fill="#2563EB"/>
-  <path d="M16 6L8 12v8l8 6 8-6v-8L16 6z" fill="white" opacity="0.9"/>
-  <circle cx="16" cy="15" r="3" fill="#2563EB"/>
-  <path d="M13 20h6" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AgentFlow AI">
+  <rect width="64" height="64" rx="14" fill="#2563eb"/>
+  <g stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.92">
+    <path d="M18 21 L32 37"/>
+    <path d="M32 18 L32 37"/>
+    <path d="M46 21 L32 37"/>
+    <path d="M32 37 L32 46"/>
+  </g>
+  <circle cx="18" cy="20" r="5" fill="#ffffff"/>
+  <circle cx="32" cy="17" r="5.5" fill="#ffffff"/>
+  <circle cx="46" cy="20" r="5" fill="#ffffff"/>
+  <circle cx="32" cy="49" r="7" fill="#bae6fd"/>
 </svg>
