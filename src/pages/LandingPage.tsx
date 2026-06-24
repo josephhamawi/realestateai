@@ -214,7 +214,7 @@ function Hero() {
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-blue-100/80 max-w-2xl mx-auto leading-relaxed">
-            Meet Aisha, your AI assistant for Dubai. She qualifies leads and books
+            Meet Noor, your AI assistant for Dubai. She qualifies leads and books
             viewings around the clock so you can spend your time closing.
           </p>
 
@@ -381,7 +381,7 @@ function Features() {
     {
       icon: Globe2,
       title: "Built for Dubai's buyers",
-      description: "Aisha talks to off-plan investors and villa seekers alike, and adapts to how each one buys.",
+      description: "Noor talks to off-plan investors and villa seekers alike, and adapts to how each one buys.",
       color: "bg-purple-50 text-purple-600",
     },
     {
@@ -399,7 +399,7 @@ function Features() {
     {
       icon: Calendar,
       title: "Automatic booking",
-      description: "Aisha checks your calendar, books the viewing, and sends an .ics invite to you and the buyer.",
+      description: "Noor checks your calendar, books the viewing, and sends an .ics invite to you and the buyer.",
       color: "bg-blue-50 text-blue-600",
     },
     {
@@ -411,7 +411,7 @@ function Features() {
     {
       icon: BarChart3,
       title: "Tuned for the UAE market",
-      description: "Aisha knows Dubai's communities, developers, and AED pricing, so leads get answers that fit the local market.",
+      description: "Noor knows Dubai's communities, developers, and AED pricing, so leads get answers that fit the local market.",
       color: "bg-indigo-50 text-indigo-600",
     },
   ];
@@ -458,18 +458,18 @@ function HowItWorks() {
   const steps = [
     {
       num: "01",
-      title: "Sign up and set up Aisha",
+      title: "Sign up and set up Noor",
       description: "Spend two minutes shaping her tone and the Dubai knowledge she works from.",
     },
     {
       num: "02",
       title: "Connect Telegram (or WhatsApp)",
-      description: "Aisha goes live as soon as you connect. Share her link with leads or embed it on your site. You won't touch any code.",
+      description: "Noor goes live as soon as you connect. Share her link with leads or embed it on your site. You won't touch any code.",
     },
     {
       num: "03",
       title: "Watch leads get qualified",
-      description: "Aisha runs the conversations and hands you a scored pipeline of leads ready to close.",
+      description: "Noor runs the conversations and hands you a scored pipeline of leads ready to close.",
     },
   ];
 
@@ -520,7 +520,7 @@ function HowItWorks() {
 function AIPersonas() {
   const aishaChat = [
     { role: "lead", text: "I'm looking for a 2-bed apartment in Dubai Marina. Off-plan or ready, budget around AED 2M." },
-    { role: "ai", text: "Welcome! I'm Aisha, your Dubai property assistant. 2-bed in Marina with AED 2M budget : excellent. Are you looking for freehold ownership? Any preference for sea view or marina view?" },
+    { role: "ai", text: "Welcome! I'm Noor, your Dubai property assistant. a 2-bed in Marina with an AED 2M budget, great. Are you looking for freehold ownership? Any preference for sea view or marina view?" },
     { role: "lead", text: "Freehold, sea view if possible. RERA registered developers only." },
     { role: "ai", text: "Absolutely. I have 4 RERA-registered freehold options with sea views, AED 1.8M to 2.1M. Two are off-plan with 60/40 payment plans. Shall I book a viewing with our certified agent this week?" },
   ];
@@ -537,20 +537,20 @@ function AIPersonas() {
               An assistant who knows Dubai
             </h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              Aisha is built around how property changes hands in the UAE, from local etiquette to RERA rules.
+              Noor is built around how property changes hands in the UAE, from local etiquette to RERA rules.
             </p>
           </div>
         </Reveal>
 
         <div className="max-w-2xl mx-auto">
-          {/* Aisha */}
+          {/* Noor */}
           <Reveal delay={100}>
             <div className="rounded-2xl border-2 border-amber-200 bg-gradient-to-b from-amber-50/50 to-white overflow-hidden">
               <div className="p-6 border-b border-amber-100 bg-amber-50/80">
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-full bg-amber-600 flex items-center justify-center text-white font-bold text-lg">A</div>
                   <div>
-                    <h3 className="font-bold text-gray-900 text-lg">Aisha</h3>
+                    <h3 className="font-bold text-gray-900 text-lg">Noor</h3>
                     <p className="text-sm text-amber-700">Dubai Market Specialist</p>
                   </div>
                   <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
@@ -818,7 +818,7 @@ function FAQ() {
   const faqs = [
     {
       q: "How does the AI qualify leads?",
-      a: "Aisha chats with each lead about budget, timeline, location, property type, and ownership (freehold or leasehold). Their answers give the lead a 0-100 score, and the hot ones get flagged for you to follow up.",
+      a: "Noor chats with each lead about budget, timeline, location, property type, and ownership (freehold or leasehold). Their answers give the lead a 0-100 score, and the hot ones get flagged for you to follow up.",
     },
     {
       q: "Is my data secure?",
@@ -830,11 +830,11 @@ function FAQ() {
     },
     {
       q: "Is it built for the Dubai market?",
-      a: "Yes. AgentFlow AI is built for Dubai and the UAE. Aisha works in AED and knows the local communities, developers, and ownership types like freehold and leasehold.",
+      a: "Yes. AgentFlow AI is built for Dubai and the UAE. Noor works in AED and knows the local communities, developers, and ownership types like freehold and leasehold.",
     },
     {
       q: "What happens if the AI gets it wrong?",
-      a: "You stay in control. Review any conversation as it happens, set your own escalation rules, and when Aisha is unsure she offers to hand the lead to a human agent.",
+      a: "You stay in control. Review any conversation as it happens, set your own escalation rules, and when Noor is unsure she offers to hand the lead to a human agent.",
     },
     {
       q: "How long is the free trial?",
