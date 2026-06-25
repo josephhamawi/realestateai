@@ -40,8 +40,9 @@ export const whatsappWebhook = functions.https.onRequest(async (req, res) => {
     // Verify signature (provider-aware)
     const cfg = await getWhatsAppConfig();
 
-    if (cfg.provider === "360dialog") {
-      // 360dialog forwards unsigned Meta-format payloads, so skip the Meta HMAC check.
+    if (cfg.provider !== "meta") {
+      // Non-Meta providers (360dialog, baileys) forward unsigned Meta-format
+      // payloads, so skip the Meta HMAC check.
       // Optionally enforce a shared verify token passed as a query param.
       if (cfg.verifyToken && req.query.token !== undefined) {
         if (req.query.token !== cfg.verifyToken) {

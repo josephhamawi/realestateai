@@ -9,13 +9,15 @@ const ADMIN_EMAIL = "joseph.hamawi.ng@gmail.com";
 
 interface ApiConfig {
   whatsapp: {
-    provider: "meta" | "360dialog";
+    provider: "meta" | "360dialog" | "baileys";
     d360ApiKey: string;
     appSecret: string;
     verifyToken: string;
     accessToken: string;
     phoneNumberId: string;
     wabaId: string;
+    baileysGatewayUrl: string;
+    gatewaySecret: string;
   };
   telegram: {
     botToken: string;
@@ -53,6 +55,8 @@ const defaultConfig: ApiConfig = {
     accessToken: "",
     phoneNumberId: "",
     wabaId: "",
+    baileysGatewayUrl: "",
+    gatewaySecret: "",
   },
   telegram: {
     botToken: "",
@@ -338,6 +342,7 @@ export function Admin() {
                       >
                         <option value="meta">Meta Cloud API</option>
                         <option value="360dialog">360dialog</option>
+                        <option value="baileys">Baileys (self-hosted)</option>
                       </select>
                     </div>
                     {config.whatsapp.provider === "360dialog" && (
@@ -347,6 +352,26 @@ export function Admin() {
                         onChange={(v) => updateWhatsApp("d360ApiKey", v)}
                         placeholder="D360-API-KEY value from 360dialog"
                       />
+                    )}
+                    {config.whatsapp.provider === "baileys" && (
+                      <>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Baileys Gateway URL</label>
+                          <input
+                            type="text"
+                            value={config.whatsapp.baileysGatewayUrl}
+                            onChange={(e) => updateWhatsApp("baileysGatewayUrl", e.target.value)}
+                            placeholder="http://your-vm-ip:8080"
+                            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                          />
+                        </div>
+                        <SecretInput
+                          label="Gateway Secret"
+                          value={config.whatsapp.gatewaySecret}
+                          onChange={(v) => updateWhatsApp("gatewaySecret", v)}
+                          placeholder="Shared secret matching GATEWAY_SECRET on the gateway"
+                        />
+                      </>
                     )}
                     <SecretInput
                       label="App Secret"
