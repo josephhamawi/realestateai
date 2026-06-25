@@ -20,6 +20,18 @@ export async function sendWhatsAppMessage(
     text: { body: text },
   };
 
+  if (cfg.provider === "baileys") {
+    // Self-hosted Baileys gateway accepts the Meta-format body and a shared secret.
+    const response = await axios.post(
+      `${cfg.baileysGatewayUrl}/messages`,
+      body,
+      {
+        headers: { "x-gateway-secret": cfg.gatewaySecret },
+      }
+    );
+    return response.data.messages?.[0]?.id || "";
+  }
+
   if (cfg.provider === "360dialog") {
     // 360dialog does not use a phone-number-id in the URL; the API key maps to the number.
     const response = await axios.post(`${D360_API_BASE}/messages`, body, {
@@ -63,6 +75,34 @@ export async function sendWhatsAppTemplate(
 
   if (components) {
     (body.template as Record<string, unknown>).components = components;
+  }
+
+  if (cfg.provider === "baileys") {
+    // The Baileys gateway is text-only in v1. Send the template's first body
+    // text parameter if present, otherwise a generic fallback referencing the
+    // template name. The gateway handles the text-only delivery.
+    const templateText =
+      components
+        ?.find((c) => c.type === "body")
+        ?.parameters?.map((p) => p.text)
+        .join(" ") || `[template: ${templateName}]`;
+
+    const baileysBody = {
+      messaging_product: "whatsapp",
+      to: recipientPhone,
+      type: "template",
+      template: { name: templateName, language: { code: languageCode } },
+      text: { body: templateText },
+    };
+
+    const response = await axios.post(
+      `${cfg.baileysGatewayUrl}/messages`,
+      baileysBody,
+      {
+        headers: { "x-gateway-secret": cfg.gatewaySecret },
+      }
+    );
+    return response.data.messages?.[0]?.id || "";
   }
 
   if (cfg.provider === "360dialog") {
@@ -156,6 +196,12 @@ export async function downloadMedia(
   mediaId: string
 ): Promise<Buffer> {
   const cfg = await getWhatsAppConfig();
+
+  if (cfg.provider === "baileys") {
+    // The self-hosted Baileys gateway is text-only in v1, so inbound media is
+    // not supported. Surface a clear error rather than crashing elsewhere.
+    throw new Error("media not supported on baileys");
+  }
 
   if (cfg.provider === "360dialog") {
     // Get media URL via 360dialog Cloud API
