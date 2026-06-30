@@ -91,12 +91,21 @@ async function startSocket() {
 
     for (const m of messages) {
       try {
+        console.log("Inbound key:", JSON.stringify(m.key));
         // Ignore our own messages, groups, and status broadcasts.
         if (m.key.fromMe) continue;
         const remoteJid = m.key.remoteJid || "";
-        if (!remoteJid.endsWith("@s.whatsapp.net")) continue;
 
-        const from = remoteJid.split("@")[0];
+        // WhatsApp may address direct chats as either <number>@s.whatsapp.net
+        // or as a privacy linked id <id>@lid. For @lid, the real phone number
+        // is carried separately (senderPn / participantPn). Resolve it.
+        let phoneJid = remoteJid;
+        if (remoteJid.endsWith("@lid")) {
+          phoneJid = m.key.senderPn || m.key.participantPn || "";
+        }
+        if (!phoneJid.endsWith("@s.whatsapp.net")) continue;
+
+        const from = phoneJid.split("@")[0];
         const text =
           m.message?.conversation ||
           m.message?.extendedTextMessage?.text ||
@@ -106,6 +115,7 @@ async function startSocket() {
         // v1 is text only: skip messages that carry no text body.
         if (!text) continue;
 
+        console.log("Forwarding inbound from %s: %s", from, text.slice(0, 40));
         await forwardToWebhook({ from, id: m.key.id, text, name, ts: m.messageTimestamp });
       } catch (err) {
         console.error("Failed to process inbound message:", err?.message || err);
@@ -159,9 +169,7 @@ async function forwardToWebhook({ from, id, text, name, ts }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) {
-      console.error("Webhook responded with status", res.status);
-    }
+    console.log("Webhook POST status:", res.status);
   } catch (err) {
     console.error("Failed to POST to webhook:", err?.message || err);
   }
