@@ -9,11 +9,15 @@ const ADMIN_EMAIL = "joseph.hamawi.ng@gmail.com";
 
 interface ApiConfig {
   whatsapp: {
+    provider: "meta" | "360dialog" | "baileys";
+    d360ApiKey: string;
     appSecret: string;
     verifyToken: string;
     accessToken: string;
     phoneNumberId: string;
     wabaId: string;
+    baileysGatewayUrl: string;
+    gatewaySecret: string;
   };
   telegram: {
     botToken: string;
@@ -44,11 +48,15 @@ interface ApiConfig {
 
 const defaultConfig: ApiConfig = {
   whatsapp: {
+    provider: "meta",
+    d360ApiKey: "",
     appSecret: "",
     verifyToken: "",
     accessToken: "",
     phoneNumberId: "",
     wabaId: "",
+    baileysGatewayUrl: "",
+    gatewaySecret: "",
   },
   telegram: {
     botToken: "",
@@ -184,7 +192,10 @@ export function Admin() {
     }
   };
 
-  const updateWhatsApp = (field: keyof ApiConfig["whatsapp"], value: string) => {
+  const updateWhatsApp = (
+    field: keyof ApiConfig["whatsapp"],
+    value: string
+  ) => {
     setConfig((prev) => ({ ...prev, whatsapp: { ...prev.whatsapp, [field]: value } }));
   };
 
@@ -318,10 +329,50 @@ export function Admin() {
                     <MessageSquare className="h-6 w-6 text-green-600" />
                     <div>
                       <h2 className="text-lg font-semibold text-gray-900">WhatsApp Business API</h2>
-                      <p className="text-sm text-gray-500">Meta Cloud API credentials for the Dubai market</p>
+                      <p className="text-sm text-gray-500">Meta Cloud API or 360dialog credentials for the Dubai market</p>
                     </div>
                   </div>
                   <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Provider</label>
+                      <select
+                        value={config.whatsapp.provider}
+                        onChange={(e) => updateWhatsApp("provider", e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      >
+                        <option value="meta">Meta Cloud API</option>
+                        <option value="360dialog">360dialog</option>
+                        <option value="baileys">Baileys (self-hosted)</option>
+                      </select>
+                    </div>
+                    {config.whatsapp.provider === "360dialog" && (
+                      <SecretInput
+                        label="360dialog API Key"
+                        value={config.whatsapp.d360ApiKey}
+                        onChange={(v) => updateWhatsApp("d360ApiKey", v)}
+                        placeholder="D360-API-KEY value from 360dialog"
+                      />
+                    )}
+                    {config.whatsapp.provider === "baileys" && (
+                      <>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Baileys Gateway URL</label>
+                          <input
+                            type="text"
+                            value={config.whatsapp.baileysGatewayUrl}
+                            onChange={(e) => updateWhatsApp("baileysGatewayUrl", e.target.value)}
+                            placeholder="http://your-vm-ip:8080"
+                            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                          />
+                        </div>
+                        <SecretInput
+                          label="Gateway Secret"
+                          value={config.whatsapp.gatewaySecret}
+                          onChange={(v) => updateWhatsApp("gatewaySecret", v)}
+                          placeholder="Shared secret matching GATEWAY_SECRET on the gateway"
+                        />
+                      </>
+                    )}
                     <SecretInput
                       label="App Secret"
                       value={config.whatsapp.appSecret}

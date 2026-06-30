@@ -4,24 +4,47 @@ import { getWhatsAppConfig } from "../config/secrets";
 
 const GRAPH_API_VERSION = "v18.0";
 const GRAPH_API_BASE = `https://graph.facebook.com/${GRAPH_API_VERSION}`;
+const D360_API_BASE = "https://waba-v2.360dialog.io";
 
 export async function sendWhatsAppMessage(
   phoneNumberId: string,
   recipientPhone: string,
   text: string
 ): Promise<string> {
-  const { accessToken } = await getWhatsAppConfig();
+  const cfg = await getWhatsAppConfig();
+
+  const body = {
+    messaging_product: "whatsapp",
+    to: recipientPhone,
+    type: "text",
+    text: { body: text },
+  };
+
+  if (cfg.provider === "baileys") {
+    // Self-hosted Baileys gateway accepts the Meta-format body and a shared secret.
+    const response = await axios.post(
+      `${cfg.baileysGatewayUrl}/messages`,
+      body,
+      {
+        headers: { "x-gateway-secret": cfg.gatewaySecret },
+      }
+    );
+    return response.data.messages?.[0]?.id || "";
+  }
+
+  if (cfg.provider === "360dialog") {
+    // 360dialog does not use a phone-number-id in the URL; the API key maps to the number.
+    const response = await axios.post(`${D360_API_BASE}/messages`, body, {
+      headers: { "D360-API-KEY": cfg.d360ApiKey },
+    });
+    return response.data.messages?.[0]?.id || "";
+  }
 
   const response = await axios.post(
     `${GRAPH_API_BASE}/${phoneNumberId}/messages`,
+    body,
     {
-      messaging_product: "whatsapp",
-      to: recipientPhone,
-      type: "text",
-      text: { body: text },
-    },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${cfg.accessToken}` },
     }
   );
 
@@ -38,7 +61,7 @@ export async function sendWhatsAppTemplate(
     parameters: Array<{ type: string; text: string }>;
   }>
 ): Promise<string> {
-  const { accessToken } = await getWhatsAppConfig();
+  const cfg = await getWhatsAppConfig();
 
   const body: Record<string, unknown> = {
     messaging_product: "whatsapp",
@@ -54,11 +77,47 @@ export async function sendWhatsAppTemplate(
     (body.template as Record<string, unknown>).components = components;
   }
 
+  if (cfg.provider === "baileys") {
+    // The Baileys gateway is text-only in v1. Send the template's first body
+    // text parameter if present, otherwise a generic fallback referencing the
+    // template name. The gateway handles the text-only delivery.
+    const templateText =
+      components
+        ?.find((c) => c.type === "body")
+        ?.parameters?.map((p) => p.text)
+        .join(" ") || `[template: ${templateName}]`;
+
+    const baileysBody = {
+      messaging_product: "whatsapp",
+      to: recipientPhone,
+      type: "template",
+      template: { name: templateName, language: { code: languageCode } },
+      text: { body: templateText },
+    };
+
+    const response = await axios.post(
+      `${cfg.baileysGatewayUrl}/messages`,
+      baileysBody,
+      {
+        headers: { "x-gateway-secret": cfg.gatewaySecret },
+      }
+    );
+    return response.data.messages?.[0]?.id || "";
+  }
+
+  if (cfg.provider === "360dialog") {
+    // 360dialog does not use a phone-number-id in the URL; the API key maps to the number.
+    const response = await axios.post(`${D360_API_BASE}/messages`, body, {
+      headers: { "D360-API-KEY": cfg.d360ApiKey },
+    });
+    return response.data.messages?.[0]?.id || "";
+  }
+
   const response = await axios.post(
     `${GRAPH_API_BASE}/${phoneNumberId}/messages`,
     body,
     {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${cfg.accessToken}` },
     }
   );
 
@@ -136,17 +195,38 @@ export function parseMessageContent(message: Record<string, unknown>): {
 export async function downloadMedia(
   mediaId: string
 ): Promise<Buffer> {
-  const { accessToken } = await getWhatsAppConfig();
+  const cfg = await getWhatsAppConfig();
+
+  if (cfg.provider === "baileys") {
+    // The self-hosted Baileys gateway is text-only in v1, so inbound media is
+    // not supported. Surface a clear error rather than crashing elsewhere.
+    throw new Error("media not supported on baileys");
+  }
+
+  if (cfg.provider === "360dialog") {
+    // Get media URL via 360dialog Cloud API
+    const urlResponse = await axios.get(`${D360_API_BASE}/${mediaId}`, {
+      headers: { "D360-API-KEY": cfg.d360ApiKey },
+    });
+
+    // Download media bytes from the returned url with the same API key header
+    const mediaResponse = await axios.get(urlResponse.data.url, {
+      headers: { "D360-API-KEY": cfg.d360ApiKey },
+      responseType: "arraybuffer",
+    });
+
+    return Buffer.from(mediaResponse.data);
+  }
 
   // Get media URL
   const urlResponse = await axios.get(
     `${GRAPH_API_BASE}/${mediaId}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
+    { headers: { Authorization: `Bearer ${cfg.accessToken}` } }
   );
 
   // Download media
   const mediaResponse = await axios.get(urlResponse.data.url, {
-    headers: { Authorization: `Bearer ${accessToken}` },
+    headers: { Authorization: `Bearer ${cfg.accessToken}` },
     responseType: "arraybuffer",
   });
 
