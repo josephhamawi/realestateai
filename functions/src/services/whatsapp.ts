@@ -129,7 +129,9 @@ export function verifyWebhookSignature(
   signature: string,
   appSecret: string
 ): boolean {
-  if (!signature || !rawBody) return false;
+  // An empty secret would still produce a valid-looking HMAC that anyone can
+  // compute, so an unconfigured secret must reject rather than accept.
+  if (!signature || !rawBody || !appSecret) return false;
   const expectedSignature =
     "sha256=" +
     crypto.createHmac("sha256", appSecret).update(rawBody).digest("hex");

@@ -90,6 +90,11 @@ service cloud.firestore {
       }
     }
 
+    // --- OAuth state (Cloud Functions only) ---
+    match /oauth_states/{stateId} {
+      allow read, write: if false;
+    }
+
     // --- Phone Mappings (Cloud Functions only) ---
     match /phone_mappings/{phoneNumberId} {
       allow read, write: if false;

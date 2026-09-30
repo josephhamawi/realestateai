@@ -10,6 +10,7 @@ import { runComplianceCheck } from "../utils/compliance";
 import { sendWhatsAppMessage } from "../services/whatsapp";
 import { sendMessageToLead } from "../services/messagingRouter";
 import type { Message } from "../types/message";
+import { requireTenantAccess } from "../utils/auth";
 
 export const aiConversation = functions.https.onCall(
   async (
@@ -17,6 +18,10 @@ export const aiConversation = functions.https.onCall(
     context
   ) => {
     const { tenantId, leadId, inboundMessage } = data;
+
+    // Callable endpoints are public: verify the caller owns this tenant before
+    // touching its leads, spending its AI credits, or messaging its contacts.
+    requireTenantAccess(context, tenantId);
 
     // Load tenant and market config
     const tenant = await loadTenant(tenantId);

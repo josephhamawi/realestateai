@@ -115,12 +115,15 @@ export async function sendTelegramDocument(
  */
 export async function registerWebhook(
   botToken: string,
-  webhookUrl: string
+  webhookUrl: string,
+  secretToken?: string
 ): Promise<boolean> {
-  const response = await axios.post(
-    buildApiUrl(botToken, "setWebhook"),
-    { url: webhookUrl }
-  );
+  const response = await axios.post(buildApiUrl(botToken, "setWebhook"), {
+    url: webhookUrl,
+    // Telegram returns this in the X-Telegram-Bot-Api-Secret-Token header on
+    // every delivery, which is how the webhook authenticates the caller.
+    ...(secretToken ? { secret_token: secretToken } : {}),
+  });
 
   return response.data.ok === true;
 }

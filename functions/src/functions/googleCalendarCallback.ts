@@ -3,6 +3,7 @@ import axios from "axios";
 import { db, FieldValue } from "../config/firebase";
 import { getGoogleOAuthConfig } from "../config/secrets";
 import { appUrl, functionUrl } from "../config/urls";
+import { consumeOAuthState } from "../utils/oauthState";
 
 const REDIRECT_URI = functionUrl("googleCalendarCallback");
 
@@ -20,7 +21,11 @@ export const googleCalendarCallback = functions.https.onRequest(
     }
     if (!code || !state) { res.status(400).send("Missing code or state"); return; }
 
-    const userId = state;
+    const userId = await consumeOAuthState(state, "google");
+    if (!userId) {
+      res.status(400).send("This authorization link is invalid or has expired. Start the connection again from Settings.");
+      return;
+    }
 
     try {
       const { clientId, clientSecret } = await getGoogleOAuthConfig();

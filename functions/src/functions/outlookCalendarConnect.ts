@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import { getMicrosoftOAuthConfig } from "../config/secrets";
 import { functionUrl } from "../config/urls";
+import { createOAuthState, uidFromIdToken } from "../utils/oauthState";
 
 const REDIRECT_URI = functionUrl("outlookCalendarCallback");
 
@@ -22,9 +23,18 @@ export const outlookCalendarConnect = functions.https.onRequest(
       return;
     }
 
-    const uid = req.query.uid as string | undefined;
-    if (!uid) {
-      res.status(400).send("Missing uid parameter");
+    // Authenticate the caller rather than trusting a uid from the query string.
+    const idToken = req.query.token as string | undefined;
+    if (!idToken) {
+      res.status(400).send("Missing token parameter");
+      return;
+    }
+
+    let uid: string;
+    try {
+      uid = await uidFromIdToken(idToken);
+    } catch {
+      res.status(401).send("Invalid or expired sign-in token");
       return;
     }
 
@@ -46,7 +56,7 @@ export const outlookCalendarConnect = functions.https.onRequest(
         redirect_uri: REDIRECT_URI,
         response_mode: "query",
         scope: SCOPES,
-        state: uid,
+        state: await createOAuthState(uid, "outlook"),
         prompt: "consent",
       });
 

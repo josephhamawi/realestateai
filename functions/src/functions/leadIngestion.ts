@@ -17,6 +17,13 @@ export const leadIngestion = functions.https.onRequest(async (req, res) => {
     return;
   }
 
+  // `source` is interpolated into a Firestore field path below, so keep it to
+  // a single plain segment rather than letting a caller walk the document.
+  if (!/^[A-Za-z0-9_-]{1,40}$/.test(source)) {
+    res.status(400).json({ error: "Invalid source parameter" });
+    return;
+  }
+
   try {
     // Validate API key -> resolve tenantId
     const tenantsSnap = await db

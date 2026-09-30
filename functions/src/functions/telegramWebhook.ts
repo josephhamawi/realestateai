@@ -16,6 +16,8 @@ import { createOutlookEvent } from "../services/outlookCalendar";
 import { runComplianceCheck } from "../utils/compliance";
 import type { Message } from "../types/message";
 import { functionUrl } from "../config/urls";
+import { requireInstanceAdmin } from "../utils/auth";
+import { ensureTelegramWebhookSecret } from "../config/secrets";
 
 /**
  * HTTP endpoint that receives Telegram Bot API updates (webhook mode).
@@ -30,6 +32,22 @@ export const telegramWebhook = functions
   // Only accept POST
   if (req.method !== "POST") {
     res.status(405).send("Method not allowed");
+    return;
+  }
+
+  // Telegram echoes the secret set at registration time on every delivery.
+  // Without this check the URL alone is the only barrier, and anyone who
+  // learns it can inject messages as any lead.
+  const { webhookSecret } = await getTelegramConfig();
+  if (!webhookSecret) {
+    console.error(
+      "Telegram webhook rejected: no webhook secret stored. Re-run registerTelegramWebhook to provision one."
+    );
+    res.status(403).send("Forbidden");
+    return;
+  }
+  if (req.headers["x-telegram-bot-api-secret-token"] !== webhookSecret) {
+    res.status(403).send("Forbidden");
     return;
   }
 
@@ -519,7 +537,10 @@ export const telegramWebhook = functions
  * Callable function to register the Telegram webhook URL with Telegram's API.
  * Call this after saving the bot token in admin.
  */
-export const registerTelegramWebhook = functions.https.onCall(async () => {
+export const registerTelegramWebhook = functions.https.onCall(async (_data, context) => {
+  // Points the shared bot at this deployment, so it is an instance-level action.
+  await requireInstanceAdmin(context);
+
   const { botToken } = await getTelegramConfig();
   if (!botToken) {
     throw new functions.https.HttpsError(
@@ -530,7 +551,10 @@ export const registerTelegramWebhook = functions.https.onCall(async () => {
 
   const webhookUrl = functionUrl("telegramWebhook");
 
-  const success = await registerWebhook(botToken, webhookUrl);
+  // Provision (or reuse) the secret Telegram will send back on every update.
+  const secret = await ensureTelegramWebhookSecret();
+
+  const success = await registerWebhook(botToken, webhookUrl, secret);
   if (!success) {
     throw new functions.https.HttpsError(
       "internal",

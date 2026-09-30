@@ -164,11 +164,15 @@ optional.
 
 **Telegram (easiest, free):** message [@BotFather](https://t.me/botfather), send
 `/newbot`, paste the token into the Telegram tab on the API Keys screen, then call the
-`registerTelegramWebhook` function once from your app to point Telegram at your webhook.
+`registerTelegramWebhook` function once (instance owners only). That call provisions the
+secret Telegram echoes on every delivery; the webhook rejects anything without it, so
+registration is required, not optional.
 
 **WhatsApp:** either use the official Business API (Meta or 360dialog credentials go in the
 WhatsApp tab), or run `whatsapp-gateway/` on a small VPS and point the gateway fields at it.
-See `whatsapp-gateway/README.md`.
+See `whatsapp-gateway/README.md`. For 360dialog and Baileys there is no request signature,
+so set a verify token and append it to the webhook URL as `?token=<value>`: without one the
+webhook refuses every request.
 
 ## Local development
 
@@ -215,6 +219,8 @@ branding: `VITE_APP_NAME`, `VITE_OPERATOR_NAME`, `VITE_CONTACT_EMAIL`, `VITE_PUB
 
 - Deploy `firestore.rules` before you use the app. Without them, Firestore in production
   mode denies everything and the app appears broken; in test mode it would be wide open.
+- Callable Cloud Functions are reachable by anyone on the internet, so each one checks the
+  caller itself in `functions/src/utils/auth.ts`. Keep that check when you add new ones.
 - The first account to visit `/setup` claims the instance. Claim it yourself right after
   deploying.
 - API keys are stored in your own Firestore, readable only by instance owners, and are
@@ -237,6 +243,11 @@ prompt and config work:
 - `functions/src/utils/compliance.ts` — regulator rules and blocked phrases
 - `src/lib/marketConfig.ts` — currency, areas, property types, weekend
 - `market_config/dubai` in Firestore — runtime overrides, seeded on first signup
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for the threat model, the deployment checklist, and how to
+report a vulnerability.
 
 ## License
 

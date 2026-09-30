@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import { db, FieldValue, Timestamp } from "../config/firebase";
 import { loadTenant } from "../utils/marketConfig";
+import { requireTenantAccess } from "../utils/auth";
 
 export const complianceLogger = functions.https.onCall(
   async (
@@ -13,6 +14,10 @@ export const complianceLogger = functions.https.onCall(
     context
   ) => {
     const { action, tenantId, leadId, eventData } = data;
+
+    // executeDeletion erases lead data and generateReport reads the audit
+    // trail, so the caller has to prove they belong to this tenant.
+    requireTenantAccess(context, tenantId);
 
     switch (action) {
       case "logEvent": {

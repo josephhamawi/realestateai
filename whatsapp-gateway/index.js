@@ -216,6 +216,13 @@ app.get("/qr", async (_req, res) => {
 
 // Outbound send: accepts a Meta-format body and delivers it via Baileys.
 app.post("/messages", async (req, res) => {
+  // With an unset secret, a request sending an empty header would compare
+  // equal and pass, so treat "not configured" as closed.
+  if (!GATEWAY_SECRET) {
+    console.error("Rejecting request: GATEWAY_SECRET is not set.");
+    res.status(503).json({ error: "Gateway not configured" });
+    return;
+  }
   if (req.get("x-gateway-secret") !== GATEWAY_SECRET) {
     res.status(401).json({ error: "Unauthorized" });
     return;

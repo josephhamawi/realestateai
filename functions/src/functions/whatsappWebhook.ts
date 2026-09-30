@@ -42,14 +42,18 @@ export const whatsappWebhook = functions.https.onRequest(async (req, res) => {
 
     if (cfg.provider !== "meta") {
       // Non-Meta providers (360dialog, baileys) forward unsigned Meta-format
-      // payloads, so skip the Meta HMAC check.
-      // Optionally enforce a shared verify token passed as a query param.
-      if (cfg.verifyToken && req.query.token !== undefined) {
-        if (req.query.token !== cfg.verifyToken) {
-          res.status(403).send("Forbidden");
-          return;
-        }
-      } else if (cfg.verifyToken && req.query.token === undefined) {
+      // payloads, so a shared token in the query string is the only thing
+      // authenticating the caller. Without one the endpoint would accept
+      // forged inbound messages from anyone, so require it.
+      if (!cfg.verifyToken) {
+        console.error(
+          "WhatsApp webhook rejected: no verify token configured for provider " +
+            cfg.provider + ". Set one on the API Keys screen and include it as ?token= on the webhook URL."
+        );
+        res.status(403).send("Forbidden");
+        return;
+      }
+      if (req.query.token !== cfg.verifyToken) {
         res.status(403).send("Forbidden");
         return;
       }

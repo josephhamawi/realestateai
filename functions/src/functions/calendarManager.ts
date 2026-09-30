@@ -10,6 +10,7 @@ import {
   createOutlookCalendarEvent,
 } from "../services/outlookCalendar";
 import type { MarketConfig } from "../types/market";
+import { requireTenantAccess } from "../utils/auth";
 
 export const calendarManager = functions.https.onCall(
   async (
@@ -22,6 +23,8 @@ export const calendarManager = functions.https.onCall(
     context
   ) => {
     const { action, tenantId, leadId, appointmentData } = data;
+
+    requireTenantAccess(context, tenantId);
 
     const tenant = await loadTenant(tenantId);
     const marketConfig = await loadMarketConfig();

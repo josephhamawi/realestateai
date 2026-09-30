@@ -561,17 +561,21 @@ function IntegrationsSettings() {
     }
   }, [location.search]);
 
-  const handleGoogleConnect = () => {
-    if (!user?.uid) return;
-    const connectUrl = `${FUNCTIONS_BASE_URL}/googleCalendarConnect?uid=${user.uid}`;
-    window.location.href = connectUrl;
+  // Send a short-lived Firebase ID token rather than a uid: the function
+  // derives the account from the token, so nobody can start a connect flow on
+  // another account's behalf.
+  const startCalendarConnect = async (endpoint: string) => {
+    if (!user) return;
+    try {
+      const idToken = await user.getIdToken();
+      window.location.href = `${FUNCTIONS_BASE_URL}/${endpoint}?token=${encodeURIComponent(idToken)}`;
+    } catch {
+      toast("error", "Could not start the connection", "Sign out and back in, then try again.");
+    }
   };
 
-  const handleOutlookConnect = () => {
-    if (!user?.uid) return;
-    const connectUrl = `${FUNCTIONS_BASE_URL}/outlookCalendarConnect?uid=${user.uid}`;
-    window.location.href = connectUrl;
-  };
+  const handleGoogleConnect = () => startCalendarConnect("googleCalendarConnect");
+  const handleOutlookConnect = () => startCalendarConnect("outlookCalendarConnect");
 
   const integrations = [
     {

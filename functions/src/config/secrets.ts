@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import { db } from "./firebase";
 
 // In-memory cache for platform config
@@ -148,13 +149,34 @@ export async function getAIConfig(): Promise<ResolvedAIConfig> {
 export async function getTelegramConfig(): Promise<{
   botToken: string;
   botUsername: string;
+  webhookSecret: string;
 }> {
   const config = await loadPlatformConfig();
   const tg = (config.telegram || {}) as Record<string, string>;
   return {
     botToken: process.env.TELEGRAM_BOT_TOKEN || tg.botToken || "",
     botUsername: process.env.TELEGRAM_BOT_USERNAME || tg.botUsername || "",
+    webhookSecret:
+      process.env.TELEGRAM_WEBHOOK_SECRET || tg.webhookSecret || "",
   };
+}
+
+/**
+ * Return the secret Telegram echoes back on every webhook delivery, creating
+ * and storing one on first use. Only letters, digits, underscore and hyphen
+ * are allowed by Telegram, and the value is at most 256 characters.
+ */
+export async function ensureTelegramWebhookSecret(): Promise<string> {
+  const existing = await getTelegramConfig();
+  if (existing.webhookSecret) return existing.webhookSecret;
+
+  const secret = randomBytes(32).toString("hex");
+  await db.doc("platform_config/apis").set(
+    { telegram: { webhookSecret: secret } },
+    { merge: true }
+  );
+  invalidateConfigCache();
+  return secret;
 }
 
 /**
