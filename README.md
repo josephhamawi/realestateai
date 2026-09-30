@@ -220,9 +220,13 @@ branding: `VITE_APP_NAME`, `VITE_OPERATOR_NAME`, `VITE_CONTACT_EMAIL`, `VITE_PUB
 - API keys are stored in your own Firestore, readable only by instance owners, and are
   sent only to the provider they belong to.
 - `.env.local` and `.firebaserc` are gitignored. Keep them that way.
-- The legal pages (`/terms`, `/privacy`) are templates written for a Dubai deployment.
-  Set `VITE_OPERATOR_NAME` and `VITE_CONTACT_EMAIL`, then have your own counsel review
-  them before you publish. They are a starting point, not legal advice.
+- The legal pages (`/terms`, `/privacy`) are templates written for a Dubai deployment and
+  say so in a banner at the top of each. They describe only what the code actually does:
+  TLS in transit, Google-managed encryption at rest, tenant isolation enforced by
+  `firestore.rules`, and no third-party security certification. Set `VITE_OPERATOR_NAME`
+  and `VITE_CONTACT_EMAIL`, adjust the retention and rights sections to your practice,
+  remove the banner, and have your own counsel review the result. They are a starting
+  point, not legal advice.
 
 ## Adapting to another market
 

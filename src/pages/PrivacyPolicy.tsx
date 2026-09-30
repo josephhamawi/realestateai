@@ -138,7 +138,7 @@ export function PrivacyPolicy() {
             Privacy Policy
           </h1>
           <p className="mt-4 text-blue-100/80 text-lg">
-            Last updated: April 9, 2026
+            Last updated: September 30, 2026
           </p>
         </div>
       </div>
@@ -148,9 +148,9 @@ export function PrivacyPolicy() {
         <Reveal>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
-              { icon: Shield, label: "PDPL Compliant", desc: "UAE Data Protection" },
-              { icon: Lock, label: "Encrypted", desc: "At rest and in transit" },
-              { icon: Database, label: "Tenant Isolated", desc: "Your data stays yours" },
+              { icon: Shield, label: "Written for UAE PDPL", desc: "Operator confirms compliance" },
+              { icon: Lock, label: "TLS in transit", desc: "Google-managed encryption at rest" },
+              { icon: Database, label: "Tenant isolated", desc: "Enforced by Firestore rules" },
             ].map((item, i) => (
               <div
                 key={i}
@@ -171,17 +171,32 @@ export function PrivacyPolicy() {
 
       {/* Content */}
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <div className="mb-10 rounded-xl border border-amber-200 bg-amber-50 p-5">
+          <p className="text-sm font-semibold text-amber-900">
+            Template. Review before you publish.
+          </p>
+          <p className="mt-2 text-sm text-amber-800">
+            {BRAND.appName} is self-hosted open-source software, so this page ships as a
+            starting point written for a Dubai deployment, not as legal advice. Whoever runs
+            this instance is the data controller and is responsible for making this text
+            accurate: the entity name, the providers actually connected, retention periods,
+            and the rights process. Have your own counsel review it before you rely on it.
+          </p>
+        </div>
+
         <Section id="introduction" title="1. Introduction">
           <p>
-            RealEstateAI ("the Service"), operated by {BRAND.operator} ("we," "us," or
-            "our"), is committed to protecting your privacy and the privacy of your leads.
-            This Privacy Policy explains how we collect, use, disclose, and safeguard your
-            information when you use our AI-powered real estate lead qualification platform.
+            {BRAND.appName} ("the Service") is run by {BRAND.operator} ("we," "us," or
+            "our") on infrastructure we control. This Privacy Policy explains what the
+            Service collects, what it does with that information, and who else sees it when
+            you use it to qualify real estate leads.
           </p>
           <p>
-            This policy applies to real estate agents and brokers who use RealEstateAI, as
-            well as the leads whose information is processed through the platform. By using
-            the Service, you agree to the terms of this Privacy Policy.
+            It applies to the agents and brokers who use this instance, and to the leads
+            whose messages pass through it. The Service is open-source software that anyone
+            can deploy, so each deployment is separate: this policy covers this instance
+            only, and no data is shared with the authors of the software or with any other
+            deployment.
           </p>
         </Section>
 
@@ -253,26 +268,30 @@ export function PrivacyPolicy() {
 
         <Section id="data-storage" title="4. Data Storage and Security">
           <p>
-            <strong>Infrastructure:</strong> Your data is stored on Google Cloud Platform
-            using Firebase and Firestore services. Our infrastructure is designed for high
-            availability, reliability, and security.
+            <strong>Infrastructure:</strong> Data is stored in a Google Cloud project that
+            we control, using Firebase Authentication, Firestore, and Cloud Functions. The
+            availability and durability of that storage are Google's, described in their
+            own documentation.
           </p>
           <p>
-            <strong>Encryption:</strong> All data is encrypted at rest using AES-256
-            encryption and in transit using TLS 1.2 or higher. API communications between
-            the Service and third-party integrations are secured with industry-standard
-            encryption protocols.
+            <strong>Encryption:</strong> Traffic to the Service and onward to the AI and
+            messaging providers travels over TLS. Data at rest in Firestore is encrypted by
+            Google using their managed keys. This is standard Google Cloud behavior rather
+            than anything added on top, and it is not end-to-end encryption: the Service can
+            read the conversations it processes, because it has to in order to reply.
           </p>
           <p>
-            <strong>Tenant Isolation:</strong> Your data is logically separated from other
-            users' data. Each agent's account operates in its own isolated environment,
-            ensuring that your lead data, conversation history, and business information
-            are never accessible to other users of the platform.
+            <strong>Tenant isolation:</strong> Each agent account has its own tenant record,
+            and the Firestore security rules shipped with the Service restrict reads and
+            writes to that account. Stored API keys are readable only by the account that
+            administers the instance. Isolation is enforced by those rules, so an operator
+            who changes or does not deploy them changes this guarantee.
           </p>
           <p>
-            <strong>Access Controls:</strong> We employ strict access controls,
-            multi-factor authentication for administrative access, and regular security
-            audits to protect your data.
+            <strong>Access controls:</strong> Accounts sign in with email and password
+            through Firebase Authentication. Administrative access to the underlying Google
+            Cloud project is limited to us, under whatever controls we have configured
+            there. We do not claim any third-party security certification for this instance.
           </p>
         </Section>
 
@@ -383,7 +402,7 @@ export function PrivacyPolicy() {
           <ul className="list-disc pl-6 space-y-2">
             <li>
               <strong>Active accounts:</strong> Your data is retained for as long as your
-              subscription is active and your account is in good standing
+              account is open on this instance
             </li>
             <li>
               <strong>Account closure:</strong> Upon account closure or deletion

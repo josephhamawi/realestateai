@@ -195,9 +195,12 @@ SECURITY NOTES
     owners, and are sent only to the provider they belong to.
   * .env.local and .firebaserc are gitignored. Keep them that way.
   * The legal pages (/terms, /privacy) are templates written for a Dubai
-    deployment. Set VITE_OPERATOR_NAME and VITE_CONTACT_EMAIL, then have your
-    own counsel review them before publishing. They are a starting point, not
-    legal advice.
+    deployment and say so in a banner at the top of each. They describe only
+    what the code actually does: TLS in transit, Google-managed encryption at
+    rest, tenant isolation enforced by firestore.rules, and no third-party
+    security certification. Set VITE_OPERATOR_NAME and VITE_CONTACT_EMAIL,
+    adjust retention and rights to your practice, remove the banner, and have
+    your own counsel review the result. A starting point, not legal advice.
 
 
 ADAPTING TO ANOTHER MARKET

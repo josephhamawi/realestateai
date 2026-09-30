@@ -138,13 +138,26 @@ export function TermsOfService() {
             Terms of Service
           </h1>
           <p className="mt-4 text-blue-100/80 text-lg">
-            Last updated: April 9, 2026
+            Last updated: September 30, 2026
           </p>
         </div>
       </div>
 
       {/* Content */}
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <div className="mb-10 rounded-xl border border-amber-200 bg-amber-50 p-5">
+          <p className="text-sm font-semibold text-amber-900">
+            Template. Review before you publish.
+          </p>
+          <p className="mt-2 text-sm text-amber-800">
+            {BRAND.appName} is self-hosted open-source software, so this page ships as a
+            starting point written for a Dubai deployment, not as legal advice. Whoever runs
+            this instance is the data controller and is responsible for making this text
+            accurate: the entity name, the providers actually connected, retention periods,
+            and the rights process. Have your own counsel review it before you rely on it.
+          </p>
+        </div>
+
         <Section id="acceptance" title="1. Acceptance of Terms">
           <p>
             By accessing or using RealEstateAI ("the Service"), you agree to be bound by
@@ -153,9 +166,10 @@ export function TermsOfService() {
             between you and RealEstateAI, operated by {BRAND.operator}.
           </p>
           <p>
-            By creating an account, subscribing to a plan, or otherwise using the platform,
-            you confirm that you have read, understood, and agree to be bound by these Terms
-            and our Privacy Policy.
+            By creating an account or otherwise using this instance, you confirm that you
+            have read, understood, and agree to be bound by these Terms and our Privacy
+            Policy. There is no plan to subscribe to: the Service is free, open-source
+            software that we host.
           </p>
         </Section>
 
@@ -295,10 +309,12 @@ export function TermsOfService() {
 
         <Section id="ip" title="8. Intellectual Property">
           <p>
-            <strong>Platform Ownership:</strong> RealEstateAI, including its software, AI
-            models, design, branding, and all related intellectual property, is owned by
-            {BRAND.operator}. You are granted a limited, non-exclusive, non-transferable
-            license to use the Service for the duration of your subscription.
+            <strong>Platform ownership:</strong> The {BRAND.appName} software is open
+            source and distributed under the MIT license, which governs what you may do with
+            the source code. These Terms cover your use of this hosted instance, which
+            {BRAND.operator} runs. Branding and content added by {BRAND.operator} to this
+            instance remain theirs. The AI models belong to the provider whose key this
+            instance is configured with, and their terms apply to model output.
           </p>
           <p>
             <strong>Your Data:</strong> You retain full ownership of all data you input into
@@ -324,7 +340,7 @@ export function TermsOfService() {
             twelve (12) months preceding the event giving rise to the claim.
           </p>
           <p>
-            RealEstateAI does not guarantee uninterrupted, error-free, or secure access to
+            {BRAND.appName} does not guarantee uninterrupted, error-free, or secure access to
             the Service. We are not responsible for any loss or damage resulting from service
             outages, data loss, or unauthorized access to your account.
           </p>
@@ -339,7 +355,6 @@ export function TermsOfService() {
             <li>You have violated these Terms</li>
             <li>You have engaged in fraudulent or illegal activity</li>
             <li>Your use of the Service poses a risk to other users or our systems</li>
-            <li>You have not paid your subscription fees within the applicable grace period</li>
           </ul>
           <p>
             Upon termination, your access to the Service will be immediately revoked. You
