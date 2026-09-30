@@ -40,5 +40,3 @@ export const LEAD_SOURCES = [
 export const APPOINTMENT_TYPES = [
   "property_viewing", "buyer_consultation", "valuation", "video_call", "other",
 ] as const;
-
-export const SUBSCRIPTION_TIERS = ["solo", "team", "brokerage"] as const;

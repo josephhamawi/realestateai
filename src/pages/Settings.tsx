@@ -40,6 +40,44 @@ const countryCodes = [
   { code: "+51", country: "PE" }, { code: "+58", country: "VE" },
 ];
 
+
+type AIProviderId = "anthropic" | "openai" | "gemini";
+
+const AI_PROVIDER_INFO: Record<
+  AIProviderId,
+  { name: string; keyHint: string; defaultModel: string; consoleUrl: string; consoleLabel: string }
+> = {
+  anthropic: {
+    name: "Anthropic (Claude)",
+    keyHint: "sk-ant-...",
+    defaultModel: "claude-opus-5",
+    consoleUrl: "https://console.anthropic.com/settings/keys",
+    consoleLabel: "console.anthropic.com",
+  },
+  openai: {
+    name: "OpenAI",
+    keyHint: "sk-...",
+    defaultModel: "gpt-4o",
+    consoleUrl: "https://platform.openai.com/api-keys",
+    consoleLabel: "platform.openai.com",
+  },
+  gemini: {
+    name: "Google Gemini",
+    keyHint: "AIza...",
+    defaultModel: "gemini-2.5-flash",
+    consoleUrl: "https://aistudio.google.com/app/apikey",
+    consoleLabel: "aistudio.google.com",
+  },
+};
+
+// Cloud Functions base URL for this deployment, derived from the configured
+// Firebase project unless VITE_FUNCTIONS_BASE_URL overrides it.
+const FUNCTIONS_BASE_URL =
+  import.meta.env.VITE_FUNCTIONS_BASE_URL ||
+  `https://${import.meta.env.VITE_FUNCTIONS_REGION || "us-central1"}-${
+    import.meta.env.VITE_FIREBASE_PROJECT_ID
+  }.cloudfunctions.net`;
+
 function SettingsMenu() {
   const navigate = useNavigate();
 
@@ -358,34 +396,38 @@ function AISettings() {
   );
 }
 
-function VynnAICard() {
+function TenantAICard() {
   const { user } = useAuth();
   const { tenant } = useTenant();
-  const vynnIntegration = (tenant?.integrations as Record<string, unknown> | undefined)?.vynn as
-    | { apiKey?: string; model?: string; enabled?: boolean }
+  const aiIntegration = (tenant?.integrations as Record<string, unknown> | undefined)?.ai as
+    | { provider?: AIProviderId; apiKey?: string; model?: string; enabled?: boolean }
     | undefined;
 
-  const [apiKey, setApiKey] = useState(vynnIntegration?.apiKey || "");
-  const [model, setModel] = useState(vynnIntegration?.model || "auto");
+  const [provider, setProvider] = useState<AIProviderId>(aiIntegration?.provider || "anthropic");
+  const [apiKey, setApiKey] = useState(aiIntegration?.apiKey || "");
+  const [model, setModel] = useState(aiIntegration?.model || "");
   const [visible, setVisible] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const connected = Boolean(vynnIntegration?.apiKey);
+  const connected = Boolean(aiIntegration?.apiKey);
+  const providerInfo = AI_PROVIDER_INFO[provider];
 
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
     try {
+      const trimmed = apiKey.trim();
       await updateDoc(doc(db, "tenants", user.uid), {
-        "integrations.vynn.apiKey": apiKey.trim(),
-        "integrations.vynn.model": model,
-        "integrations.vynn.enabled": Boolean(apiKey.trim()),
-        "integrations.vynn.connectedAt": apiKey.trim() ? serverTimestamp() : null,
+        "integrations.ai.provider": provider,
+        "integrations.ai.apiKey": trimmed,
+        "integrations.ai.model": model.trim() || providerInfo.defaultModel,
+        "integrations.ai.enabled": Boolean(trimmed),
+        "integrations.ai.connectedAt": trimmed ? serverTimestamp() : null,
         updatedAt: serverTimestamp(),
       });
-      toast("success", apiKey.trim() ? "Vynn AI connected" : "Vynn AI key removed");
+      toast("success", trimmed ? `${providerInfo.name} connected` : "AI key removed");
     } catch {
-      toast("error", "Failed to save Vynn AI key");
+      toast("error", "Failed to save the AI key");
     } finally {
       setSaving(false);
     }
@@ -399,8 +441,11 @@ function VynnAICard() {
             <Brain className="h-5 w-5 text-purple-600" />
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-900">Vynn AI</p>
-            <p className="text-xs text-gray-500">Powers your AI persona for lead conversations</p>
+            <p className="text-sm font-medium text-gray-900">Your own AI key</p>
+            <p className="text-xs text-gray-500">
+              Optional. Overrides the instance key for your leads only, and bills to your
+              own provider account.
+            </p>
           </div>
         </div>
         {connected ? (
@@ -410,33 +455,44 @@ function VynnAICard() {
           </span>
         ) : (
           <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-            Not connected
+            Using instance key
           </span>
         )}
       </div>
 
-      <div className="mt-4 rounded-lg border border-purple-100 bg-purple-50 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wider text-purple-800">How to get your Vynn AI API key</p>
-        <ol className="mt-2 space-y-1.5 text-sm text-purple-900">
-          <li>
-            1. Visit{" "}
+      <div className="mt-4 space-y-3">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Provider</label>
+          <div className="mt-1 flex flex-wrap gap-2">
+            {(Object.keys(AI_PROVIDER_INFO) as AIProviderId[]).map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setProvider(id)}
+                className={`rounded-lg border px-3 py-1.5 text-sm ${
+                  provider === id
+                    ? "border-brand-500 bg-brand-50 text-brand-700"
+                    : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                {AI_PROVIDER_INFO[id].name}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-gray-500">
+            Get a key at{" "}
             <a
-              href="https://vynnai.app"
+              href={providerInfo.consoleUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono font-semibold text-purple-700 underline hover:text-purple-900"
+              className="font-medium text-brand-600 underline"
             >
-              vynnai.app
+              {providerInfo.consoleLabel}
             </a>
-            {" "}and sign up for a free account.
-          </li>
-          <li>2. Open the dashboard and go to the API Keys section.</li>
-          <li>3. Click "Create API Key", name it (e.g. "AgentFlow"), and copy the key (starts with <span className="font-mono text-xs">vynn_</span>).</li>
-          <li>4. Paste it below and click Save. Your AI persona will start using it on the next message.</li>
-        </ol>
-      </div>
+            .
+          </p>
+        </div>
 
-      <div className="mt-4 space-y-3">
         <div>
           <label className="block text-sm font-medium text-gray-700">API Key</label>
           <div className="relative mt-1">
@@ -444,8 +500,9 @@ function VynnAICard() {
               type={visible ? "text" : "password"}
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="vynn_..."
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-10 text-sm font-mono focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              placeholder={providerInfo.keyHint}
+              autoComplete="off"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-10 font-mono text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
             <button
               type="button"
@@ -456,22 +513,18 @@ function VynnAICard() {
             </button>
           </div>
         </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700">Model</label>
-          <select
+          <input
+            type="text"
             value={model}
             onChange={(e) => setModel(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          >
-            <option value="auto">Auto (Recommended)</option>
-            <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
-            <option value="claude-opus-4-6">Claude Opus 4.6</option>
-            <option value="gpt-4.1">GPT-4.1</option>
-            <option value="gpt-4.1-mini">GPT-4.1 Mini (Fastest)</option>
-            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-          </select>
+            placeholder={providerInfo.defaultModel}
+            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          />
         </div>
+
         <div className="flex justify-end">
           <Button onClick={handleSave} loading={saving}>
             <Save className="mr-2 h-4 w-4" />
@@ -510,13 +563,13 @@ function IntegrationsSettings() {
 
   const handleGoogleConnect = () => {
     if (!user?.uid) return;
-    const connectUrl = `https://us-central1-agentflowai-11dd2.cloudfunctions.net/googleCalendarConnect?uid=${user.uid}`;
+    const connectUrl = `${FUNCTIONS_BASE_URL}/googleCalendarConnect?uid=${user.uid}`;
     window.location.href = connectUrl;
   };
 
   const handleOutlookConnect = () => {
     if (!user?.uid) return;
-    const connectUrl = `https://us-central1-agentflowai-11dd2.cloudfunctions.net/outlookCalendarConnect?uid=${user.uid}`;
+    const connectUrl = `${FUNCTIONS_BASE_URL}/outlookCalendarConnect?uid=${user.uid}`;
     window.location.href = connectUrl;
   };
 
@@ -577,7 +630,7 @@ function IntegrationsSettings() {
       <h1 className="text-2xl font-bold text-gray-900">Integrations</h1>
       <p className="mt-1 text-sm text-gray-500">Manage your AI, messaging, and calendar connections</p>
       <div className="mt-6 space-y-3">
-        <VynnAICard />
+        <TenantAICard />
         {integrations.map((item) => (
           <Card key={item.id}>
             <div className="flex items-center justify-between">

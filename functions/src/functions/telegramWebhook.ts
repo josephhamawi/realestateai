@@ -7,14 +7,15 @@ import { generateICS } from "../utils/icsGenerator";
 import { loadTenant, loadMarketConfig } from "../utils/marketConfig";
 import {
   buildSystemPrompt,
-  buildClaudeMessages,
+  buildConversationMessages,
   generateAIResponse,
   extractEntities,
-} from "../services/claude";
+} from "../services/ai";
 import { createCalendarEvent } from "../services/googleCalendar";
 import { createOutlookEvent } from "../services/outlookCalendar";
 import { runComplianceCheck } from "../utils/compliance";
 import type { Message } from "../types/message";
+import { functionUrl } from "../config/urls";
 
 /**
  * HTTP endpoint that receives Telegram Bot API updates (webhook mode).
@@ -123,23 +124,27 @@ export const telegramWebhook = functions
       lead as any,
       ""
     );
-    const claudeMessages = buildClaudeMessages(messages);
+    const aiMessages = buildConversationMessages(messages);
 
-    if (claudeMessages.length === 0) {
+    if (aiMessages.length === 0) {
       res.status(200).send("OK");
       return;
     }
 
-    // Prefer tenant's own Vynn AI key if configured
-    const tenantVynn = tenant.integrations?.vynn?.apiKey
-      ? { apiKey: tenant.integrations.vynn.apiKey, model: tenant.integrations.vynn.model }
+    // Prefer the tenant's own AI key if they configured one
+    const tenantAI = tenant.integrations?.ai?.apiKey
+      ? {
+          provider: tenant.integrations.ai.provider,
+          apiKey: tenant.integrations.ai.apiKey,
+          model: tenant.integrations.ai.model,
+        }
       : undefined;
 
     // Generate AI response
-    const { text: aiReplyText, tokensUsed } = await generateAIResponse(
+    const { text: aiReplyText, tokensUsed, model: aiModel } = await generateAIResponse(
       systemPrompt,
-      claudeMessages,
-      tenantVynn
+      aiMessages,
+      tenantAI
     );
 
     // Run compliance check
@@ -159,8 +164,8 @@ export const telegramWebhook = functions
 
       const { text: rewrittenText } = await generateAIResponse(
         constraintPrompt,
-        claudeMessages,
-        tenantVynn
+        aiMessages,
+        tenantAI
       );
       finalMessage = rewrittenText;
     }
@@ -180,7 +185,7 @@ export const telegramWebhook = functions
         content: { text: finalMessage },
         metadata: {
           aiGenerated: true,
-          aiModel: "vynn-auto",
+          aiModel,
           tokensUsed,
           complianceCheck: complianceResult.status,
           complianceNotes: complianceResult.notes,
@@ -208,7 +213,7 @@ export const telegramWebhook = functions
           content: { text: finalMessage },
           metadata: {
             aiGenerated: true,
-            aiModel: "vynn-auto",
+            aiModel,
             tokensUsed,
             complianceCheck: complianceResult.status,
             complianceNotes: complianceResult.notes,
@@ -414,7 +419,7 @@ export const telegramWebhook = functions
           const icsContent = generateICS({
             title: `Property Viewing with ${agentName}`,
             description: [
-              "Property viewing appointment booked via AgentFlow AI.",
+              "Property viewing appointment booked via RealEstateAI.",
               "",
               `Agent: ${agentName}`,
               agentPhone ? `Phone: ${agentPhone}` : "",
@@ -519,12 +524,11 @@ export const registerTelegramWebhook = functions.https.onCall(async () => {
   if (!botToken) {
     throw new functions.https.HttpsError(
       "failed-precondition",
-      "Telegram bot token not configured. Set it in the Admin dashboard first."
+      "Telegram bot token not configured. Add it on the API Keys screen first."
     );
   }
 
-  const webhookUrl =
-    "https://us-central1-agentflowai-11dd2.cloudfunctions.net/telegramWebhook";
+  const webhookUrl = functionUrl("telegramWebhook");
 
   const success = await registerWebhook(botToken, webhookUrl);
   if (!success) {

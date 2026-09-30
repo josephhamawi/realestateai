@@ -42,7 +42,7 @@ export function Login() {
         <div className="text-center">
           <LogoMark className="mx-auto h-12 w-12" />
           <h1 className="mt-4 text-2xl font-bold text-gray-900">Welcome back</h1>
-          <p className="mt-2 text-sm text-gray-500">Sign in to your AgentFlow AI account</p>
+          <p className="mt-2 text-sm text-gray-500">Sign in to your RealEstateAI account</p>
         </div>
 
         <div className="mt-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">

@@ -47,18 +47,16 @@ export interface TenantData {
   integrations: {
     whatsapp: { enabled: boolean; phoneNumberId?: string; wabaId?: string };
     telegram?: { enabled: boolean; botToken?: string; botUsername?: string };
-    vynn?: { enabled: boolean; apiKey?: string; model?: string };
     calendar: {
       google?: { enabled: boolean; email?: string; connected?: boolean };
       outlook?: { enabled: boolean; email?: string; connected?: boolean };
       preferred?: "google" | "outlook";
     };
-    payments: {
-      provider?: "stripe";
-      customerId?: string;
-      subscriptionId?: string;
-      tier?: "solo" | "team" | "brokerage";
-      currentPeriodEnd?: unknown;
+    ai?: {
+      enabled: boolean;
+      provider?: "anthropic" | "openai" | "gemini";
+      apiKey?: string;
+      model?: string;
     };
     crm: {
       webhooks?: Record<string, { enabled: boolean; apiKey: string; url: string }>;

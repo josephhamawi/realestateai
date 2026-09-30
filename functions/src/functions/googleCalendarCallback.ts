@@ -2,9 +2,9 @@ import * as functions from "firebase-functions";
 import axios from "axios";
 import { db, FieldValue } from "../config/firebase";
 import { getGoogleOAuthConfig } from "../config/secrets";
+import { appUrl, functionUrl } from "../config/urls";
 
-const REDIRECT_URI =
-  "https://us-central1-agentflowai-11dd2.cloudfunctions.net/googleCalendarCallback";
+const REDIRECT_URI = functionUrl("googleCalendarCallback");
 
 export const googleCalendarCallback = functions.https.onRequest(
   async (req, res) => {
@@ -15,7 +15,7 @@ export const googleCalendarCallback = functions.https.onRequest(
     const error = req.query.error as string | undefined;
 
     if (error) {
-      res.redirect("https://agentflowai-11dd2.web.app/settings/integrations?calendar=denied");
+      res.redirect(appUrl("/settings/integrations?calendar=denied"));
       return;
     }
     if (!code || !state) { res.status(400).send("Missing code or state"); return; }
@@ -39,7 +39,7 @@ export const googleCalendarCallback = functions.https.onRequest(
       const accessToken = tokenRes.data.access_token;
 
       if (!refreshToken) {
-        res.status(400).send("No refresh token received. Revoke AgentFlow AI access in Google account settings and try again.");
+        res.status(400).send("No refresh token received. Revoke this app's access in your Google account settings and try again.");
         return;
       }
 
@@ -65,7 +65,7 @@ export const googleCalendarCallback = functions.https.onRequest(
       });
 
       console.log(`Google Calendar connected for tenant ${userId} (${email})`);
-      res.redirect("https://agentflowai-11dd2.web.app/settings/integrations?calendar=connected");
+      res.redirect(appUrl("/settings/integrations?calendar=connected"));
     } catch (err) {
       console.error("Google Calendar callback error:", err);
       res.status(500).send("Failed to complete Google Calendar connection.");

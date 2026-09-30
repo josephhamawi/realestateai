@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getGoogleOAuthConfig } from "../config/secrets";
 import { db } from "../config/firebase";
+import { functionUrl } from "../config/urls";
 
-const REDIRECT_URI =
-  "https://us-central1-agentflowai-11dd2.cloudfunctions.net/googleCalendarCallback";
+const REDIRECT_URI = functionUrl("googleCalendarCallback");
 
 /**
  * Refresh access token using the stored refresh token.
@@ -109,12 +109,12 @@ export async function createCalendarEvent(
   const tz = appointment.timezone || tenant.config?.timezone || "UTC";
 
   return createGoogleCalendarEvent(refreshToken, {
-    title: `[AgentFlow] Viewing - ${appointment.leadName}`,
+    title: `Viewing - ${appointment.leadName}`,
     description: [
       `Lead: ${appointment.leadName}`,
       appointment.leadPhone ? `Phone: ${appointment.leadPhone}` : "",
       appointment.propertyType ? `Property: ${appointment.propertyType}` : "",
-      `Booked via AgentFlow AI`,
+      `Booked via RealEstateAI`,
     ]
       .filter(Boolean)
       .join("\n"),

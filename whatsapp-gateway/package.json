@@ -1,5 +1,5 @@
 {
-  "name": "agentflow-whatsapp-gateway",
+  "name": "realestateai-whatsapp-gateway",
   "version": "1.0.0",
   "type": "module",
   "scripts": { "start": "node index.js" },

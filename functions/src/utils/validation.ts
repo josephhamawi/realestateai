@@ -10,9 +10,6 @@ export function isValidMarket(market: string): market is "dubai" {
   return market === "dubai";
 }
 
-export function isValidTier(tier: string): tier is "solo" | "team" | "brokerage" {
-  return tier === "solo" || tier === "team" || tier === "brokerage";
-}
 
 export function sanitizeText(text: string): string {
   return text

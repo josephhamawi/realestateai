@@ -2,10 +2,18 @@ import { Timestamp } from "firebase/firestore";
 
 export function formatCurrency(
   amount: number,
-  currencyCode: string,
-  locale: string
+  currencyCode?: string,
+  locale?: string
 ): string {
-  return new Intl.NumberFormat(locale, {
+  // A tenant document written by an older version can carry an incomplete
+  // currency config. Fall back to plain number formatting rather than throwing,
+  // which would blank the whole page.
+  if (!currencyCode) {
+    return new Intl.NumberFormat(locale || "en-AE", {
+      maximumFractionDigits: 0,
+    }).format(amount);
+  }
+  return new Intl.NumberFormat(locale || "en-AE", {
     style: "currency",
     currency: currencyCode,
     minimumFractionDigits: 0,

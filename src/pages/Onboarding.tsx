@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Bot, User, MessageSquare, CreditCard, Check, Brain, ExternalLink } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Bot, User, MessageSquare, KeyRound, Check, Brain, ExternalLink } from "lucide-react";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { Button } from "../components/common/Button";
@@ -233,6 +233,48 @@ const countryCodes = [
   { code: "+263", country: "ZW", name: "Zimbabwe" },
 ];
 
+
+type OnboardingAIProvider = "anthropic" | "openai" | "gemini";
+
+const ONBOARDING_AI_PROVIDERS: Record<
+  OnboardingAIProvider,
+  { name: string; keyHint: string; defaultModel: string; consoleUrl: string; steps: string[] }
+> = {
+  anthropic: {
+    name: "Anthropic (Claude)",
+    keyHint: "sk-ant-...",
+    defaultModel: "claude-opus-5",
+    consoleUrl: "https://console.anthropic.com/settings/keys",
+    steps: [
+      "Create an account at console.anthropic.com and add credit.",
+      "Open API Keys and click Create Key.",
+      "Paste the key below and click Save.",
+    ],
+  },
+  openai: {
+    name: "OpenAI",
+    keyHint: "sk-...",
+    defaultModel: "gpt-4o",
+    consoleUrl: "https://platform.openai.com/api-keys",
+    steps: [
+      "Create an account at platform.openai.com and add credit.",
+      "Open API keys and click Create new secret key.",
+      "Paste the key below and click Save.",
+    ],
+  },
+  gemini: {
+    name: "Google Gemini",
+    keyHint: "AIza...",
+    defaultModel: "gemini-2.5-flash",
+    consoleUrl: "https://aistudio.google.com/app/apikey",
+    steps: [
+      "Sign in to aistudio.google.com.",
+      "Click Get API key, then Create API key (a free tier is available).",
+      "Paste the key below and click Save.",
+    ],
+  },
+};
+
 export function Onboarding() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -264,28 +306,33 @@ export function Onboarding() {
     handoffThreshold: tenant?.aiConfig?.handoffThreshold || 60,
   });
 
-  const existingVynn = (tenant?.integrations as Record<string, unknown> | undefined)?.vynn as
-    | { apiKey?: string; model?: string }
+  const existingAI = (tenant?.integrations as Record<string, unknown> | undefined)?.ai as
+    | { provider?: OnboardingAIProvider; apiKey?: string; model?: string }
     | undefined;
-  const [vynnApiKey, setVynnApiKey] = useState(existingVynn?.apiKey || "");
-  const [vynnSaving, setVynnSaving] = useState(false);
+  const [aiProvider, setAiProvider] = useState<OnboardingAIProvider>(
+    existingAI?.provider || "anthropic"
+  );
+  const [aiApiKey, setAiApiKey] = useState(existingAI?.apiKey || "");
+  const [aiKeySaving, setAiKeySaving] = useState(false);
 
-  const handleSaveVynn = async () => {
+  const handleSaveAIKey = async () => {
     if (!user) return;
-    setVynnSaving(true);
+    setAiKeySaving(true);
     try {
+      const trimmed = aiApiKey.trim();
       await updateDoc(doc(db, "tenants", user.uid), {
-        "integrations.vynn.apiKey": vynnApiKey.trim(),
-        "integrations.vynn.model": existingVynn?.model || "auto",
-        "integrations.vynn.enabled": Boolean(vynnApiKey.trim()),
-        "integrations.vynn.connectedAt": vynnApiKey.trim() ? serverTimestamp() : null,
+        "integrations.ai.provider": aiProvider,
+        "integrations.ai.apiKey": trimmed,
+        "integrations.ai.model": ONBOARDING_AI_PROVIDERS[aiProvider].defaultModel,
+        "integrations.ai.enabled": Boolean(trimmed),
+        "integrations.ai.connectedAt": trimmed ? serverTimestamp() : null,
         updatedAt: serverTimestamp(),
       });
-      toast("success", "Vynn AI key saved");
+      toast("success", "AI key saved");
     } catch {
-      toast("error", "Failed to save Vynn AI key");
+      toast("error", "Failed to save the AI key");
     } finally {
-      setVynnSaving(false);
+      setAiKeySaving(false);
     }
   };
 
@@ -341,7 +388,7 @@ export function Onboarding() {
           <Bot className="mx-auto h-12 w-12 text-brand-600" />
           <h1 className="mt-4 text-2xl font-bold text-gray-900">Set up your account</h1>
           <p className="mt-2 text-sm text-gray-500">
-            Complete these steps to start using AgentFlow AI
+            Complete these steps to start using RealEstateAI
           </p>
         </div>
 
@@ -515,7 +562,8 @@ export function Onboarding() {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Integrations</h2>
               <p className="text-sm text-gray-500">
-                Connect Vynn AI now so your persona can start answering leads. You can add the other integrations later from Settings.
+                Add an AI key so your persona can answer leads. If the owner of this
+                instance already added one, you can skip this and use theirs.
               </p>
               <div className="space-y-3">
                 <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-4">
@@ -523,12 +571,14 @@ export function Onboarding() {
                     <div className="flex items-center gap-3">
                       <Brain className="h-8 w-8 text-purple-600" />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">Vynn AI (Required)</p>
-                        <p className="text-xs text-gray-500">Powers your AI persona for lead conversations</p>
+                        <p className="text-sm font-medium text-gray-900">AI provider</p>
+                        <p className="text-xs text-gray-500">
+                          Powers your AI persona. Billed by the provider, not by this app.
+                        </p>
                       </div>
                     </div>
                     <a
-                      href="https://vynnai.app"
+                      href={ONBOARDING_AI_PROVIDERS[aiProvider].consoleUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-700"
@@ -537,35 +587,47 @@ export function Onboarding() {
                       Get API Key
                     </a>
                   </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {(Object.keys(ONBOARDING_AI_PROVIDERS) as OnboardingAIProvider[]).map(
+                      (id) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setAiProvider(id)}
+                          className={`rounded-lg border px-3 py-1.5 text-xs font-medium ${
+                            aiProvider === id
+                              ? "border-purple-500 bg-white text-purple-700"
+                              : "border-gray-300 bg-white/60 text-gray-600 hover:bg-white"
+                          }`}
+                        >
+                          {ONBOARDING_AI_PROVIDERS[id].name}
+                        </button>
+                      )
+                    )}
+                  </div>
+
                   <div className="mt-3 rounded-md bg-white p-3 text-xs text-gray-700">
                     <p className="font-semibold text-gray-900">How to get your API key:</p>
                     <ol className="mt-1.5 space-y-1">
-                      <li>
-                        1. Go to{" "}
-                        <a
-                          href="https://vynnai.app"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-mono font-semibold text-purple-700 underline"
-                        >
-                          vynnai.app
-                        </a>
-                        {" "}and create a free account.
-                      </li>
-                      <li>2. Open the dashboard and go to the API Keys section.</li>
-                      <li>3. Click "Create API Key", copy the value (starts with <span className="font-mono">vynn_</span>).</li>
-                      <li>4. Paste it below and click Save.</li>
+                      {ONBOARDING_AI_PROVIDERS[aiProvider].steps.map((step, i) => (
+                        <li key={step}>
+                          {i + 1}. {step}
+                        </li>
+                      ))}
                     </ol>
                   </div>
+
                   <div className="mt-3 flex gap-2">
                     <input
                       type="password"
-                      value={vynnApiKey}
-                      onChange={(e) => setVynnApiKey(e.target.value)}
-                      placeholder="vynn_..."
-                      className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      value={aiApiKey}
+                      onChange={(e) => setAiApiKey(e.target.value)}
+                      placeholder={ONBOARDING_AI_PROVIDERS[aiProvider].keyHint}
+                      autoComplete="off"
+                      className="flex-1 rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     />
-                    <Button onClick={handleSaveVynn} loading={vynnSaving} size="sm">
+                    <Button onClick={handleSaveAIKey} loading={aiKeySaving} size="sm">
                       Save
                     </Button>
                   </div>
@@ -584,17 +646,20 @@ export function Onboarding() {
                 </div>
                 <div className="flex items-center justify-between rounded-lg border border-gray-200 p-4">
                   <div className="flex items-center gap-3">
-                    <CreditCard className="h-8 w-8 text-brand-600" />
+                    <KeyRound className="h-8 w-8 text-brand-600" />
                     <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        Stripe
+                      <p className="text-sm font-medium text-gray-900">AI provider key</p>
+                      <p className="text-xs text-gray-500">
+                        Required: add an Anthropic, OpenAI, or Gemini key
                       </p>
-                      <p className="text-xs text-gray-500">Set up billing and subscription</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Set Up
-                  </Button>
+                  <Link
+                    to="/setup"
+                    className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Open
+                  </Link>
                 </div>
               </div>
               <div className="flex justify-between">
@@ -615,7 +680,7 @@ export function Onboarding() {
               </div>
               <h2 className="text-lg font-semibold text-gray-900">You're all set!</h2>
               <p className="text-sm text-gray-500">
-                Your AgentFlow AI account is ready. Start managing leads and let AI handle your conversations.
+                Your RealEstateAI account is ready. Start managing leads and let AI handle your conversations.
               </p>
               <Button onClick={handleComplete} className="mt-4">
                 Go to Dashboard

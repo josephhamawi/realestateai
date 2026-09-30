@@ -135,12 +135,12 @@ export async function createOutlookEvent(
   const tz = appointment.timezone || tenant.config?.timezone || "UTC";
 
   const eventId = await createOutlookCalendarEvent(refreshToken, {
-    title: `[AgentFlow] Viewing - ${appointment.leadName}`,
+    title: `Viewing - ${appointment.leadName}`,
     description: [
       `Lead: ${appointment.leadName}`,
       appointment.leadPhone ? `Phone: ${appointment.leadPhone}` : "",
       appointment.propertyType ? `Property: ${appointment.propertyType}` : "",
-      `Booked via AgentFlow AI`,
+      `Booked via RealEstateAI`,
     ]
       .filter(Boolean)
       .join("<br>"),

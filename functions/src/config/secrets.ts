@@ -92,19 +92,54 @@ export async function getWhatsAppConfig(): Promise<{
   };
 }
 
-/**
- * Get Vynn AI config from platform_config.
- */
-export async function getVynnConfig(): Promise<{
+export type AIProvider = "anthropic" | "openai" | "gemini";
+
+export interface ResolvedAIConfig {
+  provider: AIProvider;
   apiKey: string;
   model: string;
-}> {
+}
+
+const AI_PROVIDER_DEFAULTS: Record<AIProvider, { model: string; envKey: string; envModel: string }> = {
+  anthropic: { model: "claude-opus-5", envKey: "ANTHROPIC_API_KEY", envModel: "ANTHROPIC_MODEL" },
+  openai: { model: "gpt-4o", envKey: "OPENAI_API_KEY", envModel: "OPENAI_MODEL" },
+  gemini: { model: "gemini-2.5-flash", envKey: "GEMINI_API_KEY", envModel: "GEMINI_MODEL" },
+};
+
+/**
+ * Resolve the AI provider this instance should use.
+ *
+ * Resolution order per provider: environment variable, then the key saved from
+ * the in-app Setup screen (platform_config/apis.ai.<provider>.apiKey).
+ * The provider named in ai.defaultProvider is tried first, then the rest.
+ */
+export async function getAIConfig(): Promise<ResolvedAIConfig> {
   const config = await loadPlatformConfig();
-  const vynn = (config.vynn || {}) as Record<string, string>;
-  return {
-    apiKey: process.env.VYNN_API_KEY || vynn.apiKey || "",
-    model: process.env.VYNN_MODEL || vynn.model || "auto",
-  };
+  const ai = (config.ai || {}) as Record<string, unknown>;
+
+  const preferred = (process.env.AI_PROVIDER ||
+    (ai.defaultProvider as string) ||
+    "anthropic") as AIProvider;
+
+  const order: AIProvider[] = [preferred, "anthropic", "openai", "gemini"].filter(
+    (p, i, arr) => p in AI_PROVIDER_DEFAULTS && arr.indexOf(p) === i
+  ) as AIProvider[];
+
+  for (const provider of order) {
+    const defaults = AI_PROVIDER_DEFAULTS[provider];
+    const saved = (ai[provider] || {}) as Record<string, string>;
+    const apiKey = process.env[defaults.envKey] || saved.apiKey || "";
+    if (!apiKey) continue;
+    return {
+      provider,
+      apiKey,
+      model: process.env[defaults.envModel] || saved.model || defaults.model,
+    };
+  }
+
+  throw new Error(
+    "No AI provider configured. Open Setup in the app and add an Anthropic, OpenAI, or Google Gemini API key."
+  );
 }
 
 /**
@@ -119,23 +154,6 @@ export async function getTelegramConfig(): Promise<{
   return {
     botToken: process.env.TELEGRAM_BOT_TOKEN || tg.botToken || "",
     botUsername: process.env.TELEGRAM_BOT_USERNAME || tg.botUsername || "",
-  };
-}
-
-/**
- * Get Stripe config from platform_config.
- */
-export async function getStripeConfig(): Promise<{
-  secretKey: string;
-  publicKey: string;
-  webhookSecret: string;
-}> {
-  const config = await loadPlatformConfig();
-  const st = (config.stripe || {}) as Record<string, string>;
-  return {
-    secretKey: process.env.STRIPE_SECRET_KEY || st.secretKey || "",
-    publicKey: process.env.STRIPE_PUBLIC_KEY || st.publicKey || "",
-    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || st.webhookSecret || "",
   };
 }
 

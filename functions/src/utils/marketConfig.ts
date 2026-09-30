@@ -30,9 +30,3 @@ export async function loadTenant(tenantId: string): Promise<Tenant> {
   return snap.data() as Tenant;
 }
 
-export function isLeadLimitReached(tenant: Tenant, marketConfig: MarketConfig): boolean {
-  const tier = tenant.integrations.payments?.tier || "solo";
-  const tierConfig = marketConfig.subscriptionTiers[tier];
-  if (tierConfig.leadsPerMonth === -1) return false; // Unlimited
-  return tenant.usage.leadsThisMonth >= tierConfig.leadsPerMonth;
-}

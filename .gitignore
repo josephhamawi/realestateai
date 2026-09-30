@@ -38,3 +38,23 @@ scripts/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Local Firebase project selection (use .firebaserc.example as template)
+.firebaserc
+tsconfig.tsbuildinfo
+
+# Emulator debug logs
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+database-debug.log
+pubsub-debug.log
+
+# Internal working files (kept locally, not part of the public repo)
+planning-artifacts/
+design-artifacts/
+docs/superpowers/
+skills-lock.json
+CLAUDE.md
+.agents/
+Users/

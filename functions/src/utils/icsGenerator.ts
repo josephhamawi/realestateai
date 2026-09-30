@@ -1,3 +1,5 @@
+import { fromEmail } from "../config/urls";
+
 /**
  * ICS Calendar File Generator (RFC 5545)
  *
@@ -35,7 +37,7 @@ function formatDateUTC(date: Date): string {
 function generateUID(): string {
   const timestamp = Date.now();
   const random = Math.random().toString(36).substring(2, 12);
-  return `${timestamp}-${random}@agentflowai.com`;
+  return `${timestamp}-${random}@${fromEmail().split("@")[1]}`;
 }
 
 /**
@@ -101,7 +103,7 @@ export function generateICS(params: ICSParams): string {
   const lines: string[] = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//AgentFlow AI//Appointment Booking//EN",
+    "PRODID:-//RealEstateAI//Appointment Booking//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
@@ -127,7 +129,7 @@ export function generateICS(params: ICSParams): string {
   // Attendee
   if (attendeeName) {
     lines.push(
-      `ATTENDEE;CN=${escapeText(attendeeName)};ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED:mailto:noreply@agentflowai.com`
+      `ATTENDEE;CN=${escapeText(attendeeName)};ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED:mailto:${fromEmail()}`
     );
   }
 

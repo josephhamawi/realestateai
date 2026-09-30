@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { LogoMark } from "../brand/LogoMark";
+import { BRAND } from "../../config/brand";
 
 /* ------------------------------------------------------------------ */
 /*  Standard KodeFoundry brand footer for public pages                 */
@@ -19,17 +20,17 @@ export function SiteFooter() {
               <div className="flex h-6 w-6 items-center justify-center rounded bg-brand-600">
                 <LogoMark className="h-4 w-4" white />
               </div>
-              <span className="text-base font-extrabold text-gray-900">AgentFlow AI</span>
+              <span className="text-base font-extrabold text-gray-900">RealEstateAI</span>
             </div>
             <p className="mt-2 text-[13px] text-gray-500">
-              AI lead qualification for Dubai real estate. Made by{" "}
+              AI lead qualification for Dubai real estate. Open source:{" "}
               <a
-                href="https://kodefoundry.com"
+                href={BRAND.repoUrl}
                 target="_blank"
                 rel="noopener"
                 className="text-brand-600 hover:underline"
               >
-                KodeFoundry
+                view the source
               </a>
               .
             </p>
@@ -62,7 +63,7 @@ export function SiteFooter() {
               Contact
             </Link>
             <a
-              href="mailto:hello@kodefoundry.com"
+              href={`mailto:${BRAND.contactEmail}`}
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >
               Support
@@ -73,8 +74,8 @@ export function SiteFooter() {
         {/* Row 2 */}
         <div className="border-t border-gray-200 pt-5 mt-2 flex flex-wrap items-center justify-between gap-3 text-[13px] text-gray-500">
           <span>&copy; {year} KodeFoundry. All rights reserved.</span>
-          <a href="mailto:hello@kodefoundry.com" className="hover:underline">
-            hello@kodefoundry.com
+          <a href={`mailto:${BRAND.contactEmail}`} className="hover:underline">
+            {BRAND.contactEmail}
           </a>
         </div>
       </div>

@@ -1,4 +1,4 @@
-// Cloud Function exports for AgentFlow AI
+// Cloud Function exports for RealEstateAI
 // All functions are deployed from this file
 
 export { provisionTenant } from "./functions/provisionTenant";
@@ -11,10 +11,6 @@ export { googleCalendarConnect } from "./functions/googleCalendarConnect";
 export { googleCalendarCallback } from "./functions/googleCalendarCallback";
 export { outlookCalendarConnect } from "./functions/outlookCalendarConnect";
 export { outlookCalendarCallback } from "./functions/outlookCalendarCallback";
-export {
-  paymentProcessor as initializePayment,
-  stripeWebhook,
-} from "./functions/paymentProcessor";
 export { complianceLogger } from "./functions/complianceLogger";
 
 // Scheduled batch jobs: REMOVED (cost optimization 2026-05-03)

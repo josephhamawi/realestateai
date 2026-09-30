@@ -9,9 +9,9 @@ import {
 import { loadTenant, loadMarketConfig } from "../utils/marketConfig";
 import {
   buildSystemPrompt,
-  buildClaudeMessages,
+  buildConversationMessages,
   generateAIResponse,
-} from "../services/claude";
+} from "../services/ai";
 import { runComplianceCheck } from "../utils/compliance";
 import type { Message } from "../types/message";
 
@@ -189,21 +189,22 @@ async function generateAndSendReply(
     lead as any,
     ""
   );
-  const claudeMessages = buildClaudeMessages(messages);
-  if (claudeMessages.length === 0) return;
+  const aiMessages = buildConversationMessages(messages);
+  if (aiMessages.length === 0) return;
 
-  // Prefer the tenant's own Vynn AI key if configured
-  const tenantVynn = tenant.integrations?.vynn?.apiKey
+  // Prefer the tenant's own AI key if they configured one
+  const tenantAI = tenant.integrations?.ai?.apiKey
     ? {
-        apiKey: tenant.integrations.vynn.apiKey,
-        model: tenant.integrations.vynn.model,
+        provider: tenant.integrations.ai.provider,
+        apiKey: tenant.integrations.ai.apiKey,
+        model: tenant.integrations.ai.model,
       }
     : undefined;
 
-  const { text: aiReplyText, tokensUsed } = await generateAIResponse(
+  const { text: aiReplyText, tokensUsed, model: aiModel } = await generateAIResponse(
     systemPrompt,
-    claudeMessages,
-    tenantVynn
+    aiMessages,
+    tenantAI
   );
 
   const complianceResult = runComplianceCheck(aiReplyText, marketConfig);
@@ -217,8 +218,8 @@ async function generateAndSendReply(
       ". Rewrite your response avoiding these issues.";
     const { text: rewrittenText } = await generateAIResponse(
       constraintPrompt,
-      claudeMessages,
-      tenantVynn
+      aiMessages,
+      tenantAI
     );
     finalMessage = rewrittenText;
   }
@@ -238,7 +239,7 @@ async function generateAndSendReply(
       content: { text: finalMessage },
       metadata: {
         aiGenerated: true,
-        aiModel: "vynn-auto",
+        aiModel,
         tokensUsed,
         complianceCheck: complianceResult.status,
         complianceNotes: complianceResult.notes,
@@ -270,7 +271,7 @@ async function generateAndSendReply(
     content: { text: finalMessage },
     metadata: {
       aiGenerated: true,
-      aiModel: "vynn-auto",
+      aiModel,
       tokensUsed,
       complianceCheck: complianceResult.status,
       complianceNotes: complianceResult.notes,

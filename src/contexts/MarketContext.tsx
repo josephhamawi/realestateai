@@ -24,11 +24,6 @@ export interface MarketConfigData {
     escalationTriggers: string[];
   };
   whatsapp: { utilityRate: number; marketingRate: number };
-  subscriptionTiers: {
-    solo: { price: number; leadsPerMonth: number; maxAgents: number };
-    team: { price: number; leadsPerMonth: number; maxAgents: number };
-    brokerage: { price: number; leadsPerMonth: number; maxAgents: number };
-  };
   phonePrefix: string;
   areas: string[];
   propertyTypes: string[];

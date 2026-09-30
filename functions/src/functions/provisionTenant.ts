@@ -18,8 +18,7 @@ export const provisionTenant = onCall(async (request) => {
   // Load Dubai defaults (fallback to hardcoded if not seeded yet)
   const marketConfigSnap = await db.doc(`market_config/${market}`).get();
   const marketDefaults: Record<string, unknown> = {
-    currency: "AED",
-    currencySymbol: "AED",
+    currency: { code: "AED", symbol: "AED", locale: "en-AE" },
     region: "mena",
     timezone: "Asia/Dubai",
     weekend: ["friday", "saturday"],
@@ -43,9 +42,12 @@ export const provisionTenant = onCall(async (request) => {
     tenantId: uid,
     market,
     region: marketConfig.region,
-    status: "trial",
+    status: "active",
     config: {
-      currency: marketConfig.currency,
+      // The dashboard formats money with Intl.NumberFormat, so currency must be
+      // the {code, symbol, locale} shape. Older market_config documents stored a
+      // bare string, so normalize here.
+      currency: normalizeCurrency(marketConfig.currency),
       timezone: marketConfig.timezone,
       weekend: marketConfig.weekend,
       dateFormat: marketConfig.dateFormat,
@@ -68,7 +70,6 @@ export const provisionTenant = onCall(async (request) => {
     integrations: {
       whatsapp: { enabled: false },
       calendar: {},
-      payments: {},
       crm: { webhooks: {} },
     },
     usage: {
@@ -100,3 +101,32 @@ export const provisionTenant = onCall(async (request) => {
 
   return { success: true, tenantId: uid };
 });
+
+interface CurrencyConfig {
+  code: string;
+  symbol: string;
+  locale: string;
+}
+
+const DEFAULT_CURRENCY: CurrencyConfig = {
+  code: "AED",
+  symbol: "AED",
+  locale: "en-AE",
+};
+
+function normalizeCurrency(value: unknown): CurrencyConfig {
+  if (typeof value === "string" && value.length > 0) {
+    return { ...DEFAULT_CURRENCY, code: value, symbol: value };
+  }
+  if (value && typeof value === "object") {
+    const v = value as Partial<CurrencyConfig>;
+    if (v.code) {
+      return {
+        code: v.code,
+        symbol: v.symbol || v.code,
+        locale: v.locale || DEFAULT_CURRENCY.locale,
+      };
+    }
+  }
+  return DEFAULT_CURRENCY;
+}

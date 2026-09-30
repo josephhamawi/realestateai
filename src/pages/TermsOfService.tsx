@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Mail } from "lucide-react";
 import { LogoMark } from "../components/brand/LogoMark";
 import { SiteFooter } from "../components/layout/SiteFooter";
+import { BRAND } from "../config/brand";
 
 /* ------------------------------------------------------------------ */
 /*  Scroll reveal                                                      */
@@ -78,7 +79,7 @@ function StickyNav() {
               <LogoMark className="h-5 w-5" white />
             </div>
             <span className="text-lg font-bold tracking-tight text-gray-900">
-              AgentFlow AI
+              RealEstateAI
             </span>
           </Link>
           <Link
@@ -146,10 +147,10 @@ export function TermsOfService() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <Section id="acceptance" title="1. Acceptance of Terms">
           <p>
-            By accessing or using AgentFlow AI ("the Service"), you agree to be bound by
+            By accessing or using RealEstateAI ("the Service"), you agree to be bound by
             these Terms of Service ("Terms"). If you do not agree to these Terms, you may
             not access or use the Service. These Terms constitute a legally binding agreement
-            between you and AgentFlow AI, operated by Kode Foundry Atelier.
+            between you and RealEstateAI, operated by {BRAND.operator}.
           </p>
           <p>
             By creating an account, subscribing to a plan, or otherwise using the platform,
@@ -160,7 +161,7 @@ export function TermsOfService() {
 
         <Section id="description" title="2. Description of Service">
           <p>
-            AgentFlow AI provides AI-powered lead qualification for real estate agents via
+            RealEstateAI provides AI-powered lead qualification for real estate agents via
             Telegram and WhatsApp. The platform uses culturally aware AI assistants to
             engage, qualify, and manage real estate leads in the Dubai and UAE market.
           </p>
@@ -191,27 +192,23 @@ export function TermsOfService() {
           </p>
         </Section>
 
-        <Section id="payments" title="4. Subscription and Payments">
+        <Section id="payments" title="4. Fees and Third-Party Services">
           <p>
-            AgentFlow AI offers subscription-based pricing. Payments are processed through
-            Stripe in UAE Dirhams (AED). Prices are displayed and charged in AED.
+            The Service itself is provided free of charge as open-source software. There is
+            no subscription, no plan, and no payment is collected for access to it.
           </p>
           <p>
-            <strong>Billing Cycles:</strong> Subscriptions are billed on a monthly or annual
-            basis, depending on the plan you select. Your subscription will automatically
-            renew at the end of each billing cycle unless you cancel before the renewal
-            date.
+            <strong>Third-party costs:</strong> The Service only works once you connect your
+            own accounts with third-party providers, such as an AI provider (for example
+            Anthropic, OpenAI, or Google), a messaging provider (for example the WhatsApp
+            Business API or Telegram), and a hosting provider. Those providers bill you
+            directly under their own terms and pricing. You are solely responsible for
+            those charges and for keeping the credentials you supply valid.
           </p>
           <p>
-            <strong>Cancellation Policy:</strong> You may cancel your subscription at any
-            time through your account settings. Upon cancellation, you will retain access to
-            the Service until the end of your current billing period. No refunds will be
-            issued for partial billing periods.
-          </p>
-          <p>
-            <strong>Usage Limits:</strong> Each plan includes specific AI token and message
-            limits. If you exceed your plan's limits, additional usage may be billed at
-            overage rates or access may be restricted until your next billing cycle.
+            <strong>No usage limits from us:</strong> We impose no token, message, or lead
+            limits. Whatever limits apply come from the providers you connected and from the
+            plan you hold with them.
           </p>
         </Section>
 
@@ -252,7 +249,7 @@ export function TermsOfService() {
 
         <Section id="ai-content" title="6. AI-Generated Content">
           <p>
-            AgentFlow AI uses artificial intelligence to generate responses and assist in
+            RealEstateAI uses artificial intelligence to generate responses and assist in
             lead qualification. You acknowledge and agree that:
           </p>
           <ul className="list-disc pl-6 space-y-2">
@@ -273,7 +270,7 @@ export function TermsOfService() {
               do so when professional judgment is required
             </li>
             <li>
-              AgentFlow AI is not liable for any decisions made based on AI-generated content
+              RealEstateAI is not liable for any decisions made based on AI-generated content
             </li>
           </ul>
         </Section>
@@ -298,9 +295,9 @@ export function TermsOfService() {
 
         <Section id="ip" title="8. Intellectual Property">
           <p>
-            <strong>Platform Ownership:</strong> AgentFlow AI, including its software, AI
+            <strong>Platform Ownership:</strong> RealEstateAI, including its software, AI
             models, design, branding, and all related intellectual property, is owned by
-            Kode Foundry Atelier. You are granted a limited, non-exclusive, non-transferable
+            {BRAND.operator}. You are granted a limited, non-exclusive, non-transferable
             license to use the Service for the duration of your subscription.
           </p>
           <p>
@@ -309,14 +306,14 @@ export function TermsOfService() {
             and any other content you provide. We do not claim ownership over your data.
           </p>
           <p>
-            You grant AgentFlow AI a limited license to process your data solely for the
+            You grant RealEstateAI a limited license to process your data solely for the
             purpose of providing and improving the Service.
           </p>
         </Section>
 
         <Section id="liability" title="9. Limitation of Liability">
           <p>
-            To the maximum extent permitted by applicable law, AgentFlow AI and Kode Foundry
+            To the maximum extent permitted by applicable law, RealEstateAI and {BRAND.operator}
             Atelier shall not be liable for any indirect, incidental, special, consequential,
             or punitive damages, including but not limited to loss of profits, data, business
             opportunities, or goodwill, arising out of or related to your use of the Service.
@@ -327,7 +324,7 @@ export function TermsOfService() {
             twelve (12) months preceding the event giving rise to the claim.
           </p>
           <p>
-            AgentFlow AI does not guarantee uninterrupted, error-free, or secure access to
+            RealEstateAI does not guarantee uninterrupted, error-free, or secure access to
             the Service. We are not responsible for any loss or damage resulting from service
             outages, data loss, or unauthorized access to your account.
           </p>
@@ -379,10 +376,10 @@ export function TermsOfService() {
           <div className="mt-4 flex items-center gap-3 rounded-xl bg-gray-50 border border-gray-200 p-4">
             <Mail className="h-5 w-5 text-brand-600" />
             <a
-              href="mailto:hello@kodefoundry.com"
+              href={`mailto:${BRAND.contactEmail}`}
               className="text-brand-600 hover:text-brand-700 font-medium"
             >
-              hello@kodefoundry.com
+              {BRAND.contactEmail}
             </a>
           </div>
         </Section>

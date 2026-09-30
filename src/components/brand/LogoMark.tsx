@@ -5,7 +5,7 @@ interface LogoMarkProps {
 }
 
 /**
- * AgentFlow AI logo mark: a flow of lead nodes funneling into one qualified node.
+ * RealEstateAI logo mark: a flow of lead nodes funneling into one qualified node.
  * Renders inline as SVG so it stays crisp at any size. Use `white` on brand-colored
  * backgrounds (for example inside a brand-600 square), otherwise it uses brand colors.
  */
@@ -19,7 +19,7 @@ export function LogoMark({ className = "h-6 w-6", white = false }: LogoMarkProps
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="AgentFlow AI"
+      aria-label="RealEstateAI"
       className={className}
     >
       <g stroke={lineColor} strokeWidth={3} strokeLinecap="round" opacity={white ? 0.92 : 1}>

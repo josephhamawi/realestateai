@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Mail, Shield, Lock, Database, Globe2 } from "lucide-react";
 import { LogoMark } from "../components/brand/LogoMark";
 import { SiteFooter } from "../components/layout/SiteFooter";
+import { BRAND } from "../config/brand";
 
 /* ------------------------------------------------------------------ */
 /*  Scroll reveal                                                      */
@@ -78,7 +79,7 @@ function StickyNav() {
               <LogoMark className="h-5 w-5" white />
             </div>
             <span className="text-lg font-bold tracking-tight text-gray-900">
-              AgentFlow AI
+              RealEstateAI
             </span>
           </Link>
           <Link
@@ -172,13 +173,13 @@ export function PrivacyPolicy() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <Section id="introduction" title="1. Introduction">
           <p>
-            AgentFlow AI ("the Service"), operated by Kode Foundry Atelier ("we," "us," or
+            RealEstateAI ("the Service"), operated by {BRAND.operator} ("we," "us," or
             "our"), is committed to protecting your privacy and the privacy of your leads.
             This Privacy Policy explains how we collect, use, disclose, and safeguard your
             information when you use our AI-powered real estate lead qualification platform.
           </p>
           <p>
-            This policy applies to real estate agents and brokers who use AgentFlow AI, as
+            This policy applies to real estate agents and brokers who use RealEstateAI, as
             well as the leads whose information is processed through the platform. By using
             the Service, you agree to the terms of this Privacy Policy.
           </p>
@@ -212,10 +213,9 @@ export function PrivacyPolicy() {
 
           <h3 className="text-lg font-semibold text-gray-900 mt-6">Payment Information</h3>
           <p>
-            Stripe handles payment processing. We do not store your credit card numbers,
-            bank account details, or other sensitive financial information on our servers.
-            Payment processors handle all financial data in compliance with PCI-DSS
-            standards.
+            None is collected. This software is free and self-hosted, so it has no checkout,
+            no card fields, and no payment processor. Any charges you incur come from the AI,
+            messaging, and hosting providers you connect directly, under their own terms.
           </p>
         </Section>
 
@@ -235,8 +235,9 @@ export function PrivacyPolicy() {
               Calendar and Outlook Calendar to schedule property viewings and meetings
             </li>
             <li>
-              <strong>Billing and subscription management:</strong> Process payments, manage
-              subscriptions, and send billing-related communications
+              <strong>Third-party provider accounts:</strong> Pass messages and lead context
+              to the AI and messaging providers whose API keys the operator of this instance
+              configured, so that replies can be generated and delivered
             </li>
             <li>
               <strong>Compliance with legal obligations:</strong> Meet regulatory requirements
@@ -283,8 +284,9 @@ export function PrivacyPolicy() {
           <div className="mt-4 space-y-3">
             {[
               {
-                name: "Vynn AI",
-                purpose: "AI conversation processing and natural language understanding",
+                name: "Anthropic, OpenAI, or Google Gemini",
+                purpose:
+                  "AI conversation processing. Only the provider whose API key the operator configured receives conversation content",
               },
               {
                 name: "Telegram Bot API",
@@ -293,10 +295,6 @@ export function PrivacyPolicy() {
               {
                 name: "WhatsApp Business API",
                 purpose: "Messaging delivery and receipt for WhatsApp-based lead conversations",
-              },
-              {
-                name: "Stripe",
-                purpose: "Payment processing for subscriptions (AED)",
               },
               {
                 name: "Google Calendar / Outlook Calendar",
@@ -443,7 +441,7 @@ export function PrivacyPolicy() {
 
         <Section id="children" title="10. Children's Privacy">
           <p>
-            AgentFlow AI is not intended for use by individuals under the age of 18. We do
+            RealEstateAI is not intended for use by individuals under the age of 18. We do
             not knowingly collect personal information from children under 18. If we become
             aware that we have collected data from a child under 18, we will take steps to
             delete that information as quickly as possible.
@@ -471,14 +469,14 @@ export function PrivacyPolicy() {
           <div className="mt-4 flex items-center gap-3 rounded-xl bg-gray-50 border border-gray-200 p-4">
             <Mail className="h-5 w-5 text-brand-600" />
             <a
-              href="mailto:hello@kodefoundry.com"
+              href={`mailto:${BRAND.contactEmail}`}
               className="text-brand-600 hover:text-brand-700 font-medium"
             >
-              hello@kodefoundry.com
+              {BRAND.contactEmail}
             </a>
           </div>
           <p className="mt-4 text-sm text-gray-500">
-            Operated by Kode Foundry Atelier. Serving real estate agents in Dubai and across
+            Operated by {BRAND.operator}. Serving real estate agents in Dubai and across
             the UAE.
           </p>
         </Section>

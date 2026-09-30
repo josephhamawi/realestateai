@@ -1,5 +1,5 @@
 [Unit]
-Description=AgentFlow AI WhatsApp Gateway (Baileys)
+Description=RealEstateAI WhatsApp Gateway (Baileys)
 After=network-online.target
 Wants=network-online.target
 

@@ -35,7 +35,7 @@ export function Signup() {
       if (auth.currentUser) {
         await auth.currentUser.getIdToken(true);
       }
-      toast("success", "Account created!", "Welcome to AgentFlow AI");
+      toast("success", "Account created!", "Welcome to RealEstateAI");
       navigate("/onboarding");
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Signup failed";

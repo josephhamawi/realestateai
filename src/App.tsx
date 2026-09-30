@@ -15,10 +15,9 @@ import { LeadDetail } from "./pages/LeadDetail";
 import { LeadNew } from "./pages/LeadNew";
 import { Appointments } from "./pages/Appointments";
 import { Analytics } from "./pages/Analytics";
-import { Billing } from "./pages/Billing";
 import { Settings } from "./pages/Settings";
 import { Compliance } from "./pages/Compliance";
-import { Admin } from "./pages/Admin";
+import { Setup } from "./pages/Setup";
 import { Usage } from "./pages/Usage";
 import { useAuth } from "./hooks/useAuth";
 
@@ -100,15 +99,16 @@ export default function App() {
         }
       />
 
-      {/* Admin route (no AppLayout, standalone) */}
+      {/* Setup: instance owner enters their own API keys (no AppLayout, standalone) */}
       <Route
-        path="/admin"
+        path="/setup"
         element={
           <ProtectedRoute>
-            <Admin />
+            <Setup />
           </ProtectedRoute>
         }
       />
+      <Route path="/admin" element={<Navigate to="/setup" replace />} />
 
       {/* Protected routes with AppLayout */}
       <Route element={<AppLayout />}>
@@ -119,8 +119,6 @@ export default function App() {
         <Route path="/calendar" element={<Appointments />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/usage" element={<Usage />} />
-        <Route path="/billing" element={<Billing />} />
-        <Route path="/billing/callback" element={<Billing />} />
         <Route path="/compliance" element={<Compliance />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/settings/*" element={<Settings />} />

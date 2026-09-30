@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { LogoMark } from "../components/brand/LogoMark";
 import { SiteFooter } from "../components/layout/SiteFooter";
+import { BRAND } from "../config/brand";
 
 /* ------------------------------------------------------------------ */
 /*  Scroll reveal                                                      */
@@ -88,7 +89,7 @@ function StickyNav() {
               <LogoMark className="h-5 w-5" white />
             </div>
             <span className="text-lg font-bold tracking-tight text-gray-900">
-              AgentFlow AI
+              RealEstateAI
             </span>
           </Link>
           <Link
@@ -141,7 +142,7 @@ export function Contact() {
             Get in Touch
           </h1>
           <p className="mt-4 text-blue-100/80 text-lg max-w-2xl mx-auto">
-            Send us your questions about AgentFlow AI and we will reply within 24 hours.
+            Send us your questions about RealEstateAI and we will reply within 24 hours.
           </p>
         </div>
       </div>
@@ -160,10 +161,10 @@ export function Contact() {
                   <div>
                     <p className="text-sm font-semibold text-gray-900">Email</p>
                     <a
-                      href="mailto:hello@kodefoundry.com"
+                      href={`mailto:${BRAND.contactEmail}`}
                       className="text-sm text-brand-600 hover:text-brand-700"
                     >
-                      hello@kodefoundry.com
+                      {BRAND.contactEmail}
                     </a>
                   </div>
                 </div>

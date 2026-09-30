@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
 import { getGoogleOAuthConfig } from "../config/secrets";
+import { functionUrl } from "../config/urls";
 
-const REDIRECT_URI =
-  "https://us-central1-agentflowai-11dd2.cloudfunctions.net/googleCalendarCallback";
+const REDIRECT_URI = functionUrl("googleCalendarCallback");
 
 const SCOPES = [
   "https://www.googleapis.com/auth/calendar",

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { LogoMark } from "../components/brand/LogoMark";
 import { SiteFooter } from "../components/layout/SiteFooter";
+import { BRAND } from "../config/brand";
 
 /* ------------------------------------------------------------------ */
 /*  Scroll reveal                                                      */
@@ -95,7 +96,7 @@ function StickyNav() {
                 scrolled ? "text-gray-900" : "text-white"
               }`}
             >
-              AgentFlow AI
+              RealEstateAI
             </span>
           </Link>
           <Link
@@ -201,7 +202,7 @@ export function AboutUs() {
                 Our Story
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-                Why We Built AgentFlow AI
+                Why We Built RealEstateAI
               </h2>
             </div>
           </Reveal>
@@ -214,7 +215,7 @@ export function AboutUs() {
                 Jumeirah. By morning, that buyer has already spoken to three other agents.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                We built AgentFlow AI to close that gap. Noor replies the moment a lead
+                We built RealEstateAI to close that gap. Noor replies the moment a lead
                 writes in, in their own language, and she knows the Dubai market well
                 enough to talk through a first-time purchase or a luxury listing in Dubai
                 Marina. By the time you pick up the conversation, the lead is already
@@ -293,7 +294,7 @@ export function AboutUs() {
               The Team
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-              Built by Kode Foundry Atelier
+              Built by {BRAND.operator}
             </h2>
           </Reveal>
 
@@ -303,14 +304,14 @@ export function AboutUs() {
                 <Bot className="h-8 w-8 text-brand-600" />
               </div>
               <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                Kode Foundry Atelier is a technology studio that builds AI tools for the
+                {BRAND.operator} is a technology studio that builds AI tools for the
                 UAE property market. We pair AI with a working knowledge of how Dubai
                 agents actually sell.
               </p>
               <p className="text-gray-600 leading-relaxed">
                 Our team has spent time around AI, real estate software, and the day-to-day
                 pressures of selling property in Dubai and across the UAE. We have watched
-                agents lose leads to slow replies, and we built AgentFlow AI to fix it.
+                agents lose leads to slow replies, and we built RealEstateAI to fix it.
               </p>
             </div>
           </Reveal>
@@ -333,10 +334,10 @@ export function AboutUs() {
             <div className="inline-flex items-center gap-3 rounded-xl bg-gray-50 border border-gray-200 px-6 py-4 mb-10">
               <Mail className="h-5 w-5 text-brand-600" />
               <a
-                href="mailto:hello@kodefoundry.com"
+                href={`mailto:${BRAND.contactEmail}`}
                 className="text-brand-600 hover:text-brand-700 font-medium"
               >
-                hello@kodefoundry.com
+                {BRAND.contactEmail}
               </a>
             </div>
           </Reveal>

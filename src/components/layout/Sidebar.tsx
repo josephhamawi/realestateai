@@ -5,7 +5,7 @@ import {
   Users,
   Calendar,
   BarChart3,
-  CreditCard,
+  KeyRound,
   Settings,
   Shield,
   Activity,
@@ -18,9 +18,9 @@ const navItems = [
   { path: "/calendar", icon: Calendar, label: "Appointments" },
   { path: "/analytics", icon: BarChart3, label: "Analytics" },
   { path: "/usage", icon: Activity, label: "Usage" },
-  { path: "/billing", icon: CreditCard, label: "Billing" },
   { path: "/compliance", icon: Shield, label: "Compliance" },
   { path: "/settings", icon: Settings, label: "Settings" },
+  { path: "/setup", icon: KeyRound, label: "API Keys" },
 ];
 
 interface SidebarProps {
@@ -39,7 +39,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
       <div className="flex h-16 items-center gap-2 border-b border-gray-200 px-4">
         <LogoMark className="h-8 w-8 flex-shrink-0" />
         {!collapsed && (
-          <span className="text-xl font-bold text-gray-900">AgentFlow</span>
+          <span className="text-xl font-bold text-gray-900">RealEstateAI</span>
         )}
       </div>
 

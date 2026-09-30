@@ -1,6 +1,5 @@
 import * as functions from "firebase-functions";
 import { db, FieldValue } from "../config/firebase";
-import { loadMarketConfig, isLeadLimitReached } from "../utils/marketConfig";
 import { normalizePhone, sanitizeText } from "../utils/validation";
 import type { Tenant } from "../types/tenant";
 
@@ -35,12 +34,6 @@ export const leadIngestion = functions.https.onRequest(async (req, res) => {
     const tenant = tenantsSnap.docs[0].data() as Tenant;
     const tenantId = tenant.tenantId;
 
-    // Check tier limits
-    const marketConfig = await loadMarketConfig();
-    if (isLeadLimitReached(tenant, marketConfig)) {
-      res.status(429).json({ error: "Lead limit reached for current tier" });
-      return;
-    }
 
     // Normalize payload
     const payload = req.body;

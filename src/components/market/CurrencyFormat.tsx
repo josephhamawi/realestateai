@@ -1,5 +1,6 @@
 import React from "react";
 import { useTenant } from "../../hooks/useTenant";
+import { formatCurrency } from "../../lib/formatters";
 
 interface CurrencyFormatProps {
   amount: number;
@@ -8,17 +9,8 @@ interface CurrencyFormatProps {
 
 export function CurrencyFormat({ amount, className = "" }: CurrencyFormatProps) {
   const { tenant } = useTenant();
-  const { code, locale } = tenant?.config.currency || {
-    code: "USD",
-    locale: "en-US",
-  };
-
-  const formatted = new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency: code,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+  const currency = tenant?.config?.currency;
+  const formatted = formatCurrency(amount, currency?.code, currency?.locale);
 
   return <span className={className}>{formatted}</span>;
 }

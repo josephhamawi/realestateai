@@ -25,6 +25,7 @@ import {
   X as XIcon,
 } from "lucide-react";
 import { LogoMark } from "../components/brand/LogoMark";
+import { BRAND } from "../config/brand";
 
 /* ------------------------------------------------------------------ */
 /*  useInView hook : triggers "visible" class on scroll                */
@@ -78,7 +79,7 @@ function Navbar() {
   const navLinks = [
     { label: "Features", href: "#features" },
     { label: "How It Works", href: "#how-it-works" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Self-host", href: "#self-host" },
     { label: "FAQ", href: "#faq" },
   ];
 
@@ -98,7 +99,7 @@ function Navbar() {
               <LogoMark className="h-5 w-5" white />
             </div>
             <span className={`text-lg font-bold tracking-tight transition-colors ${scrolled ? "text-gray-900" : "text-white"}`}>
-              AgentFlow AI
+              RealEstateAI
             </span>
           </a>
 
@@ -224,7 +225,7 @@ function Hero() {
               to="/signup"
               className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-bold text-brand-700 shadow-xl shadow-brand-900/30 hover:shadow-2xl hover:shadow-brand-900/40 transition-all hover:-translate-y-0.5"
             >
-              Start Free Trial
+              Get started
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <a
@@ -243,7 +244,7 @@ function Hero() {
             {[
               { value: "5 min", label: "Avg response time", icon: Clock },
               { value: "10x", label: "More leads qualified", icon: TrendingUp },
-              { value: "AED 0", label: "Per message on Telegram", icon: Send },
+              { value: "0", label: "Per-message cost on Telegram", icon: Send },
               { value: "24/7", label: "Always working", icon: Zap },
             ].map((stat, i) => (
               <div key={i} className="flex flex-col items-center py-4 lg:py-6 lg:px-8">
@@ -315,7 +316,7 @@ function ProblemSolution() {
         <Reveal>
           <div className="text-center mb-16">
             <span className="inline-block rounded-full bg-brand-50 px-4 py-1.5 text-sm font-semibold text-brand-700 mb-4">
-              Why AgentFlow AI?
+              Why RealEstateAI?
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
               Stop chasing. Start closing.
@@ -581,227 +582,71 @@ function AIPersonas() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Pricing Section                                                    */
+/*  Self-host Section                                                  */
 /* ------------------------------------------------------------------ */
-function Pricing() {
-  const currentPlans = [
+function SelfHost() {
+  const points = [
     {
-      name: "Solo",
-      price: "179",
-      currency: "AED ",
-      period: "/mo",
-      badge: "One deal pays for 2+ years",
-      features: [
-        "100 leads per month",
-        "1 agent account",
-        "AI lead qualification",
-        "Telegram & WhatsApp",
-        "Calendar sync",
-        "Email support",
-      ],
-      highlighted: false,
+      title: "No subscription, no seats",
+      body: "The whole app is open source. Clone it, deploy it to your own Firebase project, and run it for as long as you like.",
     },
     {
-      name: "Team",
-      price: "499",
-      currency: "AED ",
-      period: "/mo",
-      badge: null,
-      features: [
-        "500 leads per month",
-        "5 agent accounts",
-        "AI lead qualification",
-        "Telegram & WhatsApp",
-        "Calendar sync",
-        "CRM integration",
-        "Team dashboard",
-        "Priority support",
-      ],
-      highlighted: true,
+      title: "Bring your own AI key",
+      body: "Add an Anthropic, OpenAI, or Google Gemini key on the API Keys screen. Model usage is billed by that provider directly to you, at their rates.",
     },
     {
-      name: "Brokerage",
-      price: "1,299",
-      currency: "AED ",
-      period: "/mo",
-      badge: null,
-      features: [
-        "Unlimited leads",
-        "Unlimited agents",
-        "AI lead qualification",
-        "Telegram & WhatsApp",
-        "Calendar sync",
-        "CRM integration",
-        "Compliance reports",
-        "API access",
-        "Dedicated account manager",
-      ],
-      highlighted: false,
+      title: "Your data stays in your project",
+      body: "Leads, conversations, and keys live in the Firestore database of the project you own. Nobody else has a copy.",
+    },
+    {
+      title: "Start free on Telegram",
+      body: "Telegram bots cost nothing per message, so you can run a full pipeline before touching the WhatsApp Business API.",
     },
   ];
 
   return (
-    <section id="pricing" className="py-20 lg:py-28 bg-gray-50 scroll-mt-20">
+    <section id="self-host" className="py-20 lg:py-28 bg-gray-50 scroll-mt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
           <div className="text-center mb-12">
             <span className="inline-block rounded-full bg-brand-50 px-4 py-1.5 text-sm font-semibold text-brand-700 mb-4">
-              Pricing
+              Open source
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Plans that pay for themselves
+              Free to run, on your own infrastructure
             </h2>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
-              Start free and upgrade when your pipeline fills up. Prices in AED.
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              There is no paid plan here and nothing to upgrade. You pay only the AI and
+              messaging providers you choose to connect.
             </p>
           </div>
         </Reveal>
 
-        <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {currentPlans.map((plan, i) => (
-            <Reveal key={i} delay={i * 100}>
-              <div
-                className={`relative rounded-2xl p-8 flex flex-col h-full transition-all duration-300 ${
-                  plan.highlighted
-                    ? "bg-gradient-to-br from-brand-600 to-purple-700 shadow-xl shadow-brand-500/25 scale-[1.02] lg:scale-105"
-                    : "bg-white border border-gray-200 shadow-sm hover:shadow-md"
-                }`}
-              >
-                {plan.badge && (
-                  <div className={`absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-4 py-1 text-xs font-bold ${
-                    plan.highlighted ? "bg-yellow-400 text-yellow-900" : "bg-green-100 text-green-700"
-                  }`}>
-                    {plan.badge}
+        <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {points.map((point, i) => (
+            <Reveal key={point.title} delay={i * 80}>
+              <div className="h-full rounded-2xl bg-white border border-gray-200 p-6 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 mt-0.5 shrink-0 text-green-500" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{point.title}</h3>
+                    <p className="mt-1.5 text-sm text-gray-600 leading-relaxed">{point.body}</p>
                   </div>
-                )}
-
-                {plan.highlighted && (
-                  <div className="absolute -top-3 right-6 rounded-full bg-yellow-400 px-3 py-1 text-xs font-bold text-yellow-900">
-                    Most Popular
-                  </div>
-                )}
-
-                <h3 className={`text-lg font-bold mb-2 ${plan.highlighted ? "text-white" : "text-gray-900"}`}>
-                  {plan.name}
-                </h3>
-                <div className="mb-6">
-                  <span className={`text-4xl font-extrabold ${plan.highlighted ? "text-white" : "text-gray-900"}`}>
-                    {plan.currency}{plan.price}
-                  </span>
-                  <span className={`text-sm ${plan.highlighted ? "text-blue-200" : "text-gray-500"}`}>{plan.period}</span>
                 </div>
-
-                <ul className="space-y-3 mb-8 flex-1">
-                  {plan.features.map((feat, j) => (
-                    <li key={j} className="flex items-start gap-2.5">
-                      <Check className={`h-4 w-4 mt-0.5 shrink-0 ${plan.highlighted ? "text-blue-200" : "text-green-500"}`} />
-                      <span className={`text-sm ${plan.highlighted ? "text-blue-50" : "text-gray-600"}`}>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  to="/signup"
-                  className={`block w-full rounded-xl py-3.5 text-center text-sm font-bold transition-all ${
-                    plan.highlighted
-                      ? "bg-white text-brand-700 hover:bg-gray-50 shadow-lg"
-                      : "bg-brand-600 text-white hover:bg-brand-700 shadow-sm"
-                  }`}
-                >
-                  Start Free Trial
-                </Link>
               </div>
             </Reveal>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
 
-/* ------------------------------------------------------------------ */
-/*  ROI Calculator                                                     */
-/* ------------------------------------------------------------------ */
-function ROICalculator() {
-  const [commission, setCommission] = useState(60000);
-  const [deals, setDeals] = useState(1);
-
-  const planCost = 179;
-  const monthlyRevenue = commission * deals;
-  const daysToPayoff = monthlyRevenue > 0 ? Math.max(1, Math.ceil((planCost / monthlyRevenue) * 30)) : 999;
-
-  const current = { commission: 60000, currency: "AED ", cost: "AED 179" };
-  const roi = monthlyRevenue > 0 ? Math.round((monthlyRevenue / planCost) * 100) : 0;
-
-  return (
-    <section className="py-20 lg:py-28 bg-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal>
-          <div className="text-center mb-12">
-            <span className="inline-block rounded-full bg-brand-50 px-4 py-1.5 text-sm font-semibold text-brand-700 mb-4">
-              ROI Calculator
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              See exactly how fast it pays off
-            </h2>
-          </div>
-        </Reveal>
-
-        <Reveal delay={100}>
-          <div className="max-w-2xl mx-auto">
-            <div className="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 p-8 lg:p-10 shadow-2xl">
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Average commission per deal ({current.currency})
-                  </label>
-                  <input
-                    type="number"
-                    value={commission}
-                    onChange={(e) => setCommission(Number(e.target.value) || 0)}
-                    className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Default: {current.currency}{new Intl.NumberFormat().format(current.commission)}</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Deals closed per month
-                  </label>
-                  <input
-                    type="number"
-                    value={deals}
-                    onChange={(e) => setDeals(Number(e.target.value) || 0)}
-                    min={0}
-                    className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                  />
-                </div>
-
-                {/* Results */}
-                <div className="rounded-xl bg-gradient-to-r from-brand-600/30 to-purple-600/30 border border-brand-400/30 p-6 mt-8">
-                  <div className="text-center">
-                    <p className="text-sm text-blue-200 mb-1">AgentFlow AI pays for itself in</p>
-                    <p className="text-5xl font-extrabold text-white mb-1">
-                      {daysToPayoff} {daysToPayoff === 1 ? "day" : "days"}
-                    </p>
-                    <p className="text-sm text-blue-200">
-                      at just {current.cost}/month (Solo plan)
-                    </p>
-                  </div>
-
-                  <div className="mt-6 grid grid-cols-2 gap-4">
-                    <div className="text-center rounded-lg bg-white/5 p-3">
-                      <p className="text-xs text-gray-400">Monthly Revenue</p>
-                      <p className="text-lg font-bold text-white">{current.currency}{new Intl.NumberFormat().format(monthlyRevenue)}</p>
-                    </div>
-                    <div className="text-center rounded-lg bg-white/5 p-3">
-                      <p className="text-xs text-gray-400">ROI</p>
-                      <p className="text-lg font-bold text-green-400">{roi.toLocaleString()}%</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <Reveal delay={200}>
+          <div className="mt-10 text-center">
+            <Link
+              to="/signup"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-8 py-4 text-sm font-bold text-white shadow-sm hover:bg-brand-700 transition-colors"
+            >
+              Create your account
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </Reveal>
       </div>
@@ -822,23 +667,27 @@ function FAQ() {
     },
     {
       q: "Is my data secure?",
-      a: "Yes. We encrypt data end to end, follow the UAE PDPL and Dubai's RERA data guidelines, and store everything in SOC 2 certified data centers. Your data stays yours, and we never sell or share it with third parties.",
+      a: "You host it, so the answer is in your hands. Data sits in the Firebase project you own, the included Firestore rules restrict every collection to its owner, and the code sends nothing to third parties beyond the AI and messaging providers you connect.",
     },
     {
       q: "Do I need WhatsApp Business API?",
-      a: "No. You can start on Telegram right away at no per-message cost. For WhatsApp, we support the official Business API for verified businesses, and our team helps you set it up if you go that route.",
+      a: "No. Telegram works right away at no per-message cost. For WhatsApp you can use the official Business API, 360dialog, or the self-hosted gateway included in this repo.",
     },
     {
       q: "Is it built for the Dubai market?",
-      a: "Yes. AgentFlow AI is built for Dubai and the UAE. Noor works in AED and knows the local communities, developers, and ownership types like freehold and leasehold.",
+      a: "Yes. RealEstateAI is built for Dubai and the UAE. Noor works in AED and knows the local communities, developers, and ownership types like freehold and leasehold.",
     },
     {
       q: "What happens if the AI gets it wrong?",
       a: "You stay in control. Review any conversation as it happens, set your own escalation rules, and when Noor is unsure she offers to hand the lead to a human agent.",
     },
     {
-      q: "How long is the free trial?",
-      a: "Fourteen days with full access to every Solo plan feature, no credit card needed. When you're ready to keep going, upgrading takes one click.",
+      q: "What does it cost to run?",
+      a: "The app itself is free and open source. Your only bills come from the providers you connect: the AI provider whose key you enter, Firebase hosting and functions (the free tier covers light use), and WhatsApp messaging if you enable it. Telegram is free per message.",
+    },
+    {
+      q: "Who can see my API keys?",
+      a: "Only the account that claims the instance on first run. Keys live in your own Firestore database, are readable only by instance owners under the included security rules, and are never sent anywhere except to the provider they belong to.",
     },
   ];
 
@@ -910,17 +759,17 @@ function FinalCTA() {
             </span>
           </h2>
           <p className="text-lg text-blue-200/80 mb-10 max-w-xl mx-auto">
-            Join 50+ agents already using AgentFlow AI to qualify more leads and close more deals.
+            Deploy your own instance, connect your AI key, and let the assistant qualify leads while you sell.
           </p>
           <Link
             to="/signup"
             className="group inline-flex items-center gap-2 rounded-2xl bg-white px-10 py-5 text-lg font-bold text-brand-700 shadow-xl shadow-brand-900/30 hover:shadow-2xl hover:-translate-y-0.5 transition-all"
           >
-            Start Your Free Trial
+            Create your account
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Link>
           <p className="mt-5 text-sm text-blue-200/60">
-            No credit card required. Set up in 2 minutes.
+            No card, no plan, no per-seat pricing. You run the instance.
           </p>
         </Reveal>
       </div>
@@ -942,7 +791,7 @@ function Footer() {
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
                 <LogoMark className="h-5 w-5" white />
               </div>
-              <span className="text-lg font-bold text-white">AgentFlow AI</span>
+              <span className="text-lg font-bold text-white">RealEstateAI</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-6">
               AI-powered lead qualification for real estate agents in Dubai and the UAE.
@@ -964,7 +813,7 @@ function Footer() {
           <div>
             <h4 className="text-sm font-semibold text-white mb-4">Product</h4>
             <ul className="space-y-3">
-              {["Features", "Pricing", "FAQ", "Changelog"].map((link) => (
+              {["Features", "Self-host", "FAQ"].map((link) => (
                 <li key={link}>
                   <a href={`#${link.toLowerCase()}`} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {link}
@@ -1006,8 +855,8 @@ function Footer() {
             <h4 className="text-sm font-semibold text-white mb-4">Contact</h4>
             <ul className="space-y-3">
               <li>
-                <a href="mailto:hello@kodefoundry.com" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  hello@kodefoundry.com
+                <a href={`mailto:${BRAND.contactEmail}`} className="text-sm text-gray-400 hover:text-white transition-colors">
+                  {BRAND.contactEmail}
                 </a>
               </li>
               <li className="text-sm text-gray-400">Dubai, UAE</li>
@@ -1017,7 +866,7 @@ function Footer() {
 
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} AgentFlow AI. All rights reserved.
+            &copy; {new Date().getFullYear()} RealEstateAI. All rights reserved.
           </p>
           <p className="text-xs text-gray-500">
             Made with AI for real estate agents in Dubai & the UAE
@@ -1061,8 +910,7 @@ export function LandingPage() {
       <Features />
       <HowItWorks />
       <AIPersonas />
-      <Pricing />
-      <ROICalculator />
+      <SelfHost />
       <FAQ />
       <FinalCTA />
       <Footer />

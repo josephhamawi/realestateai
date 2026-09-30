@@ -4,7 +4,7 @@ export interface Tenant {
   tenantId: string;
   market: "dubai";
   region: "africa-west" | "mena";
-  status: "trial" | "active" | "suspended" | "cancelled";
+  status: "active" | "suspended";
   createdAt: Timestamp;
   updatedAt: Timestamp;
 
@@ -57,8 +57,9 @@ export interface Tenant {
       botUsername?: string;
       connectedAt?: Timestamp;
     };
-    vynn?: {
+    ai?: {
       enabled: boolean;
+      provider?: "anthropic" | "openai" | "gemini";
       apiKey?: string;
       model?: string;
       connectedAt?: Timestamp;
@@ -79,13 +80,6 @@ export interface Tenant {
         connectedAt?: Timestamp;
       };
       preferred?: "google" | "outlook";
-    };
-    payments: {
-      provider?: "stripe";
-      customerId?: string;
-      subscriptionId?: string;
-      tier?: "solo" | "team" | "brokerage";
-      currentPeriodEnd?: Timestamp;
     };
     crm: {
       webhooks?: Record<string, {

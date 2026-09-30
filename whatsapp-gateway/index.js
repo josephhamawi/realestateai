@@ -1,4 +1,4 @@
-// AgentFlow AI self-hosted WhatsApp gateway.
+// RealEstateAI self-hosted WhatsApp gateway.
 //
 // Baileys needs an always-on Node process, which Firebase cannot host, so this
 // standalone service runs on a small always-on VM. It pairs with a phone via a

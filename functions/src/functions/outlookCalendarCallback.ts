@@ -2,12 +2,11 @@ import * as functions from "firebase-functions";
 import axios from "axios";
 import { db, FieldValue } from "../config/firebase";
 import { getMicrosoftOAuthConfig } from "../config/secrets";
+import { appUrl, functionUrl } from "../config/urls";
 
-const REDIRECT_URI =
-  "https://us-central1-agentflowai-11dd2.cloudfunctions.net/outlookCalendarCallback";
+const REDIRECT_URI = functionUrl("outlookCalendarCallback");
 
-const SUCCESS_REDIRECT =
-  "https://agentflowai-11dd2.web.app/settings/integrations?outlook=connected";
+const SUCCESS_REDIRECT = appUrl("/settings/integrations?outlook=connected");
 
 /**
  * Handles the Microsoft OAuth2 callback after the user grants consent.
@@ -34,7 +33,7 @@ export const outlookCalendarCallback = functions.https.onRequest(
     if (error) {
       console.warn("Microsoft OAuth denied:", error);
       res.redirect(
-        "https://agentflowai-11dd2.web.app/settings/integrations?outlook=denied"
+        appUrl("/settings/integrations?outlook=denied")
       );
       return;
     }
@@ -81,7 +80,7 @@ export const outlookCalendarCallback = functions.https.onRequest(
         res
           .status(400)
           .send(
-            "No refresh token received. Please revoke AgentFlow AI access in your Microsoft account settings and try again."
+            "No refresh token received. Please revoke this app's access in your Microsoft account settings and try again."
           );
         return;
       }

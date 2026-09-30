@@ -1,6 +1,6 @@
-# AgentFlow AI WhatsApp Gateway (Baileys)
+# RealEstateAI WhatsApp Gateway (Baileys)
 
-A standalone, always-on Node service that bridges WhatsApp to AgentFlow AI using
+A standalone, always-on Node service that bridges WhatsApp to RealEstateAI using
 [Baileys](https://github.com/WhiskeySockets/Baileys). Baileys talks to WhatsApp
 over the multi-device web protocol, which needs a persistent Node process.
 Firebase Functions cannot host that, so this gateway runs on a small always-on
@@ -114,7 +114,7 @@ not need to scan again after restarts unless you log out.
 
 ## Configure the app side
 
-In the AgentFlow AI admin dashboard, WhatsApp tab:
+In the RealEstateAI API Keys screen, WhatsApp tab:
 
 1. Set Provider to `Baileys (self-hosted)`.
 2. Set Baileys Gateway URL to `http://<vm-ip>:<port>` (no trailing slash).

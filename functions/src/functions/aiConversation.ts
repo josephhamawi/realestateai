@@ -3,9 +3,9 @@ import { db, FieldValue } from "../config/firebase";
 import { loadTenant, loadMarketConfig } from "../utils/marketConfig";
 import {
   buildSystemPrompt,
-  buildClaudeMessages,
+  buildConversationMessages,
   generateAIResponse,
-} from "../services/claude";
+} from "../services/ai";
 import { runComplianceCheck } from "../utils/compliance";
 import { sendWhatsAppMessage } from "../services/whatsapp";
 import { sendMessageToLead } from "../services/messagingRouter";
@@ -46,29 +46,33 @@ export const aiConversation = functions.https.onCall(
       (d) => d.data() as Message
     );
 
-    // Build Claude prompts
+    // Build AI prompts
     const systemPrompt = buildSystemPrompt(
       tenant as any,
       marketConfig,
       lead as any
     );
-    const claudeMessages = buildClaudeMessages(
+    const aiMessages = buildConversationMessages(
       messages,
       inboundMessage
     );
 
-    if (claudeMessages.length === 0) {
+    if (aiMessages.length === 0) {
       return { status: "no_messages" };
     }
 
-    // Prefer tenant's own Vynn AI key if configured
-    const tenantVynn = tenant.integrations?.vynn?.apiKey
-      ? { apiKey: tenant.integrations.vynn.apiKey, model: tenant.integrations.vynn.model }
+    // Prefer the tenant's own AI key if they configured one
+    const tenantAI = tenant.integrations?.ai?.apiKey
+      ? {
+          provider: tenant.integrations.ai.provider,
+          apiKey: tenant.integrations.ai.apiKey,
+          model: tenant.integrations.ai.model,
+        }
       : undefined;
 
     // Generate AI response
-    const { text: aiReplyText, tokensUsed } =
-      await generateAIResponse(systemPrompt, claudeMessages, tenantVynn);
+    const { text: aiReplyText, tokensUsed, model: aiModel } =
+      await generateAIResponse(systemPrompt, aiMessages, tenantAI);
 
     // Run compliance check
     const complianceResult = runComplianceCheck(
@@ -88,8 +92,8 @@ export const aiConversation = functions.https.onCall(
 
       const { text: rewrittenText } = await generateAIResponse(
         constraintPrompt,
-        claudeMessages,
-        tenantVynn
+        aiMessages,
+        tenantAI
       );
       finalMessage = rewrittenText;
     }
@@ -112,7 +116,7 @@ export const aiConversation = functions.https.onCall(
         content: { text: finalMessage },
         metadata: {
           aiGenerated: true,
-          aiModel: "claude-sonnet-4-20250514",
+          aiModel,
           tokensUsed,
           complianceCheck: complianceResult.status,
           complianceNotes: complianceResult.notes,
@@ -136,7 +140,7 @@ export const aiConversation = functions.https.onCall(
       // Build channel-specific metadata
       const channelMeta: Record<string, unknown> = {
         aiGenerated: true,
-        aiModel: "claude-sonnet-4-20250514",
+        aiModel,
         tokensUsed,
         complianceCheck: complianceResult.status,
         complianceNotes: complianceResult.notes,

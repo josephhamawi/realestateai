@@ -115,7 +115,7 @@ export const calendarManager = functions.https.onCall(
           calendarEventId = await createGoogleCalendarEvent(
             tenant.integrations.calendar.google.refreshToken,
             {
-              title: `[AgentFlow] Viewing - ${lead.contact.name}`,
+              title: `Viewing - ${lead.contact.name}`,
               description: `Lead: ${lead.contact.name}\nPhone: ${lead.contact.phone}\nProperty: ${lead.propertyInterest?.propertyType || "N/A"}`,
               startTime: startTime.toISOString(),
               endTime: endTime.toISOString(),
@@ -131,7 +131,7 @@ export const calendarManager = functions.https.onCall(
           calendarEventId = await createOutlookCalendarEvent(
             tenant.integrations.calendar.outlook.refreshToken,
             {
-              title: `[AgentFlow] Viewing - ${lead.contact.name}`,
+              title: `Viewing - ${lead.contact.name}`,
               description: `Lead: ${lead.contact.name}<br>Phone: ${lead.contact.phone}`,
               startTime: startTime.toISOString(),
               endTime: endTime.toISOString(),
